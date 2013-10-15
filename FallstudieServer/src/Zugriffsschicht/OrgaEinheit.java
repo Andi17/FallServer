@@ -42,7 +42,7 @@ public class OrgaEinheit {
 				"Leitername = '" + Leitername +"' AND "+
 				"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
 				"Zustand = " + stringZustand +" AND "+
-				"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" AND ");
+				"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
 		resultSet.next();
 		werteSetzen(resultSet);
 		resultSet.close();
