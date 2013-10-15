@@ -178,6 +178,15 @@ public class Webservice {
 			return false;
 	}
 
+	//Organisationseinheit löschen.
+	@WebMethod
+	public boolean orgaEinheitLoeschen(String benutzer, String passwort, int idOrgaEinheit){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return orgaEinheitVerwaltung.OrgaEinheitLoeschen(idOrgaEinheit);
+		else
+			return false;
+	}
+	
 	@WebMethod
 	public boolean gibtEsOrgaEinheitSchon(String benutzer, String passwort,
 			String orgaEinheitBezeichnung){

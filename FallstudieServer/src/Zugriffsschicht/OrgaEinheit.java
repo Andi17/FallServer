@@ -142,8 +142,26 @@ public class OrgaEinheit {
 	}
 
 	public String getMitarbeiterBerechtigungBezeichnung() {
-		// TODO Auto-generated method stub
-		return null;
+		String mitarbeiterBezeichnung = "Keine Berechtigung";
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT Berechtigungsbez FROM Berechtigung WHERE idBerechtigung = " + idMitarbeiterBerechtigung);
+			mitarbeiterBezeichnung = result.getString("Berechtigungsbez");
+			result.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return mitarbeiterBezeichnung;
 	}
 
+	public boolean loeschen(){
+		try {
+			db.executeUpdateStatement("DELETE FROM OrgaEinheiten WHERE idOrgaEinheit = "+idOrgaEinheit);
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

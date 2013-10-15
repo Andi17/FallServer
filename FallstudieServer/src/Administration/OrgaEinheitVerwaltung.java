@@ -93,5 +93,11 @@ public class OrgaEinheitVerwaltung {
 		else
 			return true;
 	}
+	
+	public boolean OrgaEinheitLoeschen(int idOrgaEinheit){
+		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+		if(orgaEinheit!=null)return orgaEinheit.loeschen();
+		else return false;
+	}
 
 }
