@@ -34,7 +34,7 @@ public class OrgaEinheit {
 		else stringZustand ="0";
 		db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
 				"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
-				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + ", '" + Leitername +
+				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
 				"', " + idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
 		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
 				"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
