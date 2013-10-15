@@ -9,11 +9,12 @@ public class ComOrgaEinheit {
 	private String LeiterBerechtigungBez;
 	private int idMitarbeiterBerechtigung;
 	private String MitarbeiterBerechtigungBez;
+	private boolean zustand;
 
 	public ComOrgaEinheit(int idOrgaEinheit, int UeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
 			String LeiterBerechtigungBez, int idMitarbeiterBerechtigung,
-			String MitarbeiterBerechtigungBez) {
+			String MitarbeiterBerechtigungBez, boolean zustand) {
 		this.idOrgaEinheit = idOrgaEinheit;
 		this.UeberOrgaEinheit = UeberOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
@@ -22,6 +23,7 @@ public class ComOrgaEinheit {
 		this.LeiterBerechtigungBez = LeiterBerechtigungBez;
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 		this.MitarbeiterBerechtigungBez = MitarbeiterBerechtigungBez;
+		this.setZustand(zustand);
 	}
 
 	public int getIdOrgaEinheit() {
@@ -56,20 +58,24 @@ public class ComOrgaEinheit {
 		return MitarbeiterBerechtigungBez;
 	}
 
+	public boolean isZustand() {
+		return zustand;
+	}
+
 	public void setIdOrgaEinheit(int idOrgaEinheit) {
 		this.idOrgaEinheit = idOrgaEinheit;
 	}
 
 	public void setUeberOrgaEinheit(int ueberOrgaEinheit) {
-		UeberOrgaEinheit = ueberOrgaEinheit;
+		this.UeberOrgaEinheit = ueberOrgaEinheit;
 	}
 
 	public void setOrgaEinheitBez(String orgaEinheitBez) {
-		OrgaEinheitBez = orgaEinheitBez;
+		this.OrgaEinheitBez = orgaEinheitBez;
 	}
 
 	public void setLeitername(String leitername) {
-		Leitername = leitername;
+		this.Leitername = leitername;
 	}
 
 	public void setIdLeiterBerechtigung(int idLeiterBerechtigung) {
@@ -77,7 +83,7 @@ public class ComOrgaEinheit {
 	}
 
 	public void setLeiterBerechtigungBez(String leiterBerechtigungBez) {
-		LeiterBerechtigungBez = leiterBerechtigungBez;
+		this.LeiterBerechtigungBez = leiterBerechtigungBez;
 	}
 
 	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung) {
@@ -85,6 +91,10 @@ public class ComOrgaEinheit {
 	}
 
 	public void setMitarbeiterBerechtigungBez(String mitarbeiterBerechtigungBez) {
-		MitarbeiterBerechtigungBez = mitarbeiterBerechtigungBez;
+		this.MitarbeiterBerechtigungBez = mitarbeiterBerechtigungBez;
+	}
+
+	public void setZustand(boolean zustand) {
+		this.zustand = zustand;
 	}
 }

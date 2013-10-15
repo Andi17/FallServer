@@ -1,9 +1,9 @@
 package Stricheln;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 
-import Com.ComStrichart;
-import Zugriffsschicht.Strichart;
+import Zugriffsschicht.Arbeitsschritt;
 import Zugriffsschicht.Zugriffschicht;
 
 public class Stricheln {
@@ -14,30 +14,22 @@ public class Stricheln {
 		this.dbZugriff = dbZugriff;
 	}
 
-	public List<ComStrichart> getMoeglicheStricharten() {
-		/*
-		 * Rückgabe aller Stricharten die anzeigbar sind
-		 *//*
-		 * rückgabe der verschiedenen Strichelmöglichkeiten. Eventuell übergabe
-		 * einer Strichelklasse( siehe statistik) Rückgabe von Strichelart(DB)
-		 * und bezeichnung sofern Zustand vorhanden ist.
-		 */
-		return null;
-	}
-
-	public String getstrichbezeichnung(int Strichart) {
-		/*
-		 * Rückgabe Strichbezeichnung
-		 */
-		return null;
-	}
-
 	//gibt true zurück wenn erfolgreich, speichert strich in datenbank
-	public boolean schreibeStrichInDatenbank(String Benutzername, int Strichart, 
-			boolean aktuelleWoche, int jahr) {
-		
-		
-		return false;
+	public boolean schreibeStricheInDatenbank(String Benutzername, int idStrichart, 
+			int strichanzahl, boolean aktuelleWoche) {
+		Calendar localCalendar = Calendar.getInstance();
+		Date datum = localCalendar.getTime();
+		int jahr = localCalendar.get(Calendar.YEAR);
+		int kalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
+		if(!aktuelleWoche) kalendarwoche--;
+		if(kalendarwoche<=0){
+			kalendarwoche = 52;
+			jahr--;
+		}
+		int idOrgaEinheit = dbZugriff.getBenutzervonBenutzername(Benutzername).getAktuelleOE();
+		Arbeitsschritt arbeitsschritt = dbZugriff.neuerArbeitsschritt(idOrgaEinheit, datum, idStrichart, strichanzahl, kalendarwoche, jahr);
+		if(arbeitsschritt == null)return false;
+		else return true;
 	}
 
 }

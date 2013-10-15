@@ -7,35 +7,39 @@ import java.util.Date;
 
 import jdbc.JdbcAccess;
 
-public class Arbeitsschritte {
-	private JdbcAccess db;
+public class Arbeitsschritt {
 	private int idArbeitsschritt;
 	private int idOrgaEinheit;
-	private Date Datum;
 	private int idStrichart;
+	private Date Datum;
 	private int Strichzahl;
+	private int kalendarwoche;
+	private int jahr;
 
-	public Arbeitsschritte(ResultSet resultSet, JdbcAccess db)
+	public Arbeitsschritt(ResultSet resultSet, JdbcAccess db)
 			throws SQLException {
 		werteSetzen(resultSet);
-		this.db = db;
 	}
-//TODO
-	// DATUM Currentdate().... Select muss mit datum statfinden... vor der implementierung datum abfragen und eintragen
-	public Arbeitsschritte(int idOrgaEinheit, Date Datum, int idStrichart,
-			int Strichzahl, JdbcAccess db) throws SQLException {
+
+	public Arbeitsschritt(int idOrgaEinheit, int idStrichart, Date datum,
+			int strichanzahl, int kalendarWoche, int jahr, JdbcAccess db) throws SQLException {
 		db.executeUpdateStatement("INSERT INTO Arbeitsschritte ("
-				+ "idOrgaEinheit, Timestamp, idStrichart, Strichzahl) "
+				+ "idOrgaEinheit, idStrichart, Timestamp, Strichanzahl, Kalendarwoche, Jahr) "
 				+ "VALUES ( " + idOrgaEinheit + ", "
-				+ dateToSqlTimestamp(Datum) + ", "+
-				+ idStrichart + ", "+
-				+ Strichzahl + ")");
+				+ idStrichart + ", "
+				+ dateToSqlTimestamp(datum) + ", " 
+				+ strichanzahl + ", " 
+				+ kalendarWoche + ", " 
+				+ jahr +")");
 		ResultSet resultSet = db
 				.executeQueryStatement("SELECT * FROM Arbeitsschritte WHERE "
-						+ "idOrgaEinheit = " + idOrgaEinheit + "AND Timestamp = "+ dateToSqlTimestamp(Datum)+ " AND " + "idStrichart = "
-						+ idStrichart + " AND Strichzahl = "+ Strichzahl+ "");
-		resultSet.next();
-		werteSetzen(resultSet);
+						+ "idOrgaEinheit = " + idOrgaEinheit 
+						+ " AND idStrichart = " + idStrichart
+						+ " AND Timestamp = " + dateToSqlTimestamp(datum)
+						+ " AND Strichanzahl = "+ strichanzahl
+						+ " AND Kalendarwoche = " + kalendarWoche
+						+ " AND Jahr = " + jahr);
+		if(resultSet.next())werteSetzen(resultSet);
 		resultSet.close();
 	}
 
@@ -45,6 +49,8 @@ public class Arbeitsschritte {
 		this.idStrichart = resultSet.getInt("idStrichart");
 		this.Datum = sqlTimestampToDate(resultSet.getTimestamp("Timestamp"));
 		this.Strichzahl = resultSet.getInt("Strichzahl");
+		this.kalendarwoche = resultSet.getInt("Kalendarwoche");
+		this.jahr = resultSet.getInt("Jahr");
 	}
 
 
@@ -60,31 +66,24 @@ public class Arbeitsschritte {
 	public int getIdArbeitsschritt() {
 		return idArbeitsschritt;
 	}
-	public void setIdArbeitsschritt(int idArbeitsschritt) {
-		this.idArbeitsschritt = idArbeitsschritt;
-	}
 	public int getIdOrgaEinheit() {
 		return idOrgaEinheit;
-	}
-	public void setIdOrgaEinheit(int idOrgaEinheit) {
-		this.idOrgaEinheit = idOrgaEinheit;
 	}
 	public Date getDatum() {
 		return Datum;
 	}
-	public void setDatum(Date datum) {
-		Datum = datum;
-	}
 	public int getIdStrichart() {
 		return idStrichart;
-	}
-	public void setIdStrichart(int idStrichart) {
-		this.idStrichart = idStrichart;
 	}
 	public int getStrichzahl() {
 		return Strichzahl;
 	}
-	public void setStrichzahl(int strichzahl) {
-		Strichzahl = strichzahl;
+
+	public int getJahr() {
+		return jahr;
+	}
+
+	public int getKalendarwoche() {
+		return kalendarwoche;
 	}
 }

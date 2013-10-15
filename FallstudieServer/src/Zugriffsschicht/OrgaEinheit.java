@@ -15,7 +15,7 @@ public class OrgaEinheit {
 	private String OrgaEinheitBez;
 	private String Leitername;
 	private int idLeiterBerechtigung;
-	private boolean Zustand;
+	private boolean zustand;
 	private int idMitarbeiterBerechtigung;
 
 
@@ -55,7 +55,7 @@ public class OrgaEinheit {
 		this.Leitername = resultSet.getString("Leitername");
 		this.idLeiterBerechtigung = resultSet
 				.getInt("idLeiterBerechtigung");
-		this.Zustand = resultSet.getBoolean("Zustand");
+		this.zustand = resultSet.getBoolean("Zustand");
 		this.idMitarbeiterBerechtigung = resultSet.getInt("idMitarbeiterBerechtigung");
 	}
 	
@@ -104,7 +104,7 @@ public class OrgaEinheit {
 	}
 
 	public boolean isZustand() {
-		return Zustand;
+		return zustand;
 	}
 
 	public int getIdMitarbeiterBerechtigung() {
@@ -131,9 +131,17 @@ public class OrgaEinheit {
 		this.idLeiterBerechtigung = idLeiterBerechtigung;
 	}
 
-	public void setZustand(boolean zustand) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET Zustand = " + zustand +" WHERE idOrgaEinheit = " + idOrgaEinheit);
-		Zustand = zustand;
+	public void setZustand(boolean neuerZustand){
+		try {
+			String stringZustand;
+			if(neuerZustand)stringZustand = "1";
+			else stringZustand = "0";
+			db.executeUpdateStatement("UPDATE OrgaEinheit SET Zustand = " + stringZustand +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			zustand = neuerZustand;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung) throws SQLException {
@@ -152,16 +160,5 @@ public class OrgaEinheit {
 			e.printStackTrace();
 		} 
 		return mitarbeiterBezeichnung;
-	}
-
-	public boolean loeschen(){
-		try {
-			db.executeUpdateStatement("DELETE FROM OrgaEinheiten WHERE idOrgaEinheit = "+idOrgaEinheit);
-			return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
 	}
 }

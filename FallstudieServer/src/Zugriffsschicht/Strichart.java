@@ -9,7 +9,7 @@ public class Strichart {
 	private JdbcAccess db;
 	private int idStrichart;
 	private String StrichBez;
-	private boolean Zustand;
+	private boolean zustand;
 
 	public Strichart(String StrichBez, boolean Zustand,
 			JdbcAccess db) throws SQLException {
@@ -31,7 +31,7 @@ public class Strichart {
 	public void werteSetzen(ResultSet resultSet) throws SQLException{
 		this.idStrichart = resultSet.getInt("idStrichart");
 		this.StrichBez = resultSet.getString("StrichBez");
-		this.Zustand = resultSet.getBoolean("Zustand");
+		this.zustand = resultSet.getBoolean("Zustand");
 	}
 
 	public int getIdStrichart() {
@@ -46,16 +46,34 @@ public class Strichart {
 		return StrichBez;
 	}
 
-	public void setStrichbez(String strichbez) {
-		StrichBez = strichbez;
+	public boolean setStrichbez(String strichbez) {
+		try {
+			db.executeUpdateStatement("UPDATE Stricharten SET Strichbez = '" + strichbez + "' WHERE idStrichart = " + idStrichart);
+			StrichBez = strichbez;
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean getZustand() {
-		return Zustand;
+		return zustand;
 	}
 
-	public void setZustand(boolean zustand) {
-		this.Zustand = zustand;
+	public boolean setZustand(boolean neuerZustand) {
+		try {
+			String stringZustand;
+			if(neuerZustand)stringZustand = "1";
+			else stringZustand ="0";
+			db.executeUpdateStatement("UPDATE Stricharten SET Zustand = " + stringZustand + " WHERE idStrichart = " + idStrichart);
+			this.zustand = neuerZustand;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

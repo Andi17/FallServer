@@ -3,6 +3,7 @@ package Zugriffsschicht;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jdbc.JdbcAccess;
@@ -217,11 +218,13 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
-	public List<OrgaEinheit> getOrgaEinheiten(){
+	public List<OrgaEinheit> getOrgaEinheiten(boolean nurAktive){
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
 		try {
-			resultSet = db
+			if(nurAktive)resultSet = db
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Zustand = 1 ORDER BY OrgaEinheitBez");
+			else resultSet = db
 					.executeQueryStatement("SELECT * FROM OrgaEinheiten ORDER BY OrgaEinheitBez");
 			while(resultSet.next()){
 			rueckgabe.add(new OrgaEinheit(resultSet, db, this));
@@ -277,13 +280,29 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Gibt Strichart zurück, wenns die Strichart nicht gibt null
+	public Strichart getStrichart(String strichbezeichnung){
+		Strichart rueckgabe = null;
+		ResultSet resultSet;
+		try {
+			resultSet = db
+					.executeQueryStatement("SELECT * FROM Stricharten WHERE Strichbez = '" + strichbezeichnung + "'");
+			if(resultSet.next())rueckgabe = new Strichart(resultSet, db);
+			resultSet.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+
+		}
+		return rueckgabe;
+	}
+	
 	//Gibt liste mit allen Stricharten zurück. wenn true übergeben wird werden nur die aktive zurück gegeben.
 	public List<Strichart> getAlleStricharten(boolean nurAktive) {
 		ResultSet resultSet;
 		List<Strichart> listeStricharten = new ArrayList<Strichart>();
 		try {
 			if(!nurAktive)resultSet = db.executeQueryStatement("SELECT * FROM Stricharten");
-			else resultSet = db.executeQueryStatement("SELECT * FROM Strichart WHERE Zustand = 1");
+			else resultSet = db.executeQueryStatement("SELECT * FROM Stricharten WHERE Zustand = 1");
 			while (resultSet.next()) {
 				listeStricharten.add(new Strichart(resultSet, db));
 			}
@@ -295,6 +314,17 @@ public class Zugriffschicht {
 		return listeStricharten;
 	}
 
+	public Arbeitsschritt neuerArbeitsschritt(int idOrgaEinheit, Date datum, int idStrichart,
+			int strichzahl, int kalendarwoche, int jahr){
+		Arbeitsschritt rueckgabe = null;
+		try {
+			rueckgabe = new Arbeitsschritt(idOrgaEinheit, idStrichart, datum, strichzahl, kalendarwoche, jahr, db);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
+		return rueckgabe;
+	}
 	
 
 	

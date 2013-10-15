@@ -89,7 +89,7 @@ public class Webservice {
 	@WebMethod
 	public boolean benutzerErstellen(String benutzer, String passwort,
 			String benutzername, String neuerBenutzerPasswort, int idOE) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.benutzerErstellen(benutzername,
 					neuerBenutzerPasswort, idOE);
 		else
@@ -158,10 +158,11 @@ public class Webservice {
 	}
 
 	// Gibt eine Liste mit allen Organisationseinheiten zurück.
+	//Wenn nurAktive true ist dann werden nur aktive ausgegeben.
 	@WebMethod
-	public List<ComOrgaEinheit> getOrgaEinheiten(String benutzer, String passwort) {
+	public List<ComOrgaEinheit> getOrgaEinheiten(String benutzer, String passwort, boolean nurAktive) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
-			return orgaEinheitVerwaltung.getAlleOrgaEinheiten();
+			return orgaEinheitVerwaltung.getAlleOrgaEinheiten(nurAktive);
 		else
 			return null;
 	}
@@ -229,10 +230,18 @@ public class Webservice {
 
 	@WebMethod
 	public boolean gibtEsStrichelBezeichnungSchon(String benutzer, String passwort,
-			String strichelBezeichnungBezeichnung){
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 1))
-		return strichArtVerwaltung.gibtEsStrichelBezeichnung(strichelBezeichnungBezeichnung);
+			String strichArtBezeichnung){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
+		return strichArtVerwaltung.gibtEsStrichelBezeichnung(strichArtBezeichnung);
 		else return false;
+	}
+	
+	@WebMethod
+	public boolean strichelArtAufInaktivSetzen(String benutzer, String passwort,
+			String strichArtBezeichnung){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return strichArtVerwaltung.strichArtInaktivSetzen(strichArtBezeichnung);
+			else return false;
 	}
 
 	// alle Anforderungen aus 4.1 werden hierüber abgedeckt.
@@ -240,10 +249,10 @@ public class Webservice {
 	// Gibt true zurück wenn erfolgreich.
 	@WebMethod
 	public boolean stricheln(String benutzer, String passwort, int strichart,
-			int strichzahl, boolean aktuelleWoche) {
+			int strichanzahl, boolean aktuelleWoche) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 5)) {
-			return stricheln.schreibeStrichInDatenbank(benutzer, strichart,
-					aktuelleWoche, strichzahl);
+			return stricheln.schreibeStricheInDatenbank(benutzer, strichart,
+					strichanzahl, aktuelleWoche);
 		} else
 			return false;
 	}
@@ -290,7 +299,7 @@ public class Webservice {
 	}
 
 	// beendet den Access auf die Datenbank
-	private void dbZugriffBeenden() {
+	public void dbZugriffBeenden() {
 		try {
 			dbZugriff.disconnect();
 		} catch (SQLException e) {

@@ -34,11 +34,23 @@ private Zugriffschicht dbZugriff;
 	}
 	
 	public boolean strichArtBezeichnungAendern(String bezeichnungAlt, String bezeichnungNeu){
-		return false;
+		if(gibtEsStrichelBezeichnung(bezeichnungNeu))return false;
+		else{
+			Strichart strichart = dbZugriff.getStrichart(bezeichnungAlt);
+			return strichart.setStrichbez(bezeichnungNeu);
+		}
 	}
 
-	public boolean gibtEsStrichelBezeichnung(String strichelBezeichnung) {
-		return false;
+	public boolean gibtEsStrichelBezeichnung(String strichArtBezeichnung) {
+		Strichart strichart = dbZugriff.getStrichart(strichArtBezeichnung);
+		if(strichart == null) return false;
+		else return true;
 	}
 
+	public boolean strichArtInaktivSetzen(String strichArtBezeichnung){
+		if(gibtEsStrichelBezeichnung(strichArtBezeichnung))
+			return dbZugriff.getStrichart(strichArtBezeichnung).setZustand(false);
+		else return false;
+		
+	}
 }

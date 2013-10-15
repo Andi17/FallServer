@@ -6,7 +6,7 @@ public class Optionen {
 	private final static boolean initialbelegungStrichartZustand = true;
 	private final static String jdbcurl = "jdbc:mysql://localhost/Elastico";
 	private final static String jdbcuser = "root";
-	private final static String jdbcpw = "hermann";
+	private final static String jdbcpw = "1234";
 	private final static String webserverURL = "http://localhost:8888/WSExample/simple";
 	// Anforderung 4.3.1: Speicherdauer soll konfigurierbar sein.
 	private static int speicherdauer;
