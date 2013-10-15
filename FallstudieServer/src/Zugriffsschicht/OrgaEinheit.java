@@ -26,19 +26,22 @@ public class OrgaEinheit {
 	}
 
 	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
-			int idLeiterBerechtigung, boolean Zustand, int idMitarbeiterBerechtigung, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
+			int idLeiterBerechtigung, boolean zustand, int idMitarbeiterBerechtigung, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
 		this.db = db;
 		this.dbZugriff = dbZugriff;
+		String stringZustand;
+		if(zustand)stringZustand ="1";
+		else stringZustand ="0";
 		db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
 				"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
-				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
-				"', " + idLeiterBerechtigung + ", " + Zustand +", " + idMitarbeiterBerechtigung +")");
+				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + ", '" + Leitername +
+				"', " + idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
 		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
 				"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
 				"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
 				"Leitername = '" + Leitername +"' AND "+
 				"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
-				"Zustand = " + Zustand +" AND "+
+				"Zustand = " + stringZustand +" AND "+
 				"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" AND ");
 		resultSet.next();
 		werteSetzen(resultSet);
