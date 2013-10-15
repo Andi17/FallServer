@@ -29,11 +29,11 @@ public class OrgaEinheit {
 			int idLeiterBerechtigung, boolean Zustand, int idMitarbeiterBerechtigung, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
 		this.db = db;
 		this.dbZugriff = dbZugriff;
-		db.executeUpdateStatement("INSERT INTO OrgaEinheit (" +
+		db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
 				"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
 				"VALUES (" + idUeberOrgaEinheit + ", " + OrgaEinheitBez + ", " + Leitername +
 				", " + idLeiterBerechtigung + ", " + Zustand +", " + idMitarbeiterBerechtigung +")");
-		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheit WHERE " +
+		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
 				"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
 				"OrgaEinheitBez = " + OrgaEinheitBez +" AND "+
 				"Leitername = " + Leitername +" AND "+
