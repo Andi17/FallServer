@@ -31,12 +31,12 @@ public class OrgaEinheit {
 		this.dbZugriff = dbZugriff;
 		db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
 				"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
-				"VALUES (" + idUeberOrgaEinheit + ", " + OrgaEinheitBez + ", " + Leitername +
-				", " + idLeiterBerechtigung + ", " + Zustand +", " + idMitarbeiterBerechtigung +")");
+				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
+				"', " + idLeiterBerechtigung + ", " + Zustand +", " + idMitarbeiterBerechtigung +")");
 		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
 				"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
-				"OrgaEinheitBez = " + OrgaEinheitBez +" AND "+
-				"Leitername = " + Leitername +" AND "+
+				"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
+				"Leitername = '" + Leitername +"' AND "+
 				"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
 				"Zustand = " + Zustand +" AND "+
 				"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" AND ");
