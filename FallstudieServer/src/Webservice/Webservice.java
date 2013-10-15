@@ -196,10 +196,11 @@ public class Webservice {
 	}
 
 	// Gibt eine Liste von allen möglichen Stricharten zurück.
+	//Ist nurAktive true werden nur die aktiven zurückgegeben.
 	@WebMethod
-	public List<ComStrichart> getStrichelArten(String benutzer, String passwort) {
+	public List<ComStrichart> getStrichelArten(String benutzer, String passwort, boolean nurAktive) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 4)) {
-			return stricheln.getMoeglicheStricharten();
+			return strichArtVerwaltung.getAlleStricharten(nurAktive);
 		} else
 			return null;
 	}
@@ -209,7 +210,7 @@ public class Webservice {
 	public boolean neueStrichelart(String benutzer, String passwort,
 			String strichbezeichnung) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 0))
-			return strichArtVerwaltung.strichArtHinzufuegen(strichbezeichnung);
+			return strichArtVerwaltung.strichArtHinzufuegen(strichbezeichnung, Optionen.isinitialbelegungStrichartZustand());
 		else
 			return false;
 	}

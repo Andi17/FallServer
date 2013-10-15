@@ -189,7 +189,7 @@ public class Zugriffschicht {
 	 * ORGAEINHEIT
 	 */
 	
-	public OrgaEinheit erstelleOrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
+	public OrgaEinheit neueOrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
 			int idLeiterBerechtigung, boolean Zustand, int idMitarbeiterBerechtigung){
 		OrgaEinheit rueckgabe = null;
 		try {
@@ -272,33 +272,18 @@ public class Zugriffschicht {
 		try {
 			rueckgabe = new Strichart(strichbezeichnung, zustand, db);
 		} catch (SQLException e) {
-			System.out.println("Zugriffschicht: neuerBenutzerErstellen: "+e);
+			System.out.println("Zugriffschicht: neueStrichartErstellen: "+e);
 		}
 		return rueckgabe;
 	}
 	
-	public List<Strichart> getAlleMoeglichenStricharten() {
+	//Gibt liste mit allen Stricharten zurück. wenn true übergeben wird werden nur die aktive zurück gegeben.
+	public List<Strichart> getAlleStricharten(boolean nurAktive) {
 		ResultSet resultSet;
 		List<Strichart> listeStricharten = new ArrayList<Strichart>();
 		try {
-			resultSet = db
-					.executeQueryStatement("SELECT * FROM Stricharten WHERE Zustand = true");
-			while (resultSet.next()) {
-				listeStricharten.add(new Strichart(resultSet, db));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-			return null;
-		}
-		return listeStricharten;
-	}
-	public List<Strichart> getAlleStricharten() {
-		ResultSet resultSet;
-		List<Strichart> listeStricharten = new ArrayList<Strichart>();
-		try {
-			resultSet = db
-					.executeQueryStatement("SELECT * FROM Stricharten");
+			if(!nurAktive)resultSet = db.executeQueryStatement("SELECT * FROM Stricharten");
+			else resultSet = db.executeQueryStatement("SELECT * FROM Strichart WHERE Zustand = 1");
 			while (resultSet.next()) {
 				listeStricharten.add(new Strichart(resultSet, db));
 			}

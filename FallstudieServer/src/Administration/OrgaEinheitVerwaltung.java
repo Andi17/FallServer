@@ -75,7 +75,7 @@ public class OrgaEinheitVerwaltung {
 	public boolean neueOrgaEinheit(int idUeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
 			boolean Zustand, int idMitarbeiterBerechtigung) {
-		OrgaEinheit orga = dbZugriff.erstelleOrgaEinheit(idUeberOrgaEinheit,
+		OrgaEinheit orga = dbZugriff.neueOrgaEinheit(idUeberOrgaEinheit,
 				OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand,
 				idMitarbeiterBerechtigung);
 		if (orga == null)
@@ -94,6 +94,7 @@ public class OrgaEinheitVerwaltung {
 			return true;
 	}
 	
+	//Löscht OrgaEinheti mit der id.
 	public boolean OrgaEinheitLoeschen(int idOrgaEinheit){
 		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
 		if(orgaEinheit!=null)return orgaEinheit.loeschen();

@@ -3,6 +3,7 @@ package Optionen;
 public class Optionen {
 	private final static boolean initialbelegungBenutzerGesperrt = false;
 	private final static boolean initialbelegungOrgaEinheitZustand = true;
+	private final static boolean initialbelegungStrichartZustand = true;
 	private final static String jdbcurl = "jdbc:mysql://localhost/Elastico";
 	private final static String jdbcuser = "root";
 	private final static String jdbcpw = "hermann";
@@ -18,6 +19,9 @@ public class Optionen {
 		return initialbelegungOrgaEinheitZustand;
 	}
 
+	public static boolean isinitialbelegungStrichartZustand(){
+		return initialbelegungStrichartZustand;
+	}
 	public static String getJdbcuser() {
 		return jdbcuser;
 	}
