@@ -19,9 +19,13 @@ private Zugriffschicht dbZugriff;
 	}
 	
 	public boolean strichArtHinzufuegen(String strichbezeichnung, boolean zustand){
-		Strichart strichart = dbZugriff.neueStrichartErstellen(strichbezeichnung, zustand);
-		if(strichart==null)return false;
-		else return true;
+		if(!gibtEsStrichelBezeichnung(strichbezeichnung)){
+			Strichart strichart = dbZugriff.neueStrichartErstellen(strichbezeichnung, zustand);
+			if(strichart==null)return false;
+			else return true;
+		}
+		else return false;
+		
 	}
 	
 	public List<ComStrichart> getAlleStricharten(boolean nurAktive){
@@ -47,9 +51,9 @@ private Zugriffschicht dbZugriff;
 		else return true;
 	}
 
-	public boolean strichArtInaktivSetzen(String strichArtBezeichnung){
+	public boolean strichArtZustandSetzen(String strichArtBezeichnung, boolean neuerZustand){
 		if(gibtEsStrichelBezeichnung(strichArtBezeichnung))
-			return dbZugriff.getStrichart(strichArtBezeichnung).setZustand(false);
+			return dbZugriff.getStrichart(strichArtBezeichnung).setZustand(neuerZustand);
 		else return false;
 		
 	}

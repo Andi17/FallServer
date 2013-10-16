@@ -57,7 +57,8 @@ public class Benutzerverwaltung {
 	// Löscht den Benuttzer mit der entsprechenden ID.
 	public boolean benutzerLoeschen(String benutzername) {
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
-		return benutzer.loeschen();
+		if(benutzer!=null) return benutzer.loeschen();
+		else return false;
 	}
 
 	// Ändert die OrgaEinheit. Muss aus dem String die entsprechende ID
@@ -66,7 +67,8 @@ public class Benutzerverwaltung {
 			int idorgaEinheit) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(betroffenerBenutzer);
-		return benutzer.setidOrgaEinheit(idorgaEinheit);
+		if(benutzer!=null) return benutzer.setidOrgaEinheit(idorgaEinheit);
+		else return false;
 	}
 
 	// setzt das Passwort des Benutzers mit der entsprechenden benutzerID auf
@@ -74,13 +76,15 @@ public class Benutzerverwaltung {
 	public boolean setPasswort(String betroffenerBenutzer, String neuesPasswort) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(betroffenerBenutzer);
-		return benutzer.setPasswort(neuesPasswort);
+		if(benutzer!=null) return benutzer.setPasswort(neuesPasswort);
+		else return false;
 	}
 
 	// Sperrt das Passwort.
 	public boolean passwortGesperrtSetzen(String benutzername, boolean gesperrt) {
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
-		return benutzer.setGesperrt(gesperrt);
+		if(benutzer!=null) return benutzer.setGesperrt(gesperrt);
+		else return false;
 	}
 
 	public boolean benutzerSchonVorhanden(String neuerBenutzername) {
@@ -96,12 +100,15 @@ public class Benutzerverwaltung {
 			String neuerBenutzername) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(betroffenerBenutzer);
-		return benutzer.setBenutzername(neuerBenutzername);
+		if(benutzer!=null)return benutzer.setBenutzername(neuerBenutzername);
+		else return false;
 	}
 	
 	public boolean istBenutzerSchonLeiter(String benutzername){
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(benutzername);
-		return benutzer.isLeiter();
+		if(benutzer!=null) return benutzer.isLeiter();
+		else return false;
+		
 	}
 }

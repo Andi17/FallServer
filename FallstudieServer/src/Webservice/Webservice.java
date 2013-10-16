@@ -197,6 +197,8 @@ public class Webservice {
 	}
 
 	// Organisationseinheit hinzufügen.
+	//Geteste, funzt. Eventuell noch überprüfen ob es den Leitername auch wirklich gibt.
+	//TODO: wenn es noch keinen leiter gibt!!
 	@WebMethod
 	public boolean OrgaEinheitErstellen(String benutzer, String passwort,
 			int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
@@ -208,15 +210,25 @@ public class Webservice {
 			return false;
 	}
 
-	//Organisationseinheit löschen.
+	//Den Zustand der Organisationseinheit neu setzen.
+	//Getetstet, funzt.
 	@WebMethod
-	public boolean orgaEinheitLoeschen(String benutzer, String passwort, int idOrgaEinheit){
+	public boolean orgaEinheitZustandAendern(String benutzer, String passwort, int idOrgaEinheit, boolean neuerZustand){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
-			return orgaEinheitVerwaltung.OrgaEinheitLoeschen(idOrgaEinheit);
+			return orgaEinheitVerwaltung.OrgaEinheitZustandAendern(idOrgaEinheit, neuerZustand);
 		else
 			return false;
 	}
 	
+	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort, int idOrgaEinheit, String leitername){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(idOrgaEinheit, leitername);
+		else
+			return false;
+	}
+	
+	//Gibt true zurück wenn es die OrgaEinheit schon gibt. 
+	//Getestet, funzt.
 	@WebMethod
 	public boolean gibtEsOrgaEinheitSchon(String benutzer, String passwort,
 			String orgaEinheitBezeichnung){
@@ -227,6 +239,7 @@ public class Webservice {
 
 	// Gibt eine Liste von allen möglichen Stricharten zurück.
 	//Ist nurAktive true werden nur die aktiven zurückgegeben.
+	//Getestet, funzt.
 	@WebMethod
 	public List<ComStrichart> getStrichelArten(String benutzer, String passwort, boolean nurAktive) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
@@ -236,6 +249,7 @@ public class Webservice {
 	}
 
 	// Anforderung 4.2.10: Eine neue Strichbezeichnung hinzufügen.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean neueStrichelart(String benutzer, String passwort,
 			String strichbezeichnung) {
@@ -246,6 +260,7 @@ public class Webservice {
 	}
 
 	//Ändert die Bezeichnung von einer Strichelart.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean StrichelArtBezeichnungAendern(String benutzer,
 			String passwort, String strichelbezeichnungAlt,
@@ -257,6 +272,8 @@ public class Webservice {
 			return false;
 	}
 
+	//Gibt true zurück wenn es die Strichelbezeichnung shcon gibt.
+	//getestet, funzt.
 	@WebMethod
 	public boolean gibtEsStrichelBezeichnungSchon(String benutzer, String passwort,
 			String strichArtBezeichnung){
@@ -265,17 +282,20 @@ public class Webservice {
 		else return false;
 	}
 	
+	//Setzt den Zustand der StrichelArt neu.
+	//Getestet, funzt.
 	@WebMethod
-	public boolean strichelArtAufInaktivSetzen(String benutzer, String passwort,
-			String strichArtBezeichnung){
+	public boolean strichelArtZustandAendern(String benutzer, String passwort,
+			String strichArtBezeichnung, boolean neuerZustand){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
-			return strichArtVerwaltung.strichArtInaktivSetzen(strichArtBezeichnung);
+			return strichArtVerwaltung.strichArtZustandSetzen(strichArtBezeichnung, neuerZustand);
 			else return false;
 	}
 
 	// alle Anforderungen aus 4.1 werden hierüber abgedeckt.
 	// Speichert Striche entweder für letzte oder diese Woche in die Datenbank.
 	// Gibt true zurück wenn erfolgreich.
+	// Getestet, funzt.
 	@WebMethod
 	public boolean stricheln(String benutzer, String passwort, int strichart,
 			int strichanzahl, boolean aktuelleWoche) {
@@ -308,17 +328,20 @@ public class Webservice {
 
 	// Gibt ein Array aus char zurück, je nachdem welche Fenster angezeigt
 	// werden sollen.
+	//Getestet, funzt.
 	@WebMethod
 	public char[] anzeige(String benutzer, String passwort) {
 		/*
 		 * 'd'->Dash/Strichelfenster 'b'->Adminrechte 's'->Statistikfenster
 		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
-			return rightsManagement.erlaubteAnzeigen();
+			return rightsManagement.erlaubteAnzeigen(benutzer);
 		} else
 			return null;
 	}
 	
+	//gibt alle Berechtigungen zurück. 
+	//Getestet, funzt.
 	@WebMethod
 	public List<ComBerechtigung> getAlleBerechtigungen (String benutzer, String passwort){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {

@@ -1,9 +1,11 @@
 package Zugriffsschicht;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+
 
 import jdbc.JdbcAccess;
 
@@ -23,20 +25,22 @@ public class Arbeitsschritt {
 
 	public Arbeitsschritt(int idOrgaEinheit, int idStrichart, Date datum,
 			int strichanzahl, int kalendarWoche, int jahr, JdbcAccess db) throws SQLException {
-		db.executeUpdateStatement("INSERT INTO Arbeitsschritte ("
-				+ "idOrgaEinheit, idStrichart, Timestamp, Strichanzahl, Kalendarwoche, Jahr) "
-				+ "VALUES ( " + idOrgaEinheit + ", "
-				+ idStrichart + ", "
-				+ dateToSqlTimestamp(datum) + ", " 
-				+ strichanzahl + ", " 
-				+ kalendarWoche + ", " 
-				+ jahr +")");
+		PreparedStatement statement = db.getConnection().prepareStatement("INSERT INTO Arbeitsschritte ("
+				+ "idOrgaEinheit, idStrichart, Timestamp, Strichzahl, Kalendarwoche, Jahr) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?)");
+		statement.setInt(1, idOrgaEinheit);
+		statement.setInt(2, idStrichart);
+		statement.setTimestamp(3, dateToSqlTimestamp(datum));
+		statement.setInt(4, strichanzahl);
+		statement.setInt(5, kalendarWoche);
+		statement.setInt(6, jahr);
+		statement.execute();
 		ResultSet resultSet = db
 				.executeQueryStatement("SELECT * FROM Arbeitsschritte WHERE "
 						+ "idOrgaEinheit = " + idOrgaEinheit 
 						+ " AND idStrichart = " + idStrichart
-						+ " AND Timestamp = " + dateToSqlTimestamp(datum)
-						+ " AND Strichanzahl = "+ strichanzahl
+						+ " AND Timestamp = '" + dateToSqlTimestamp(datum)
+						+ "' AND Strichzahl = "+ strichanzahl
 						+ " AND Kalendarwoche = " + kalendarWoche
 						+ " AND Jahr = " + jahr);
 		if(resultSet.next())werteSetzen(resultSet);

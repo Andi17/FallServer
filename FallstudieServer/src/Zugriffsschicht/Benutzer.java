@@ -25,9 +25,9 @@ public class Benutzer {
 
 	public Benutzer(String Benutzername, String Passwort, int idOrgaEinheit,
 			boolean Gesperrt, JdbcAccess db) throws SQLException{
-		String GesperrtString = "1";
+		String GesperrtString = "0";
 		if (Gesperrt){
-			GesperrtString = "0";
+			GesperrtString = "1";
 		}
 		db.executeUpdateStatement("INSERT INTO Benutzer (Benutzername, " +
 				"Passwort, idOrgaEinheit, Gesperrt) " +

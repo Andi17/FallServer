@@ -15,9 +15,9 @@ public class Strichart {
 			JdbcAccess db) throws SQLException {
 		db.executeUpdateStatement("INSERT INTO Stricharten (StrichBez, " +
 				"Zustand) " +
-				"VALUES ( " + StrichBez + ", " + Zustand + ")");
+				"VALUES ( '" + StrichBez + "', " + Zustand + ")");
 		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM Stricharten WHERE " +
-				"StrichBez = " + StrichBez +" AND "+
+				"StrichBez = '" + StrichBez + "' AND "+
 				"Zustand = " + Zustand );
 		resultSet.next();
 		werteSetzen(resultSet);

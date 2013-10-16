@@ -109,9 +109,25 @@ public class Rechte {
 		return rueckgabe;
 	}
 
-	public char[] erlaubteAnzeigen() {
+	public char[] erlaubteAnzeigen(String benutzername) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Character> liste = new ArrayList<Character>();
+		int LeiterRechte = this.getRechtLeiter(benutzername);
+		int MitarbeiterRechte = this.getRechtMitarbeiter(benutzername);
+		if(LeiterRechte == 1 || MitarbeiterRechte == 1){
+			liste.add('a');
+		}
+		if(LeiterRechte == 2 || MitarbeiterRechte == 2){
+			liste.add('d');
+		}
+		if(LeiterRechte == 3 || LeiterRechte == 4 || MitarbeiterRechte == 3|| MitarbeiterRechte == 4){
+			liste.add('s');
+		}
+		char[] rueckgabe = new char[liste.size()];
+		for(int i=0; i<liste.size(); i++){
+			rueckgabe[i] = liste.get(i);
+		}
+		return rueckgabe;
 	}
 
 }

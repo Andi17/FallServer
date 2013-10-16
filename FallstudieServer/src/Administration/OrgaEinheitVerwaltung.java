@@ -97,12 +97,19 @@ public class OrgaEinheitVerwaltung {
 			return true;
 	}
 	
-	//Löscht OrgaEinheit mit der id.
-	public boolean OrgaEinheitLoeschen(int idOrgaEinheit){
+	//Setzt die OrgaEinheit mit der id auf inaktiv.
+	public boolean OrgaEinheitZustandAendern(int idOrgaEinheit, boolean neuerZustand){
 		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
 		if(orgaEinheit!=null){
-			orgaEinheit.setZustand(false);
-			return true;
+			return orgaEinheit.setZustand(neuerZustand);
+		}
+		else return false;
+	}
+	
+	public boolean OrgaEinheitLeiterAendern(int idOrgaEinheit, String leitername){
+		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+		if(orgaEinheit!=null && !dbZugriff.getBenutzervonBenutzername(leitername).isLeiter()){
+			return orgaEinheit.setLeitername(leitername);
 		}
 		else return false;
 	}

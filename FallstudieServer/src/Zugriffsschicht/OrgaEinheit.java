@@ -32,20 +32,38 @@ public class OrgaEinheit {
 		String stringZustand;
 		if(zustand)stringZustand ="1";
 		else stringZustand ="0";
-		db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
-				"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
-				"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
-				"', " + idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
-		ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
-				"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
-				"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
-				"Leitername = '" + Leitername +"' AND "+
-				"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
-				"Zustand = " + stringZustand +" AND "+
-				"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
-		resultSet.next();
-		werteSetzen(resultSet);
-		resultSet.close();
+		if(Leitername==null){
+			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
+					"idUeberOrgaEinheit, OrgaEinheitBez, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
+					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', " 
+					+ idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
+					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
+					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
+					"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
+					"Zustand = " + stringZustand +" AND "+
+					"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
+			resultSet.next();
+			werteSetzen(resultSet);
+			resultSet.close();
+		}
+				
+		else {
+			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
+					"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
+					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
+					"', " + idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
+					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
+					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
+					"Leitername = '" + Leitername +"' AND "+
+					"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
+					"Zustand = " + stringZustand +" AND "+
+					"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
+			resultSet.next();
+			werteSetzen(resultSet);
+			resultSet.close();
+		}
 	}
 	
 	public void werteSetzen(ResultSet resultSet) throws SQLException{
@@ -111,41 +129,59 @@ public class OrgaEinheit {
 		return idMitarbeiterBerechtigung;
 	}
 
-	public void setIdUeberOrgaEinheit(int idUeberOrgaEinheit) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET idUeberOrgaEinheit = " + idUeberOrgaEinheit +" WHERE idOrgaEinheit = " + idOrgaEinheit);
-		this.idUeberOrgaEinheit = idUeberOrgaEinheit;
+	public boolean setOrgaEinheitBez(String orgaEinheitBez){
+		try {
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = " + orgaEinheitBez +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			OrgaEinheitBez = orgaEinheitBez;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setOrgaEinheitBez(String orgaEinheitBez) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET orgaEinheitBez = " + orgaEinheitBez +" WHERE idOrgaEinheit = " + idOrgaEinheit);
-		OrgaEinheitBez = orgaEinheitBez;
+	public boolean setLeitername(String leitername) {
+		try {
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = '" + leitername + "' WHERE idOrgaEinheit = " + idOrgaEinheit);
+			Leitername = leitername;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setLeitername(String leitername) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET Leitername = " + leitername +" WHERE idOrgaEinheit = " + idOrgaEinheit);
-		Leitername = leitername;
+	public boolean setIdLeiterBerechtigung(int idLeiterBerechtigung) {
+		try {
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idLeiterBerechtigung = " + idLeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			this.idLeiterBerechtigung = idLeiterBerechtigung;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setIdLeiterBerechtigung(int idLeiterBerechtigung) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET idLeiterBerechtigung = " + idLeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
-		this.idLeiterBerechtigung = idLeiterBerechtigung;
-	}
-
-	public void setZustand(boolean neuerZustand){
+	public boolean setZustand(boolean neuerZustand){
 		try {
 			String stringZustand;
 			if(neuerZustand)stringZustand = "1";
 			else stringZustand = "0";
-			db.executeUpdateStatement("UPDATE OrgaEinheit SET Zustand = " + stringZustand +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Zustand = " + stringZustand +" WHERE idOrgaEinheit = " + idOrgaEinheit);
 			zustand = neuerZustand;
+			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 	}
 
 	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+		db.executeUpdateStatement("UPDATE OrgaEinheiten SET idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 	}
 
