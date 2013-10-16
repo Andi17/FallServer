@@ -10,6 +10,7 @@ import javax.xml.ws.Endpoint;
 import Com.ComBenutzer;
 import Com.ComBerechtigung;
 import Com.ComOrgaEinheit;
+import Com.ComStatistik;
 import Com.ComStrichart;
 import Optionen.Optionen;
 import Statistikerstellung.Statistikerstellung;
@@ -22,7 +23,8 @@ public class Testklasse {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Webservice webservice = new Webservice();
+		Timer jedeWocheStatistikErstellen = new Timer();
+		Webservice webservice = new Webservice(jedeWocheStatistikErstellen);
 		Endpoint endpoint = Endpoint.publish(Optionen.getWebserverURL(),
 				webservice);
 		// Hier wartet der Server
@@ -103,7 +105,16 @@ public class Testklasse {
 //		}
 //	    timer.cancel();
 		
+		List<ComStatistik> statistiken = webservice.getStrichartStatistik("abteilungsmitarbeiter", "2", 1, 2013);
+		for (int i=0; i<statistiken.size(); i++){
+			ComStatistik stat = statistiken.get(i);
+			System.out.println("OEBez: " + stat.getOrgaEinheitBez() + "\t StrichBez: " + stat.getStrichBez() + "\t Anzahl: " + stat.getStrichzahl() 
+					+ " \t Hierarchieebene: " + stat.getHierarchiestufe());
+		}
 		
+		
+		
+		jedeWocheStatistikErstellen.cancel();
 		endpoint.stop();
 		webservice.dbZugriffBeenden();
 		System.out.println("Web service Server stopped");

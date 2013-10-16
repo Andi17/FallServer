@@ -6,25 +6,25 @@ public class ComStatistik {
 	private int KalenderWoche;
 	private int Jahr;
 	private String StrichBez;
+	private int idStrichBez;
 	private int Strichzahl;
 	private int Hierarchiestufe;
-	
-	public ComStatistik(int idOrgaEinheit, String OrgaEinheitBez, int KalenderWoche, int Jahr, String StrichBez, int Strichzahl, int Hierarchiestufe){
+
+	public ComStatistik(int idOrgaEinheit, String OrgaEinheitBez,
+			int KalenderWoche, int Jahr, String StrichBez, int idStrichBez,
+			int Strichzahl, int Hierarchiestufe) {
 		this.idOrgaEinheit = idOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
 		this.KalenderWoche = KalenderWoche;
 		this.Jahr = Jahr;
 		this.StrichBez = StrichBez;
+		this.setIdStrichBez(idStrichBez);
 		this.Strichzahl = Strichzahl;
 		this.Hierarchiestufe = Hierarchiestufe;
 	}
 
 	public int getIdOrgaEinheit() {
 		return idOrgaEinheit;
-	}
-
-	public void setIdOrgaEinheit(int idOrgaEinheit) {
-		this.idOrgaEinheit = idOrgaEinheit;
 	}
 
 	public String getOrgaEinheitBez() {
@@ -43,12 +43,20 @@ public class ComStatistik {
 		return StrichBez;
 	}
 
+	public int getIdStrichBez() {
+		return idStrichBez;
+	}
+
 	public int getStrichzahl() {
 		return Strichzahl;
 	}
 
 	public int getHierarchiestufe() {
 		return Hierarchiestufe;
+	}
+
+	public void setIdOrgaEinheit(int idOrgaEinheit) {
+		this.idOrgaEinheit = idOrgaEinheit;
 	}
 
 	public void setOrgaEinheitBez(String orgaEinheitBez) {
@@ -73,6 +81,10 @@ public class ComStatistik {
 
 	public void setHierarchiestufe(int hierarchiestufe) {
 		Hierarchiestufe = hierarchiestufe;
+	}
+
+	public void setIdStrichBez(int idStrichBez) {
+		this.idStrichBez = idStrichBez;
 	}
 
 }

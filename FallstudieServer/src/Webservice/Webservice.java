@@ -3,8 +3,8 @@ package Webservice;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -14,7 +14,6 @@ import jdbc.JdbcAccess;
 
 import RightsManagement.Rechte;
 import Administration.Benutzerverwaltung;
-import Administration.Berechtigungsverwaltung;
 import Administration.OrgaEinheitVerwaltung;
 import Administration.StrichArtVerwaltung;
 import Com.ComBenutzer;
@@ -24,6 +23,7 @@ import Com.ComStatistik;
 import Com.ComStrichart;
 import Optionen.Optionen;
 import Statistikausgabe.Statistikausgabe;
+import Statistikerstellung.Statistikerstellung;
 import Stricheln.Stricheln;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -48,9 +48,8 @@ public class Webservice {
 	private Statistikausgabe statistikausgabe;
 	private OrgaEinheitVerwaltung orgaEinheitVerwaltung;
 	private StrichArtVerwaltung strichArtVerwaltung;
-	private Berechtigungsverwaltung berechtigungsverwaltung;
 
-	public Webservice() {
+	public Webservice(Timer jedeWocheStatistikErstellen) {
 		try {
 			JdbcAccess jdbc = new JdbcAccess(Optionen.getJdbcurl(),
 					Optionen.getJdbcuser(), Optionen.getJdbcpw());
@@ -62,6 +61,25 @@ public class Webservice {
 			statistikausgabe = new Statistikausgabe(dbZugriff);
 			orgaEinheitVerwaltung = new OrgaEinheitVerwaltung(dbZugriff);
 			strichArtVerwaltung = new StrichArtVerwaltung(dbZugriff);
+			
+		    Calendar date = Calendar.getInstance();
+		    date.set(
+		      Calendar.DAY_OF_WEEK,
+		      Calendar.MONDAY
+		    );
+		    date.set(Calendar.HOUR, 1);
+		    date.set(Calendar.MINUTE, 0);
+		    date.set(Calendar.SECOND, 0);
+		    date.set(Calendar.MILLISECOND, 0);
+		    // Schedule to run every Sunday in midnight
+		    jedeWocheStatistikErstellen.schedule(
+		      new Statistikerstellung(dbZugriff),
+		      date.getTime(),
+		      1000 * 60 * 60 * 24 * 7
+		    );
+			
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -315,30 +333,23 @@ public class Webservice {
 	// Methode bis jetzt erst einmal nur Grundfunktionalität. Muss noch
 	// erweitert werden oder neue Methode.
 	@WebMethod
-	public List<ComStatistik> getStatistik(String benutzer, String passwort,
-			int kalendarwoche, int jahr) {
-		/*
-		 * TODO : Anstatt String[] als übergabewert die Klasse Statistik
-		 * übergeben. bei mehreren Statistiken : List<Statistik> Der Server
-		 * sucht die OE des Benutzers und gibt alle Statistiken dazu aus.
-		 */
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
-			return statistikausgabe.getStatistik(benutzer, kalendarwoche, jahr);
-		}
-		return null;
-	}
-	
-	public static List<ComStatistik> gibBereichsStatistik(int kw, int jahr) { 
+	public List<ComStatistik> getBereichsStatistik(String benutzer, String passwort, int kalendarwoche, int jahr) { 
 		/*Übergaben: int Jahr ist immer >0  int kw=0 --> Es soll die 
 		 * Jahresstatistik geliefert werden  Liste wird nach Bereichen 
-		 * sortiert ausgegeben */ 
+		 * sortiert ausgegeben */
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
+			return statistikausgabe.getBereichsStatistik(benutzer, kalendarwoche, jahr);
+		}
 		return null;
 		}
-
-	public static List<ComStatistik> gibKategorieStatistik(int kw, int jahr) {
+	@WebMethod
+	public List<ComStatistik> getStrichartStatistik(String benutzer, String passwort, int kalendarwoche, int jahr) {
 		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
 		 *  gibBereichsStatistik) * Liste wird anders sortiert, (nach 
 		 *  Kategorie übergeben) */
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
+			return statistikausgabe.getStrichartStatistik(benutzer, kalendarwoche, jahr);
+		}
 		return null; 
 	}	
 	
@@ -395,8 +406,9 @@ public class Webservice {
 	 * Den Service mittels in Java 6 enthaltenen HTTP-Server veröffentlichen
 	 */
 	public static void main(String[] args) {
+		Timer jedeWocheStatistikErstellen = new Timer();
 
-		Webservice webservice = new Webservice();
+		Webservice webservice = new Webservice(jedeWocheStatistikErstellen);
 		Endpoint endpoint = Endpoint.publish(Optionen.getWebserverURL(),
 				webservice);
 		// Hier wartet der Server
@@ -407,6 +419,7 @@ public class Webservice {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		jedeWocheStatistikErstellen.cancel();
 		endpoint.stop();
 		webservice.dbZugriffBeenden();
 		System.out.println("Web service Server stopped");

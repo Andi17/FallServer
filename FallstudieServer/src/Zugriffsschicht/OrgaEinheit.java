@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Com.ComStatistik;
+
 import jdbc.JdbcAccess;
 
 public class OrgaEinheit {
@@ -75,22 +77,6 @@ public class OrgaEinheit {
 				.getInt("idLeiterBerechtigung");
 		this.zustand = resultSet.getBoolean("Zustand");
 		this.idMitarbeiterBerechtigung = resultSet.getInt("idMitarbeiterBerechtigung");
-	}
-	
-	public List<OrgaEinheit> getUnterOrgaEinheiten(){
-		ResultSet resultSet;
-		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
-		try {
-			resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idUeberOrgaEinheit = " + this.idOrgaEinheit);
-			while(resultSet.next()){
-			rueckgabe.add(new OrgaEinheit(resultSet, db, dbZugriff));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return rueckgabe;
 	}
 	
 	public String getLeiterBerechtigungBezeichnung(){
@@ -213,5 +199,48 @@ public class OrgaEinheit {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	private List<OrgaEinheit> getUnterOrgaEinheiten(){
+		ResultSet resultSet;
+		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
+		try {
+			resultSet = db
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idUeberOrgaEinheit = " + this.idOrgaEinheit);
+			while(resultSet.next()){
+			rueckgabe.add(new OrgaEinheit(resultSet, db, dbZugriff));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return rueckgabe;
+	}
+
+	
+	public List<ComStatistik> getStatistik (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		for(int i=0; i<unterOrga.size(); i++){
+			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+			rueckgabe.addAll(unterOrga.get(i).getStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
+		}
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT * FROM Statistiken WHERE " +
+					"idOrgaEinheit = '" + idOrgaEinheit + "' AND " +
+					"Kalenderwoche = '" + kalendarwoche + "' AND " +
+					"Jahr = '" + jahr + "' AND " +
+					"idStrichart = '" + idStrichart + "'");
+			int strichzahl;
+			if(result.next()){
+				strichzahl = result.getInt("Strichzahl");
+			}else{
+				strichzahl = 0;
+			}
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rueckgabe;
 	}
 }
