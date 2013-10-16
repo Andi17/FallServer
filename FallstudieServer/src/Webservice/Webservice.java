@@ -70,15 +70,17 @@ public class Webservice {
 	// Gibt true zurück wenn login geklappt hat, wahrscheinlich ändern wir es
 	// noch zum char
 	// dann kann der grund mit zurück gegeben werden.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean login(String benutzer, String passwort) {
 		return rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer);
 	}
 
 	// Gibt eine Liste mit allen Benutzern zurück.
+	//Getestet, funzt.
 	@WebMethod
 	public List<ComBenutzer> getBenutzer(String benutzer, String passwort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
 			return benutzerVerwaltung.getAlleBenutzer();
 		else
 			return null;
@@ -86,6 +88,7 @@ public class Webservice {
 
 	// Methode nur für Admin. Anforderung 4.2.1: Erstellt neuen Benutzer.
 	// gibt true zurück wenn alles geklappt hat.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzerErstellen(String benutzer, String passwort,
 			String benutzername, String neuerBenutzerPasswort, int idOE) {
@@ -98,10 +101,11 @@ public class Webservice {
 
 	// Anforderung 4.2.2: Löscht den Benutzer mit der entsprechenden ID aus der
 	// Datenbank.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzerLoeschen(String benutzer, String passwort,
 			String zuLoeschenderBenutzer) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.benutzerLoeschen(zuLoeschenderBenutzer);
 		else
 			return false;
@@ -109,42 +113,54 @@ public class Webservice {
 
 	// Anforderung 4.2.3: Ändert den Benutzer mit der entsprechenden ID zu der
 	// entsprechenden Organisationseinheit.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzerOrgaEinheitAendern(String benutzer, String passwort,
 			String benutzername, int idorgaEinheit) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.orgaEinheitAendern(benutzername,
 					idorgaEinheit);
 		else
 			return false;
 	}
 
-	// Anforderung Arni: Aendert Benutzername.
+	// Aendert Benutzername.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzernameAendern(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuerBenutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.Benutzernameaendern(betroffenerBenutzer,
 					neuerBenutzername);
 		else
 			return false;
 	}
+	
+	@WebMethod
+	public boolean istBenutzerSchonLeiter(String benutzer, String passwort, String benutzername){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
+			return benutzerVerwaltung.istBenutzerSchonLeiter(benutzername);
+		else
+			return false;
+	}
 
-	// Anforderung 4.2.5: Setzt das Passwort zurück.
+	// Fragt, ob es benutzer schon gibt.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean gibtesBenutzerschon(String benutzer, String passwort,
 			String neuerBenutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
 			return benutzerVerwaltung.benutzerSchonVorhanden(neuerBenutzername);
 		else
 			return false;
 	}
 
 	// Anforderung 4.2.5: Setzt das Passwort zurück.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean neuesPasswortSetzen(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuesPasswort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.setPasswort(betroffenerBenutzer,
 					neuesPasswort);
 		else
@@ -152,16 +168,27 @@ public class Webservice {
 	}
 
 	// Anforderung 4.2.6: Sperrt den Benutzer. Kein Rückgabewert.
+	//Getestet, funzt.
 	@WebMethod
 	public void passwortSperren(String benutzername) {
-		benutzerVerwaltung.passwortSperren(benutzername);
+		benutzerVerwaltung.passwortGesperrtSetzen(benutzername, true);
+	}
+	
+	//Anforderung 4.2.6: Entsperrt den Benutzer wieder. Gibt true zurück wenn geklappt.
+	//Getestet, funzt.
+	@WebMethod
+	public boolean passwortEntsperren(String benutzer, String passwort, String benutzername){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return benutzerVerwaltung.passwortGesperrtSetzen(benutzername, false);
+		else
+			return false;
 	}
 
 	// Gibt eine Liste mit allen Organisationseinheiten zurück.
 	//Wenn nurAktive true ist dann werden nur aktive ausgegeben.
 	@WebMethod
 	public List<ComOrgaEinheit> getOrgaEinheiten(String benutzer, String passwort, boolean nurAktive) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 101))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
 			return orgaEinheitVerwaltung.getAlleOrgaEinheiten(nurAktive);
 		else
 			return null;
@@ -172,7 +199,7 @@ public class Webservice {
 	public boolean OrgaEinheitErstellen(String benutzer, String passwort,
 			int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
 			int idLeiterBerechtigung, int idMitarbeiterBerechtigung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.neueOrgaEinheit(idUeberOrgaEinheit,
 					OrgaEinheitBez, Leitername, idLeiterBerechtigung, Optionen.isInitialbelegungOrgaEinheitZustand(), idMitarbeiterBerechtigung);
 		else
@@ -200,7 +227,7 @@ public class Webservice {
 	//Ist nurAktive true werden nur die aktiven zurückgegeben.
 	@WebMethod
 	public List<ComStrichart> getStrichelArten(String benutzer, String passwort, boolean nurAktive) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 4)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
 			return strichArtVerwaltung.getAlleStricharten(nurAktive);
 		} else
 			return null;
@@ -210,7 +237,7 @@ public class Webservice {
 	@WebMethod
 	public boolean neueStrichelart(String benutzer, String passwort,
 			String strichbezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 0))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return strichArtVerwaltung.strichArtHinzufuegen(strichbezeichnung, Optionen.isinitialbelegungStrichartZustand());
 		else
 			return false;
@@ -221,7 +248,7 @@ public class Webservice {
 	public boolean StrichelArtBezeichnungAendern(String benutzer,
 			String passwort, String strichelbezeichnungAlt,
 			String strichelbezeichnungNeu) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 0))
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return strichArtVerwaltung.strichArtBezeichnungAendern(
 					strichelbezeichnungAlt, strichelbezeichnungNeu);
 		else
@@ -250,7 +277,7 @@ public class Webservice {
 	@WebMethod
 	public boolean stricheln(String benutzer, String passwort, int strichart,
 			int strichanzahl, boolean aktuelleWoche) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 5)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.stricheln)) {
 			return stricheln.schreibeStricheInDatenbank(benutzer, strichart,
 					strichanzahl, aktuelleWoche);
 		} else
@@ -271,7 +298,7 @@ public class Webservice {
 		 * übergeben. bei mehreren Statistiken : List<Statistik> Der Server
 		 * sucht die OE des Benutzers und gibt alle Statistiken dazu aus.
 		 */
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 3)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
 			return statistikausgabe.getStatistik(benutzer, kalendarwoche, jahr);
 		}
 		return null;
@@ -284,7 +311,7 @@ public class Webservice {
 		/*
 		 * 'd'->Dash/Strichelfenster 'b'->Adminrechte 's'->Statistikfenster
 		 */
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, 2)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
 			return rightsManagement.erlaubteAnzeigen();
 		} else
 			return null;

@@ -15,7 +15,7 @@ public class Benutzer {
 	private String benutzername;
 	private String Passwort;
 	private int idOrgaEinheit;
-	private boolean Gesperrt;
+	private boolean gesperrt;
 
 	public Benutzer(ResultSet resultSet, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException {
 		this.db = db;
@@ -43,7 +43,7 @@ public class Benutzer {
 		this.benutzername = resultSet.getString("Benutzername");
 		this.Passwort = resultSet.getString("Passwort");
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
-		this.Gesperrt = resultSet.getBoolean("Gesperrt");
+		this.gesperrt = resultSet.getBoolean("Gesperrt");
 	}
 	
 	public String getOrgaEinheitBezeichnung(){
@@ -64,35 +64,84 @@ public class Benutzer {
 		return idOrgaEinheit;
 	}
 
-	public boolean getGesperrt() {
-		return Gesperrt;
+	public boolean isGesperrt() {
+		return gesperrt;
+	}
+	
+	public boolean isLeiter() {
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Leitername = '" + benutzername + "'");
+			if(result.next())return true;
+			else return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setGesperrt(boolean gesperrt) {
-		Gesperrt = gesperrt;
+	public boolean setGesperrt(boolean gesperrt) {
+		String stringGesperrt;
+		if(gesperrt) stringGesperrt = "1";
+		else stringGesperrt = "0";
+		try {
+			db.executeUpdateStatement("UPDATE Benutzer SET Gesperrt = " + stringGesperrt + " WHERE Benutzername = '"+benutzername+"'" );
+			this.gesperrt = gesperrt;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setBenutzername(String neuerBenutzername) throws SQLException{
-
-		db.executeUpdateStatement("UPDATE Benutzer SET Benutzername = '" + neuerBenutzername+"' WHERE Benutzername = '"+benutzername+"'");
-		db.executeUpdateStatement("UPDATE OrgaEinheit SET Leitername = '" + neuerBenutzername + "' WHERE Leitername = '" + benutzername + "'");
-		this.benutzername = neuerBenutzername;
+	public boolean setBenutzername(String neuerBenutzername){
+		try {
+			db.executeUpdateStatement("UPDATE Benutzer SET Benutzername = '" + neuerBenutzername+"' WHERE Benutzername = '"+benutzername+"'");
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = '" + neuerBenutzername + "' WHERE Leitername = '" + benutzername + "'");
+			this.benutzername = neuerBenutzername;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 
 	}
 
-	public void setPasswort(String passwort) throws SQLException{
-		db.executeUpdateStatement("UPDATE Benutzer SET Passwort = '" + passwort+"' WHERE Benutzername = '"+benutzername+"'");
-		this.Passwort = passwort;
+	public boolean setPasswort(String passwort){
+		try {
+			db.executeUpdateStatement("UPDATE Benutzer SET Passwort = '" + passwort+"' WHERE Benutzername = '"+benutzername+"'");
+			this.Passwort = passwort;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void setidOrgaEinheit(int aktuelleOE) throws SQLException{
-		db.executeUpdateStatement("UPDATE Benutzer SET idOrgaEinheit = '" + aktuelleOE+"' WHERE Benutzername = '"+benutzername+"'");
-		this.idOrgaEinheit = aktuelleOE;
+	public boolean setidOrgaEinheit(int aktuelleOE){
+		try {
+			db.executeUpdateStatement("UPDATE Benutzer SET idOrgaEinheit = '" + aktuelleOE+"' WHERE Benutzername = '"+benutzername+"'");
+			this.idOrgaEinheit = aktuelleOE;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void loeschen() throws SQLException {
-		db.executeUpdateStatement("DELETE FROM Benutzer WHERE Benutzername = '"+benutzername+"'");
-		
+	public boolean loeschen() {
+		try {
+			db.executeUpdateStatement("DELETE FROM Benutzer WHERE Benutzername = '"+benutzername+"'");
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	

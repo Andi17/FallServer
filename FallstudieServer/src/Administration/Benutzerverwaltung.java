@@ -1,6 +1,5 @@
 package Administration;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +21,11 @@ public class Benutzerverwaltung {
 	// nicht (false)
 	public boolean benutzerErstellen(String benutzername, String passwort,
 			int oeEinheit) {
-
-		Benutzer neu = dbZugriff.neuerBenutzerErstellen(benutzername, passwort,
-				oeEinheit, Optionen.isInitialbelegungbenutzergesperrt());
+		Benutzer neu = null;
+		if (!benutzerSchonVorhanden(benutzername)) {
+			neu = dbZugriff.neuerBenutzerErstellen(benutzername, passwort,
+					oeEinheit, Optionen.isInitialbelegungbenutzergesperrt());
+		}
 		if (neu == null) {
 			return false;
 		} else {
@@ -45,8 +46,10 @@ public class Benutzerverwaltung {
 	public List<ComBenutzer> getAlleBenutzer() {
 		List<Benutzer> alleBenutzerListe = dbZugriff.getAlleBenutzer();
 		List<ComBenutzer> rueckgabe = new ArrayList<ComBenutzer>();
-		for (Benutzer benutzer : alleBenutzerListe){
-				rueckgabe.add(new ComBenutzer(benutzer.getBenutzername(), benutzer.getPasswort(), benutzer.getAktuelleOE(), benutzer.getOrgaEinheitBezeichnung(), benutzer.getGesperrt()));
+		for (Benutzer benutzer : alleBenutzerListe) {
+			rueckgabe.add(new ComBenutzer(benutzer.getBenutzername(), benutzer
+					.getPasswort(), benutzer.getAktuelleOE(), benutzer
+					.getOrgaEinheitBezeichnung(), benutzer.isGesperrt()));
 		}
 		return rueckgabe;
 	}
@@ -54,58 +57,36 @@ public class Benutzerverwaltung {
 	// Löscht den Benuttzer mit der entsprechenden ID.
 	public boolean benutzerLoeschen(String benutzername) {
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
-		if(benutzer != null){
-		try{
-		benutzer.loeschen();
-		return true;
-		}
-		catch(SQLException e){
-			System.out.println(e);
-		}
-		}
-		return false;
+		return benutzer.loeschen();
 	}
 
 	// Ändert die OrgaEinheit. Muss aus dem String die entsprechende ID
 	// herrauslesen.
-	public boolean orgaEinheitAendern(String betroffenerBenutzer, int idorgaEinheit) {
-		Benutzer benutzer =dbZugriff.getBenutzervonBenutzername(betroffenerBenutzer);
-		if (benutzer != null){
-			try{
-			benutzer.setidOrgaEinheit(idorgaEinheit);
-			return true;
-			}
-			catch (SQLException e){
-				System.out.println(e);
-			}
-		}
-		return false;
+	public boolean orgaEinheitAendern(String betroffenerBenutzer,
+			int idorgaEinheit) {
+		Benutzer benutzer = dbZugriff
+				.getBenutzervonBenutzername(betroffenerBenutzer);
+		return benutzer.setidOrgaEinheit(idorgaEinheit);
 	}
 
 	// setzt das Passwort des Benutzers mit der entsprechenden benutzerID auf
 	// das neue Passwort
 	public boolean setPasswort(String betroffenerBenutzer, String neuesPasswort) {
-		Benutzer benutzer =dbZugriff.getBenutzervonBenutzername(betroffenerBenutzer);
-		if (benutzer != null){
-			try{
-			benutzer.setPasswort(neuesPasswort);
-			return true;
-			}
-			catch (SQLException e){
-				System.out.println(e);
-			}
-		}
-		return false;
+		Benutzer benutzer = dbZugriff
+				.getBenutzervonBenutzername(betroffenerBenutzer);
+		return benutzer.setPasswort(neuesPasswort);
 	}
 
 	// Sperrt das Passwort.
-	public void passwortSperren(String benutzername) {
-
+	public boolean passwortGesperrtSetzen(String benutzername, boolean gesperrt) {
+		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
+		return benutzer.setGesperrt(gesperrt);
 	}
 
 	public boolean benutzerSchonVorhanden(String neuerBenutzername) {
-		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(neuerBenutzername);
-		if (benutzer != null){
+		Benutzer benutzer = dbZugriff
+				.getBenutzervonBenutzername(neuerBenutzername);
+		if (benutzer != null) {
 			return true;
 		}
 		return false;
@@ -113,16 +94,14 @@ public class Benutzerverwaltung {
 
 	public boolean Benutzernameaendern(String betroffenerBenutzer,
 			String neuerBenutzername) {
-		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(betroffenerBenutzer);
-		if (benutzer != null){
-			try{
-			benutzer.setBenutzername(neuerBenutzername);
-			return true;
-			}
-			catch (SQLException e){
-				System.out.println(e);
-			}
-		}
-		return false;
+		Benutzer benutzer = dbZugriff
+				.getBenutzervonBenutzername(betroffenerBenutzer);
+		return benutzer.setBenutzername(neuerBenutzername);
+	}
+	
+	public boolean istBenutzerSchonLeiter(String benutzername){
+		Benutzer benutzer = dbZugriff
+				.getBenutzervonBenutzername(benutzername);
+		return benutzer.isLeiter();
 	}
 }

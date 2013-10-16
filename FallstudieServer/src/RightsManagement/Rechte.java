@@ -10,11 +10,11 @@ import Zugriffsschicht.Zugriffschicht;
 
 public class Rechte {
 	
-	public static int alleBenutzer = 1;
-	public static int nurAdmin = 2;
-	public static int stricheln = 3;
-	public static int nurEigeneGruppenEinsehbar = 4;
-	public static int alleGruppenEinsehbar = 5;
+	public static int nurAdmin = 1;
+	public static int stricheln = 2;
+	public static int nurEigeneGruppenEinsehbar = 3;
+	public static int alleGruppenEinsehbar = 4;
+	public static int alleBenutzer = 5;
 	
 	private Zugriffschicht dbZugriff;
 
@@ -29,7 +29,7 @@ public class Rechte {
 		 * Benutzername.
 		 */
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(Benutzername);
-		if (benutzer!=null && benutzer.getPasswort().equals(Passwort)){
+		if (benutzer!=null && benutzer.getPasswort().equals(Passwort) && !benutzer.isGesperrt()){
 			return true;
 		}
 		return false;
@@ -55,10 +55,10 @@ public class Rechte {
 		else return 0;
 	}
 
-	private int[] getRechtemoeglich(int Vorgang) {
-		/*
+	/*private int[] getRechtemoeglich(int Vorgang) {
+		
 		 * gibt alle Rechte zum Webservice zurück.
-		 */
+		 
 		List<Berechtigung> BerechtigungListe = dbZugriff.getBerechtigungenZuWebmethode(Vorgang);
 		
 		int[] ret = null;
@@ -71,7 +71,7 @@ public class Rechte {
 			}
 		}
 		return ret;
-	}
+	}*/
 
 	public boolean vorgangMoeglich(String Benutzername, String Passwort,
 			int Vorgang) {
@@ -80,18 +80,19 @@ public class Rechte {
 		 * mit erhaltenen rechten möglich ist.
 		 */
 		if (login(Benutzername, Passwort)) {
-			if (Vorgang == 1) {
+			if (Vorgang == alleBenutzer) {
 				return true;
 			}
 			else {
 				int LeiterRechte = this.getRechtLeiter(Benutzername);
 				int MitarbeiterRechte = this.getRechtMitarbeiter(Benutzername);
-				int[] MoeglicheRechte = this.getRechtemoeglich(Vorgang);
-				for(int i = 0; i < MoeglicheRechte.length;i++){
-					if (MoeglicheRechte[i] == MitarbeiterRechte || MoeglicheRechte[i] == LeiterRechte){
-						return true;
-					}					
-				}
+				if(LeiterRechte == Vorgang || MitarbeiterRechte == Vorgang)return true;
+//				int[] MoeglicheRechte = this.getRechtemoeglich(Vorgang);
+//				for(int i = 0; i < MoeglicheRechte.length;i++){
+//					if (MoeglicheRechte[i] == MitarbeiterRechte || MoeglicheRechte[i] == LeiterRechte){
+//						return true;
+//					}					
+//				}
 			}	
 		}
 		return false;
