@@ -218,14 +218,20 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
-	public List<OrgaEinheit> getOrgaEinheiten(boolean nurAktive){
+	public List<OrgaEinheit> getOrgaEinheiten(boolean nurAktive, boolean nurStrichberechtigte){
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
 		try {
-			if(nurAktive)resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Zustand = 1 ORDER BY OrgaEinheitBez");
-			else resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten ORDER BY OrgaEinheitBez");
+			if(nurStrichberechtigte){
+				resultSet = db
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idMitarbeiterBerechtigung = 2 ORDER BY OrgaEinheitBez");
+			}
+			else{
+				if(nurAktive)resultSet = db
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Zustand = 1 ORDER BY OrgaEinheitBez");
+				else resultSet = db
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten ORDER BY OrgaEinheitBez");
+			}
 			while(resultSet.next()){
 			rueckgabe.add(new OrgaEinheit(resultSet, db, this));
 			}
@@ -327,6 +333,17 @@ public class Zugriffschicht {
 	}
 	
 
+	public Statistik neueStatistik(int idOrgaEinheit, int kalendarwoche, int jahr,
+			int idStrichart, int strichanzahl){
+		Statistik rueckgabe = null;
+		try {
+			rueckgabe = new Statistik(idOrgaEinheit, kalendarwoche, jahr, idStrichart, strichanzahl, db);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
+		return rueckgabe;
+	}
 	
 
 	public void disconnect() throws SQLException {

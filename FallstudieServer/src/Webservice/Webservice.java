@@ -2,6 +2,8 @@ package Webservice;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -325,6 +327,22 @@ public class Webservice {
 		}
 		return null;
 	}
+	
+	public static List<ComStatistik> gibBereichsStatistik(int kw, int jahr) { 
+		/*Übergaben: int Jahr ist immer >0  int kw=0 --> Es soll die 
+		 * Jahresstatistik geliefert werden  Liste wird nach Bereichen 
+		 * sortiert ausgegeben */ 
+		return null;
+		}
+
+	public static List<ComStatistik> gibKategorieStatistik(int kw, int jahr) {
+		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
+		 *  gibBereichsStatistik) * Liste wird anders sortiert, (nach 
+		 *  Kategorie übergeben) */
+		return null; 
+	}	
+	
+	
 
 	// Gibt ein Array aus char zurück, je nachdem welche Fenster angezeigt
 	// werden sollen.
@@ -349,6 +367,20 @@ public class Webservice {
 		} else
 			return null;
 	}
+	
+	@WebMethod
+	public int getAktuellesJahr(){
+		Calendar localCalendar = Calendar.getInstance();
+		int jahr = localCalendar.get(Calendar.YEAR);
+		return jahr;
+	}
+	
+	@WebMethod
+	public int getAktuelleKalendarwoche(){
+		Calendar localCalendar = Calendar.getInstance();
+		int kalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
+		return kalendarwoche;
+	}
 
 	// beendet den Access auf die Datenbank
 	public void dbZugriffBeenden() {
@@ -358,7 +390,7 @@ public class Webservice {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Den Service mittels in Java 6 enthaltenen HTTP-Server veröffentlichen
 	 */

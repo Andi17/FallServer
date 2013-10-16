@@ -1,7 +1,9 @@
 package Webservice;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
 
 import javax.xml.ws.Endpoint;
 
@@ -10,6 +12,7 @@ import Com.ComBerechtigung;
 import Com.ComOrgaEinheit;
 import Com.ComStrichart;
 import Optionen.Optionen;
+import Statistikerstellung.Statistikerstellung;
 
 public class Testklasse {
 
@@ -76,6 +79,30 @@ public class Testklasse {
 //		System.out.println(webservice.stricheln("mitarbeiter4", "1", 3, 7, true));
 //		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 12, true));
 //		System.out.println(webservice.stricheln("mitarbeiter2", "1", 3, 7, true));
+		
+//		Timer timer = new Timer();
+//	    Calendar date = Calendar.getInstance();
+//	    date.set(
+//	      Calendar.DAY_OF_WEEK,
+//	      Calendar.SUNDAY
+//	    );
+//	    date.set(Calendar.HOUR, 0);
+//	    date.set(Calendar.MINUTE, 0);
+//	    date.set(Calendar.SECOND, 0);
+//	    date.set(Calendar.MILLISECOND, 0);
+//	    // Schedule to run every Sunday in midnight
+//	    timer.schedule(
+//	      new Statistikerstellung(),
+//	      date.getTime(),
+//	      1000 * 60 * 60 * 24 * 7
+//	    );
+//	    try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	    timer.cancel();
+		
 		
 		endpoint.stop();
 		webservice.dbZugriffBeenden();

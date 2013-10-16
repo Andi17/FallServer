@@ -19,7 +19,7 @@ public class OrgaEinheitVerwaltung {
 	// Gibt alle OrgaEinheiten zurück.
 	public List<ComOrgaEinheit> getAlleOrgaEinheiten(boolean nurAktive) {
 
-		List<OrgaEinheit> ListOrga = dbZugriff.getOrgaEinheiten(nurAktive);
+		List<OrgaEinheit> ListOrga = dbZugriff.getOrgaEinheiten(nurAktive, false);
 		List<ComOrgaEinheit> rueckgabe = new ArrayList<ComOrgaEinheit>();
 		for (OrgaEinheit orga : ListOrga) {
 			Berechtigung Leiterber = dbZugriff

@@ -197,4 +197,21 @@ public class OrgaEinheit {
 		} 
 		return mitarbeiterBezeichnung;
 	}
+	
+	public int getAlleStricheInWoche(int kalendarwoche, int jahr, int idStrichart){
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT SUM(Strichzahl) FROM Arbeitsschritte " +
+					"GROUP BY idOrgaEinheit, idStrichart, Kalendarwoche, Jahr HAVING " +
+					"idOrgaEinheit = " + idOrgaEinheit + " AND " +
+					"idStrichart = " + idStrichart + " AND " +
+					"Kalendarwoche = " + kalendarwoche + " AND " +
+					"Jahr = " + jahr);
+			if(result.next()) return result.getInt(1);
+			else return 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+	}
 }
