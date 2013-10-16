@@ -136,6 +136,8 @@ public class Webservice {
 			return false;
 	}
 	
+	//Gibt true zurück wenn Benutzer schon Leiter ist. False wenn er noch kein Leiter ist.
+	//Getestet, funzt.
 	@WebMethod
 	public boolean istBenutzerSchonLeiter(String benutzer, String passwort, String benutzername){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
@@ -320,7 +322,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComBerechtigung> getAlleBerechtigungen (String benutzer, String passwort){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
-			return berechtigungsverwaltung.getAlleBerechtigung();
+			return rightsManagement.getAlleBerechtigung();
 		} else
 			return null;
 	}

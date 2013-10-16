@@ -1,7 +1,9 @@
 package RightsManagement;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import Com.ComBerechtigung;
 import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.Berechtigung;
 import Zugriffsschicht.Zugriffschicht;
@@ -96,6 +98,15 @@ public class Rechte {
 			}	
 		}
 		return false;
+	}
+	
+	public List<ComBerechtigung> getAlleBerechtigung (){
+		List<Berechtigung> listeBerechtigung = dbZugriff.getAlleBerechtigungen();
+		List<ComBerechtigung> rueckgabe = new ArrayList<ComBerechtigung>();
+		for (Berechtigung berechtigung : listeBerechtigung){
+				rueckgabe.add(new ComBerechtigung(berechtigung.getIdBerechtigung(), berechtigung.getBerechtigungbez()));
+		}
+		return rueckgabe;
 	}
 
 	public char[] erlaubteAnzeigen() {
