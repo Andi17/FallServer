@@ -247,7 +247,11 @@ public class OrgaEinheit {
 				strichzahl = 0;
 			}
 			strichzahl = strichzahl + stricheUnterEinheiten;
-			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe));
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for(int i=0; i<unterOrga.size();i++){
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, idUnterOrgaEinheiten));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -269,7 +273,11 @@ public class OrgaEinheit {
 		}
 		int strichzahl = getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
 		strichzahl = strichzahl + stricheUnterEinheiten;
-		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe));
+		List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+		for(int i=0; i<unterOrga.size();i++){
+			idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+		}
+		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, idUnterOrgaEinheiten));
 		return rueckgabe;
 	} 
 }

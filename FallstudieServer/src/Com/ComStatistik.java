@@ -1,5 +1,7 @@
 package Com;
 
+import java.util.List;
+
 public class ComStatistik {
 	private int idOrgaEinheit;
 	private String OrgaEinheitBez;
@@ -9,12 +11,13 @@ public class ComStatistik {
 	private int idStrichBez;
 	private int Strichzahl;
 	private int Hierarchiestufe;
+	private List<Integer> unterOrgaEinheiten;
 
 	public ComStatistik(){}
 	
 	public ComStatistik(int idOrgaEinheit, String OrgaEinheitBez,
 			int KalenderWoche, int Jahr, String StrichBez, int idStrichBez,
-			int Strichzahl, int Hierarchiestufe) {
+			int Strichzahl, int Hierarchiestufe, List<Integer> unterOrgaEinheiten) {
 		this.idOrgaEinheit = idOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
 		this.KalenderWoche = KalenderWoche;
@@ -23,6 +26,7 @@ public class ComStatistik {
 		this.setIdStrichBez(idStrichBez);
 		this.Strichzahl = Strichzahl;
 		this.Hierarchiestufe = Hierarchiestufe;
+		this.setUnterOrgaEinheiten(unterOrgaEinheiten);
 	}
 
 	public int getIdOrgaEinheit() {
@@ -57,6 +61,10 @@ public class ComStatistik {
 		return Hierarchiestufe;
 	}
 
+	public List<Integer> getUnterOrgaEinheiten() {
+		return unterOrgaEinheiten;
+	}
+
 	public void setIdOrgaEinheit(int idOrgaEinheit) {
 		this.idOrgaEinheit = idOrgaEinheit;
 	}
@@ -87,6 +95,10 @@ public class ComStatistik {
 
 	public void setIdStrichBez(int idStrichBez) {
 		this.idStrichBez = idStrichBez;
+	}
+
+	public void setUnterOrgaEinheiten(List<Integer> unterOrgaEinheiten) {
+		this.unterOrgaEinheiten = unterOrgaEinheiten;
 	}
 
 }

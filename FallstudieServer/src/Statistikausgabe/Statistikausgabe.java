@@ -25,33 +25,54 @@ public class Statistikausgabe {
 	public List<ComStatistik> getBereichsStatistik(String benutzername, int kalendarwoche, int jahr){
 		List<ComStatistik> unsortiert = getStrichartStatistik(benutzername, kalendarwoche, jahr);
 		List<ComStatistik> sortiert = new ArrayList<ComStatistik>();
-		int hoechsteHierarchieStufe = 0;
+		int aktuelleHierarchieStufe = 1;
+		ComStatistik aktuelleOrgaEinheit = null;
 		for(int x=0; x<unsortiert.size(); x++){
-			if(unsortiert.get(x).getHierarchiestufe() > hoechsteHierarchieStufe){
-				hoechsteHierarchieStufe = unsortiert.get(x).getHierarchiestufe();
+//			if(unsortiert.get(x).getHierarchiestufe() > hoechsteHierarchieStufe){
+//				hoechsteHierarchieStufe = unsortiert.get(x).getHierarchiestufe();
+//			}
+			if(unsortiert.get(x).getHierarchiestufe()==aktuelleHierarchieStufe){
+				sortiert.add(unsortiert.get(x));
+				aktuelleOrgaEinheit = unsortiert.get(x);
+				unsortiert.remove(x);
 			}
 		}
-		for(int x=1; x<=hoechsteHierarchieStufe; x++){
-			int i=0;
-			boolean wiederholen = true;
-			while (i<unsortiert.size() && wiederholen==true){
-				if(unsortiert.get(i).getHierarchiestufe()==x){
-					sortiert.add(unsortiert.get(i));
-					unsortiert.remove(i);
-//					wiederholen = false;
-				}
-				if(i+1>=unsortiert.size())wiederholen=false;
-				i++;
-			}
-		}
+		sortiert.addAll(getStatistikUnterEinheiten(aktuelleOrgaEinheit, unsortiert));
 		return sortiert;
 	}
 	
-//	private ComStatistik listeDurchsuchen(List<ComStatistik> liste){
-//		for(int i=0; i<liste.size(); i++){
-//			
-//		}
-//	}
+	private List<ComStatistik> getStatistikUnterEinheiten(ComStatistik aktuelle, List<ComStatistik> unsortiert){
+		List<Integer> unterOrgaEinheiten = aktuelle.getUnterOrgaEinheiten();
+		List<ComStatistik> rueckgabe = new ArrayList<ComStatistik>();
+		for(int i=0; i<unterOrgaEinheiten.size(); i++){
+			for(int x=0; x<dbZugriff.getAlleStricharten(true).size(); x++){
+				ComStatistik statistik = listeDurchsuchen(unsortiert, unterOrgaEinheiten.get(i));
+				if(statistik != null){
+					rueckgabe.add(statistik);
+					if(x+1==dbZugriff.getAlleStricharten(true).size()){
+						rueckgabe.addAll(getStatistikUnterEinheiten(statistik, unsortiert));
+					}
+				}
+			}
+			
+		}
+		return rueckgabe;
+	}
+	
+	private ComStatistik listeDurchsuchen(List<ComStatistik> liste, int idOrgaEinheit){
+		int i=0;
+		boolean wiederholen = true;
+		ComStatistik rueckgabe = null;
+		while (i<liste.size() && wiederholen==true){
+			if(liste.get(i).getIdOrgaEinheit()==idOrgaEinheit){
+				rueckgabe = liste.get(i);
+				liste.remove(i);
+				wiederholen = false;
+			}
+			i++;
+		}
+		return rueckgabe;
+	}
 	
 	//Gibt eine Liste von comStatistik zurück.
 	//Entweder aus Datenbank oder temporäre, wenn diese oder letzte woche abgefragt wird.

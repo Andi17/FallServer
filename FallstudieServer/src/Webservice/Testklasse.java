@@ -73,7 +73,7 @@ public class Testklasse {
 //		System.out.println(webservice.stricheln("mitarbeiter3", "1", 1, 5, true));
 //		System.out.println(webservice.stricheln("mitarbeiter4", "1", 2, 7, true));
 //		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 12, true));
-//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 7, true));
+		System.out.println(webservice.stricheln("mitarbeiter2", "1", "Briefwechsel", 7, true));
 		webservice.benutzerErstellen("Admin", "aic", "Zentralbereichsleiter", "1", 2);
 		
 		List<ComStatistik> statistiken = webservice.getBereichsStatistik("Zentralbereichsleiter", "1", 42, 2013);

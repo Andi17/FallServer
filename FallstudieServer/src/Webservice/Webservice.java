@@ -338,8 +338,8 @@ public class Webservice {
 	// Anforderung 4.4.4: Einsicht für bestimmten Zeitraum
 	// Anforderung 4.4.5: Leiter einer Organisationseinheit kann Daten in der
 	// Ebene unter ihm sehen.
-	// Methode bis jetzt erst einmal nur Grundfunktionalität. Muss noch
-	// erweitert werden oder neue Methode.
+	// Getestet, funzt.
+	//TODO: Jahresstatistik
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistik(String benutzer, String passwort, int kalendarwoche, int jahr) { 
 		/*Übergaben: int Jahr ist immer >0  int kw=0 --> Es soll die 
@@ -351,6 +351,8 @@ public class Webservice {
 		return null;
 		}
 	
+	//Getestet, funzt.
+	//TODO: Jahresstatistik
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistik(String benutzer, String passwort, int kalendarwoche, int jahr) {
 		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
