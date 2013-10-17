@@ -12,6 +12,8 @@ public class ComOrgaEinheit {
 	private boolean zustand;
 	private String OrgaEinheitTyp;
 
+	public ComOrgaEinheit(){}
+	
 	public ComOrgaEinheit(int idOrgaEinheit, int UeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
 			String LeiterBerechtigungBez, int idMitarbeiterBerechtigung,

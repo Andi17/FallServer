@@ -8,7 +8,6 @@ import java.util.Timer;
 import javax.xml.ws.Endpoint;
 
 import Com.ComBenutzer;
-import Com.ComBerechtigung;
 import Com.ComOrgaEinheit;
 import Com.ComStatistik;
 import Com.ComStrichart;
@@ -61,58 +60,29 @@ public class Testklasse {
 			System.out.println("");
 		}
 		
-//		System.out.println(webservice.OrgaEinheitErstellen("admin", "aic", 2, "Arbeitsgruppe5", null, 4, 2));
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 3);
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 4);
 //		webservice.benutzerErstellen("admin", "aic", "mitarbeiter3", "1", 4);
 //		webservice.benutzerErstellen("admin", "aic", "mitarbeiter4", "1", 5);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 6);
-//		webservice.orgaEinheitZustandAendern("admin", "aic", 2, true);
-		
-//		System.out.println(webservice.neueStrichelart("Admin", "aic", "Brief"));
-//		System.out.println(webservice.neueStrichelart("Admin", "aic", "Dokument"));
-//		System.out.println(webservice.neueStrichelart("Admin", "aic", "Tackern"));
-//		webservice.passwortEntsperren("Admin", "aic", "mitarbeiter1");
-//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 3, 7, true));
-//		System.out.println(webservice.stricheln("mitarbeiter3", "1", 3, 3, true));
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 5);
+
+//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 7, true));
+//		System.out.println(webservice.stricheln("mitarbeiter3", "1", 1, 3, true));
 //		System.out.println(webservice.stricheln("mitarbeiter4", "1", 2, 4, true));
 //		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 6, true));
 //		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 1, true));
 //		System.out.println(webservice.stricheln("mitarbeiter3", "1", 1, 5, true));
-//		System.out.println(webservice.stricheln("mitarbeiter4", "1", 3, 7, true));
+//		System.out.println(webservice.stricheln("mitarbeiter4", "1", 2, 7, true));
 //		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 12, true));
-//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 3, 7, true));
+//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 7, true));
+		webservice.benutzerErstellen("Admin", "aic", "Zentralbereichsleiter", "1", 2);
 		
-//		Timer timer = new Timer();
-//	    Calendar date = Calendar.getInstance();
-//	    date.set(
-//	      Calendar.DAY_OF_WEEK,
-//	      Calendar.SUNDAY
-//	    );
-//	    date.set(Calendar.HOUR, 0);
-//	    date.set(Calendar.MINUTE, 0);
-//	    date.set(Calendar.SECOND, 0);
-//	    date.set(Calendar.MILLISECOND, 0);
-//	    // Schedule to run every Sunday in midnight
-//	    timer.schedule(
-//	      new Statistikerstellung(),
-//	      date.getTime(),
-//	      1000 * 60 * 60 * 24 * 7
-//	    );
-//	    try {
-//			System.in.read();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	    timer.cancel();
-		
-		List<ComStatistik> statistiken = webservice.getStrichartStatistik("Zentralbereichsleiter", "1", 41, 2013);
+		List<ComStatistik> statistiken = webservice.getBereichsStatistik("Zentralbereichsleiter", "1", 42, 2013);
 		if(statistiken != null)
 		for (int i=0; i<statistiken.size(); i++){
 			ComStatistik stat = statistiken.get(i);
 			System.out.println("OEBez: " + stat.getOrgaEinheitBez() + "\t\t   StrichBez: " + stat.getStrichBez() + "\t Anzahl: " + stat.getStrichzahl() 
 					+ " \t Hierarchieebene: " + stat.getHierarchiestufe());
 		}
-		
 		jedeWocheStatistikErstellen.cancel();
 		endpoint.stop();
 		webservice.dbZugriffBeenden();

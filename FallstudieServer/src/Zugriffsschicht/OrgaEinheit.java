@@ -222,12 +222,12 @@ public class OrgaEinheit {
 	}
 
 	
-	public List<ComStatistik> getStatistik (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+	public List<ComStatistik> getStatistikAusDatenbank (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
 		for(int i=0; i<unterOrga.size(); i++){
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
+			rueckgabe.addAll(unterOrga.get(i).getStatistikAusDatenbank(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
 			for(int x=0; x<hilfsListe.size(); x++){
 				ComStatistik statistik = hilfsListe.get(x);
 				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
@@ -254,4 +254,22 @@ public class OrgaEinheit {
 		}
 		return rueckgabe;
 	}
+	
+	public List<ComStatistik> getTemporaereStatistik (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		int stricheUnterEinheiten = 0;
+		for(int i=0; i<unterOrga.size(); i++){
+			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+			rueckgabe.addAll(unterOrga.get(i).getTemporaereStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
+			for(int x=0; x<hilfsListe.size(); x++){
+				ComStatistik statistik = hilfsListe.get(x);
+				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
+				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
+			}
+		}
+		int strichzahl = getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
+		strichzahl = strichzahl + stricheUnterEinheiten;
+		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe));
+		return rueckgabe;
+	} 
 }

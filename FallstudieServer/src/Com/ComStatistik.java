@@ -10,6 +10,8 @@ public class ComStatistik {
 	private int Strichzahl;
 	private int Hierarchiestufe;
 
+	public ComStatistik(){}
+	
 	public ComStatistik(int idOrgaEinheit, String OrgaEinheitBez,
 			int KalenderWoche, int Jahr, String StrichBez, int idStrichBez,
 			int Strichzahl, int Hierarchiestufe) {

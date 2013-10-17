@@ -31,11 +31,11 @@ public class Statistikerstellung extends TimerTask{
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
 		for(int i=0; i<orgaEinheiten.size(); i++){
 			for(int x=0; x<stricharten.size(); x++){
-				OrgaEinheit a = orgaEinheiten.get(i);
+				OrgaEinheit orgaEinheit = orgaEinheiten.get(i);
 				int idStrichart = stricharten.get(x).getIdStrichart();
-				int strichanzahl = a.getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
+				int strichanzahl = orgaEinheit.getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
 				if(strichanzahl!=0)
-				dbZugriff.neueStatistik(a.getIdOrgaEinheit(), kalendarwoche , jahr, idStrichart, strichanzahl);
+				dbZugriff.neueStatistik(orgaEinheit.getIdOrgaEinheit(), kalendarwoche , jahr, idStrichart, strichanzahl);
 			
 			}
 		}

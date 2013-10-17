@@ -87,23 +87,19 @@ public class Rechte {
 //		return rueckgabe;
 //	}
 
-	public char[] erlaubteAnzeigen(String benutzername) {
+	public List<Character> erlaubteAnzeigen(String benutzername) {
 		// TODO Auto-generated method stub
-		List<Character> liste = new ArrayList<Character>();
+		List<Character> rueckgabe = new ArrayList<Character>();
 		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
 		int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
 		if(LeiterRechte == 1 || MitarbeiterRechte == 1){
-			liste.add('a');
+			rueckgabe.add('a');
 		}
 		if(LeiterRechte == 2 || MitarbeiterRechte == 2){
-			liste.add('d');
+			rueckgabe.add('d');
 		}
 		if(LeiterRechte == 3 || LeiterRechte == 4 || MitarbeiterRechte == 3|| MitarbeiterRechte == 4){
-			liste.add('s');
-		}
-		char[] rueckgabe = new char[liste.size()];
-		for(int i=0; i<liste.size(); i++){
-			rueckgabe[i] = liste.get(i);
+			rueckgabe.add('s');
 		}
 		return rueckgabe;
 	}

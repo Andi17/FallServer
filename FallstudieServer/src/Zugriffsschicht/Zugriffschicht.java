@@ -126,11 +126,11 @@ public class Zugriffschicht {
 		int rueckgabe = 0;
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT Leiterberechtigung FROM " +
+					.executeQueryStatement("SELECT Mitarbeiterberechtigung FROM " +
 							"Benutzer NATURAL JOIN OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
 							"Benutzername = '" + Benutzername + "'");
 			if(resultSet.next())
-			rueckgabe = resultSet.getInt("Leiterberechtigung");
+			rueckgabe = resultSet.getInt("Mitarbeiterberechtigung");
 			resultSet.close();
 		} catch (SQLException e) {
 			System.out.println(e);

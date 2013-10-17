@@ -368,7 +368,7 @@ public class Webservice {
 	// werden sollen.
 	//Getestet, funzt.
 	@WebMethod
-	public char[] anzeige(String benutzer, String passwort) {
+	public List<Character> anzeige(String benutzer, String passwort) {
 		/*
 		 * 'd'->Dash/Strichelfenster 'b'->Adminrechte 's'->Statistikfenster
 		 */

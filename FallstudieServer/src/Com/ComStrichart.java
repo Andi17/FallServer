@@ -6,6 +6,8 @@ public class ComStrichart {
     private String StrichBez;
     private boolean Zustand;
     
+    public ComStrichart(){}
+    
     public ComStrichart(int idStrichart, String StrichBez, boolean Zustand){
     	this.idStrichart = idStrichart;
     	this.StrichBez = StrichBez;

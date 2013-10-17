@@ -7,6 +7,7 @@ public class ComBenutzer {
 	private String OrgaEinheitBez;
 	private boolean Gesperrt;
 	
+	public ComBenutzer(){}
 	
 	public ComBenutzer(String Benutzername, String Passwort, int idOrgaEinheit, String OrgaEinheitBez, boolean Gesperrt){
 		this.Benutzername = Benutzername;
