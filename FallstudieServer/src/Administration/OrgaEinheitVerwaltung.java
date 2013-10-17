@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComOrgaEinheit;
-import Zugriffsschicht.Berechtigung;
+import RightsManagement.Rechte;
 import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -19,52 +19,20 @@ public class OrgaEinheitVerwaltung {
 	// Gibt alle OrgaEinheiten zurück.
 	public List<ComOrgaEinheit> getAlleOrgaEinheiten(boolean nurAktive) {
 
-		List<OrgaEinheit> ListOrga = dbZugriff.getOrgaEinheiten(nurAktive, false);
+		List<OrgaEinheit> ListOrga = dbZugriff.getOrgaEinheiten(nurAktive,
+				false);
 		List<ComOrgaEinheit> rueckgabe = new ArrayList<ComOrgaEinheit>();
 		for (OrgaEinheit orga : ListOrga) {
-			Berechtigung Leiterber = dbZugriff
-					.getBerechtigungzuidBerechtigung(orga
-							.getIdLeiterBerechtigung());
-			Berechtigung Mitarbeiterber = dbZugriff
-					.getBerechtigungzuidBerechtigung(orga
-							.getIdMitarbeiterBerechtigung());
-			if (Leiterber != null) {
-				if (Mitarbeiterber != null) {
-					rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(),
-							orga.getIdUeberOrgaEinheit(), orga
-									.getOrgaEinheitBez(), orga.getLeitername(),
-							orga.getIdLeiterBerechtigung(), Leiterber
-									.getBerechtigungbez(), orga
-									.getIdMitarbeiterBerechtigung(),
-							Mitarbeiterber.getBerechtigungbez(), orga.isZustand()));
-				} else {
-					rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(),
-							orga.getIdUeberOrgaEinheit(), orga
-									.getOrgaEinheitBez(), orga.getLeitername(),
-							orga.getIdLeiterBerechtigung(), Leiterber
-									.getBerechtigungbez(), orga
-									.getIdMitarbeiterBerechtigung(),
-							"Keine Berechtigung", orga.isZustand()));
-				}
-			} else {
-				if (Mitarbeiterber != null) {
-					rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(),
-							orga.getIdUeberOrgaEinheit(), orga
-									.getOrgaEinheitBez(), orga.getLeitername(),
-							orga.getIdLeiterBerechtigung(),
-							"Keine Berechtigung", orga
-									.getIdMitarbeiterBerechtigung(),
-							Mitarbeiterber.getBerechtigungbez(), orga.isZustand()));
-				} else {
-					rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(),
-							orga.getIdUeberOrgaEinheit(), orga
-									.getOrgaEinheitBez(), orga.getLeitername(),
-							orga.getIdLeiterBerechtigung(),
-							"Keine Berechtigung", orga
-									.getIdMitarbeiterBerechtigung(),
-							"Keine Berechtigung", orga.isZustand()));
-				}
-			}
+			String leiterberechtigung = Rechte.getRechtBezeichnung(orga
+					.getIdLeiterBerechtigung());
+			String mitarbeiterberechtigung = Rechte.getRechtBezeichnung(orga
+					.getIdMitarbeiterBerechtigung());
+			rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(), orga
+					.getIdUeberOrgaEinheit(), orga.getOrgaEinheitBez(), orga
+					.getLeitername(), orga.getIdLeiterBerechtigung(),
+					leiterberechtigung, orga.getIdMitarbeiterBerechtigung(),
+					mitarbeiterberechtigung, orga.isZustand(), orga
+							.getOrgaEinheitTyp()));
 		}
 		return rueckgabe;
 
@@ -72,19 +40,19 @@ public class OrgaEinheitVerwaltung {
 
 	// fügt neue OrgaEinheit hinzu, gibt true zurück wenn geklappt
 	public boolean neueOrgaEinheit(int idUeberOrgaEinheit,
-			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
-			boolean Zustand, int idMitarbeiterBerechtigung) {
-		if(gibtEsOrgaEinheit(OrgaEinheitBez))return false;
+			String OrgaEinheitBez, String Leitername, boolean Zustand,
+			String OrgaEinheitTyp) {
+		if (gibtEsOrgaEinheit(OrgaEinheitBez))
+			return false;
 		else {
 			OrgaEinheit orga = dbZugriff.neueOrgaEinheit(idUeberOrgaEinheit,
-					OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand,
-					idMitarbeiterBerechtigung);
+					OrgaEinheitBez, Leitername, Zustand, OrgaEinheitTyp);
 			if (orga == null)
 				return false;
 			else
 				return true;
 		}
-		
+
 	}
 
 	// Gibt true zurück wenn es schon eine OrgaEinheit mit der Bezeichnung gibt.
@@ -96,22 +64,29 @@ public class OrgaEinheitVerwaltung {
 		else
 			return true;
 	}
-	
-	//Setzt die OrgaEinheit mit der id auf inaktiv.
-	public boolean OrgaEinheitZustandAendern(int idOrgaEinheit, boolean neuerZustand){
-		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
-		if(orgaEinheit!=null){
+
+	// Setzt die OrgaEinheit mit der id auf inaktiv.
+	public boolean OrgaEinheitZustandAendern(int idOrgaEinheit,
+			boolean neuerZustand) {
+		OrgaEinheit orgaEinheit = dbZugriff
+				.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+		if (orgaEinheit != null) {
 			return orgaEinheit.setZustand(neuerZustand);
-		}
-		else return false;
-	}
-	
-	public boolean OrgaEinheitLeiterAendern(int idOrgaEinheit, String leitername){
-		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
-		if(orgaEinheit!=null && !dbZugriff.getBenutzervonBenutzername(leitername).isLeiter()){
-			return orgaEinheit.setLeitername(leitername);
-		}
-		else return false;
+		} else
+			return false;
 	}
 
+	public boolean OrgaEinheitLeiterAendern(int idOrgaEinheit, String leitername) {
+		OrgaEinheit orgaEinheit = dbZugriff
+				.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+		if (orgaEinheit != null
+				&& !dbZugriff.getBenutzervonBenutzername(leitername).isLeiter()) {
+			return orgaEinheit.setLeitername(leitername);
+		} else
+			return false;
+	}
+
+	public List<String> getOrgaEinheitTypen(){
+		return dbZugriff.getOrgaEinheitTypen();
+	}
 }

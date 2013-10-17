@@ -19,7 +19,6 @@ public class Statistikerstellung extends TimerTask{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("Neue Statistiken wurden erstellt.");
 		Calendar localCalendar = Calendar.getInstance();
 		int jahr = localCalendar.get(Calendar.YEAR);
 		int kalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
@@ -40,6 +39,7 @@ public class Statistikerstellung extends TimerTask{
 			
 			}
 		}
+		System.out.println("Neue Statistiken wurden erstellt.");
 	}
 
 }

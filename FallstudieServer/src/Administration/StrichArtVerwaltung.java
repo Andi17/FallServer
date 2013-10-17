@@ -3,9 +3,7 @@ package Administration;
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComBerechtigung;
 import Com.ComStrichart;
-import Zugriffsschicht.Berechtigung;
 import Zugriffsschicht.Strichart;
 import Zugriffsschicht.Zugriffschicht;
 

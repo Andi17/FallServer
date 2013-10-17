@@ -17,7 +17,6 @@ import Administration.Benutzerverwaltung;
 import Administration.OrgaEinheitVerwaltung;
 import Administration.StrichArtVerwaltung;
 import Com.ComBenutzer;
-import Com.ComBerechtigung;
 import Com.ComOrgaEinheit;
 import Com.ComStatistik;
 import Com.ComStrichart;
@@ -221,13 +220,22 @@ public class Webservice {
 	//TODO: wenn es noch keinen leiter gibt!!
 	@WebMethod
 	public boolean OrgaEinheitErstellen(String benutzer, String passwort,
-			int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
-			int idLeiterBerechtigung, int idMitarbeiterBerechtigung) {
+			String OrgaEinheitBez, String Leitername,
+			String OrgaEinheitTyp, int idUeberOrgaEinheit) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.neueOrgaEinheit(idUeberOrgaEinheit,
-					OrgaEinheitBez, Leitername, idLeiterBerechtigung, Optionen.isInitialbelegungOrgaEinheitZustand(), idMitarbeiterBerechtigung);
+					OrgaEinheitBez, Leitername, Optionen.isInitialbelegungOrgaEinheitZustand(), OrgaEinheitTyp);
 		else
 			return false;
+	}
+	
+	//Alle möglichen OrgaEinheitenTypen werden zurück gegeben.
+	@WebMethod
+	public List<String> getAlleMoeglichenOrgaEinheitTypen(String benutzer, String passwort){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin)){
+			return orgaEinheitVerwaltung.getOrgaEinheitTypen();
+		}	
+		else return null;
 	}
 
 	//Den Zustand der Organisationseinheit neu setzen.
@@ -342,6 +350,7 @@ public class Webservice {
 		}
 		return null;
 		}
+	
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistik(String benutzer, String passwort, int kalendarwoche, int jahr) {
 		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
@@ -369,7 +378,7 @@ public class Webservice {
 			return null;
 	}
 	
-	//gibt alle Berechtigungen zurück. 
+	/*//gibt alle Berechtigungen zurück. 
 	//Getestet, funzt.
 	@WebMethod
 	public List<ComBerechtigung> getAlleBerechtigungen (String benutzer, String passwort){
@@ -377,8 +386,10 @@ public class Webservice {
 			return rightsManagement.getAlleBerechtigung();
 		} else
 			return null;
-	}
+	}*/
 	
+	//Gibt das aktuelle Jahr zurück.
+	//Getestet, funzt.
 	@WebMethod
 	public int getAktuellesJahr(){
 		Calendar localCalendar = Calendar.getInstance();
@@ -386,6 +397,8 @@ public class Webservice {
 		return jahr;
 	}
 	
+	//Gibt die aktuelle Kalendarwoche zurück.
+	//Getestet, funzt.
 	@WebMethod
 	public int getAktuelleKalendarwoche(){
 		Calendar localCalendar = Calendar.getInstance();

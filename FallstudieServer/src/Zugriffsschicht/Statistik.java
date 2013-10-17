@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import jdbc.JdbcAccess;
 
 public class Statistik {
-	private JdbcAccess db;
 	private int idStatistik;
 	private int idOrgaEinheit;
 	private int kalenderWoche;
@@ -17,7 +16,6 @@ public class Statistik {
 	// Konstruktor wenn die Statistik schon existiert.
 	public Statistik(ResultSet resultSet, JdbcAccess db) throws SQLException {
 		werteSetzen(resultSet);
-		this.db = db;
 	}
 
 	// Konstruktor bei Neuanlegen
@@ -37,7 +35,6 @@ public class Statistik {
 		resultSet.next();
 		werteSetzen(resultSet);
 		resultSet.close();
-		this.db = db;
 	}
 	
 	//Methode nur um Kurs zu sparen

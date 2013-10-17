@@ -10,11 +10,12 @@ public class ComOrgaEinheit {
 	private int idMitarbeiterBerechtigung;
 	private String MitarbeiterBerechtigungBez;
 	private boolean zustand;
+	private String OrgaEinheitTyp;
 
 	public ComOrgaEinheit(int idOrgaEinheit, int UeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
 			String LeiterBerechtigungBez, int idMitarbeiterBerechtigung,
-			String MitarbeiterBerechtigungBez, boolean zustand) {
+			String MitarbeiterBerechtigungBez, boolean zustand, String OrgaEinheitTyp) {
 		this.idOrgaEinheit = idOrgaEinheit;
 		this.UeberOrgaEinheit = UeberOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
@@ -23,7 +24,8 @@ public class ComOrgaEinheit {
 		this.LeiterBerechtigungBez = LeiterBerechtigungBez;
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 		this.MitarbeiterBerechtigungBez = MitarbeiterBerechtigungBez;
-		this.setZustand(zustand);
+		this.zustand = zustand;
+		this.setOrgaEinheitTyp(OrgaEinheitTyp);
 	}
 
 	public int getIdOrgaEinheit() {
@@ -62,6 +64,10 @@ public class ComOrgaEinheit {
 		return zustand;
 	}
 
+	public String getOrgaEinheitTyp() {
+		return OrgaEinheitTyp;
+	}
+
 	public void setIdOrgaEinheit(int idOrgaEinheit) {
 		this.idOrgaEinheit = idOrgaEinheit;
 	}
@@ -96,5 +102,9 @@ public class ComOrgaEinheit {
 
 	public void setZustand(boolean zustand) {
 		this.zustand = zustand;
+	}
+
+	public void setOrgaEinheitTyp(String orgaEinheitTyp) {
+		OrgaEinheitTyp = orgaEinheitTyp;
 	}
 }

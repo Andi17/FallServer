@@ -30,13 +30,6 @@ public class Testklasse {
 		// Hier wartet der Server
 		System.out.println("web service server running ... press key to stop");
 		
-
-//		System.out.println(webservice.OrgaEinheitErstellen("admin", "aic", 2, "Arbeitsgruppe5", null, 4, 2));
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 3);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter3", "1", 4);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter4", "1", 5);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 6);
-//		webservice.orgaEinheitZustandAendern("admin", "aic", 2, true);
 		List<ComOrgaEinheit> orgaEinheit = webservice.getOrgaEinheiten("admin", "aic", true);
 		if(orgaEinheit != null){
 			for(int i=0; i<orgaEinheit.size(); i++){
@@ -52,10 +45,10 @@ public class Testklasse {
 			System.out.println("");
 		}
 		
-		List<ComBerechtigung> berechtigung = webservice.getAlleBerechtigungen("Admin", "aic");
-		if(berechtigung != null){
-			for(int i=0; i<berechtigung.size(); i++){
-				System.out.println("Berechtigung: " + berechtigung.get(i).getBerechtigungBez());
+		List<String> OrgaEinheitTyp = webservice.getAlleMoeglichenOrgaEinheitTypen("Admin", "aic");
+		if(OrgaEinheitTyp != null){
+			for(int i=0; i<OrgaEinheitTyp.size(); i++){
+				System.out.println("OrgaEinheitTyp: " + OrgaEinheitTyp.get(i));
 			}
 			System.out.println("");
 		}
@@ -67,6 +60,13 @@ public class Testklasse {
 			}
 			System.out.println("");
 		}
+		
+//		System.out.println(webservice.OrgaEinheitErstellen("admin", "aic", 2, "Arbeitsgruppe5", null, 4, 2));
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 3);
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter3", "1", 4);
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter4", "1", 5);
+//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 6);
+//		webservice.orgaEinheitZustandAendern("admin", "aic", 2, true);
 		
 //		System.out.println(webservice.neueStrichelart("Admin", "aic", "Brief"));
 //		System.out.println(webservice.neueStrichelart("Admin", "aic", "Dokument"));
@@ -105,14 +105,13 @@ public class Testklasse {
 //		}
 //	    timer.cancel();
 		
-		List<ComStatistik> statistiken = webservice.getStrichartStatistik("abteilungsmitarbeiter", "2", 1, 2013);
+		List<ComStatistik> statistiken = webservice.getStrichartStatistik("Zentralbereichsleiter", "1", 41, 2013);
+		if(statistiken != null)
 		for (int i=0; i<statistiken.size(); i++){
 			ComStatistik stat = statistiken.get(i);
-			System.out.println("OEBez: " + stat.getOrgaEinheitBez() + "\t StrichBez: " + stat.getStrichBez() + "\t Anzahl: " + stat.getStrichzahl() 
+			System.out.println("OEBez: " + stat.getOrgaEinheitBez() + "\t\t   StrichBez: " + stat.getStrichBez() + "\t Anzahl: " + stat.getStrichzahl() 
 					+ " \t Hierarchieebene: " + stat.getHierarchiestufe());
 		}
-		
-		
 		
 		jedeWocheStatistikErstellen.cancel();
 		endpoint.stop();

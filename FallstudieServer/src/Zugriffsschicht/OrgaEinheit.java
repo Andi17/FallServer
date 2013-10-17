@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComStatistik;
+import RightsManagement.Rechte;
 
 import jdbc.JdbcAccess;
 
@@ -19,6 +20,7 @@ public class OrgaEinheit {
 	private int idLeiterBerechtigung;
 	private boolean zustand;
 	private int idMitarbeiterBerechtigung;
+	private String OrgaEinheitTyp;
 
 
 	public OrgaEinheit(ResultSet resultSet, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
@@ -28,7 +30,7 @@ public class OrgaEinheit {
 	}
 
 	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
-			int idLeiterBerechtigung, boolean zustand, int idMitarbeiterBerechtigung, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
+			boolean zustand, String OrgaEinheitTyp, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
 		this.db = db;
 		this.dbZugriff = dbZugriff;
 		String stringZustand;
@@ -36,15 +38,14 @@ public class OrgaEinheit {
 		else stringZustand ="0";
 		if(Leitername==null){
 			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
-					"idUeberOrgaEinheit, OrgaEinheitBez, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
+					"idUeberOrgaEinheit, OrgaEinheitBez, Zustand, OrgaEinheitTyp) " +
 					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', " 
-					+ idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
-			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
+					+ stringZustand +", '" + OrgaEinheitTyp +"')");
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
 					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
 					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
-					"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
 					"Zustand = " + stringZustand +" AND "+
-					"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
+					"OrgaEinheitTyp = " + OrgaEinheitTyp);
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
@@ -52,16 +53,15 @@ public class OrgaEinheit {
 				
 		else {
 			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
-					"idUeberOrgaEinheit, OrgaEinheitBez, Leitername, idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung) " +
+					"idUeberOrgaEinheit, OrgaEinheitBez, Leitername,  Zustand, OrgaEinheitTyp) " +
 					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
-					"', " + idLeiterBerechtigung + ", " + stringZustand +", " + idMitarbeiterBerechtigung +")");
-			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE " +
+					"', "  + stringZustand +", '" + OrgaEinheitTyp +"')");
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
 					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
 					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
 					"Leitername = '" + Leitername +"' AND "+
-					"idLeiterBerechtigung = " + idLeiterBerechtigung +" AND "+
 					"Zustand = " + stringZustand +" AND "+
-					"idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung);
+					"OrgaEinheitTyp = " + OrgaEinheitTyp);
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
@@ -74,15 +74,15 @@ public class OrgaEinheit {
 		this.OrgaEinheitBez = resultSet.getString("OrgaEinheitBez");
 		this.Leitername = resultSet.getString("Leitername");
 		this.idLeiterBerechtigung = resultSet
-				.getInt("idLeiterBerechtigung");
+				.getInt("Leiterberechtigung");
 		this.zustand = resultSet.getBoolean("Zustand");
-		this.idMitarbeiterBerechtigung = resultSet.getInt("idMitarbeiterBerechtigung");
+		this.idMitarbeiterBerechtigung = resultSet.getInt("Mitarbeiterberechtigung");
+		this.OrgaEinheitTyp = resultSet.getString("OrgaEinheitTyp");
 	}
 	
 	public String getLeiterBerechtigungBezeichnung(){
-		Berechtigung berechtigung = dbZugriff.getBerechtigungzuLeitername(Leitername);
-		if(berechtigung!=null)return berechtigung.getBerechtigungbez();
-		else return "Keine Berechtigung";
+		int berechtigung = dbZugriff.getBerechtigungzuLeitername(Leitername);
+		return Rechte.getRechtBezeichnung(berechtigung);
 	}
 	
 	
@@ -113,6 +113,10 @@ public class OrgaEinheit {
 
 	public int getIdMitarbeiterBerechtigung() {
 		return idMitarbeiterBerechtigung;
+	}
+	
+	public String getOrgaEinheitTyp(){
+		return OrgaEinheitTyp;
 	}
 
 	public boolean setOrgaEinheitBez(String orgaEinheitBez){
@@ -206,7 +210,7 @@ public class OrgaEinheit {
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idUeberOrgaEinheit = " + this.idOrgaEinheit);
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE idUeberOrgaEinheit = " + this.idOrgaEinheit);
 			while(resultSet.next()){
 			rueckgabe.add(new OrgaEinheit(resultSet, db, dbZugriff));
 			}
@@ -220,9 +224,15 @@ public class OrgaEinheit {
 	
 	public List<ComStatistik> getStatistik (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		int stricheUnterEinheiten = 0;
 		for(int i=0; i<unterOrga.size(); i++){
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
 			rueckgabe.addAll(unterOrga.get(i).getStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
+			for(int x=0; x<hilfsListe.size(); x++){
+				ComStatistik statistik = hilfsListe.get(x);
+				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
+				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
+			}
 		}
 		try {
 			ResultSet result = db.executeQueryStatement("SELECT * FROM Statistiken WHERE " +
@@ -236,6 +246,7 @@ public class OrgaEinheit {
 			}else{
 				strichzahl = 0;
 			}
+			strichzahl = strichzahl + stricheUnterEinheiten;
 			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

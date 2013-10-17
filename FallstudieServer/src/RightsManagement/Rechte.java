@@ -3,9 +3,7 @@ package RightsManagement;
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComBerechtigung;
 import Zugriffsschicht.Benutzer;
-import Zugriffsschicht.Berechtigung;
 import Zugriffsschicht.Zugriffschicht;
 
 //Anforderung 4.2.8 wird hier realisiert.
@@ -37,26 +35,6 @@ public class Rechte {
 		return false;
 	}
 
-	private int getRechtLeiter(String Benutzername) {
-		/*
-		 * Ermittelt sämtliche Rechte für den Benutzer Achtung: ebenfalls rechte
-		 * wenn man OE-Inhaber ist!
-		 */
-		Berechtigung BerechtigungLeiter = dbZugriff.getBerechtigungzuLeitername(Benutzername);
-		if (BerechtigungLeiter!=null){
-			return BerechtigungLeiter.getIdBerechtigung();
-		}
-		else return 0;
-		
-	}
-	private int getRechtMitarbeiter(String Benutzername){
-		Berechtigung BerechtigungMitarbeiter = dbZugriff.getBerechtigungzuMitarbeiter(Benutzername);
-		if (BerechtigungMitarbeiter!=null){
-			return BerechtigungMitarbeiter.getIdBerechtigung();
-		}
-		else return 0;
-	}
-
 	/*private int[] getRechtemoeglich(int Vorgang) {
 		
 		 * gibt alle Rechte zum Webservice zurück.
@@ -75,19 +53,19 @@ public class Rechte {
 		return ret;
 	}*/
 
-	public boolean vorgangMoeglich(String Benutzername, String Passwort,
+	public boolean vorgangMoeglich(String benutzername, String Passwort,
 			int Vorgang) {
 		/*
 		 * überprüfung ob login gültig ist rechte suchen vergleichen ob Vorgang
 		 * mit erhaltenen rechten möglich ist.
 		 */
-		if (login(Benutzername, Passwort)) {
+		if (login(benutzername, Passwort)) {
 			if (Vorgang == alleBenutzer) {
 				return true;
 			}
 			else {
-				int LeiterRechte = this.getRechtLeiter(Benutzername);
-				int MitarbeiterRechte = this.getRechtMitarbeiter(Benutzername);
+				int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
+				int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
 				if(LeiterRechte == Vorgang || MitarbeiterRechte == Vorgang)return true;
 //				int[] MoeglicheRechte = this.getRechtemoeglich(Vorgang);
 //				for(int i = 0; i < MoeglicheRechte.length;i++){
@@ -100,20 +78,20 @@ public class Rechte {
 		return false;
 	}
 	
-	public List<ComBerechtigung> getAlleBerechtigung (){
-		List<Berechtigung> listeBerechtigung = dbZugriff.getAlleBerechtigungen();
-		List<ComBerechtigung> rueckgabe = new ArrayList<ComBerechtigung>();
-		for (Berechtigung berechtigung : listeBerechtigung){
-				rueckgabe.add(new ComBerechtigung(berechtigung.getIdBerechtigung(), berechtigung.getBerechtigungbez()));
-		}
-		return rueckgabe;
-	}
+//	public List<ComBerechtigung> getAlleBerechtigung (){
+//		List<Berechtigung> listeBerechtigung = dbZugriff.getAlleBerechtigungen();
+//		List<ComBerechtigung> rueckgabe = new ArrayList<ComBerechtigung>();
+//		for (Berechtigung berechtigung : listeBerechtigung){
+//				rueckgabe.add(new ComBerechtigung(berechtigung.getIdBerechtigung(), berechtigung.getBerechtigungbez()));
+//		}
+//		return rueckgabe;
+//	}
 
 	public char[] erlaubteAnzeigen(String benutzername) {
 		// TODO Auto-generated method stub
 		List<Character> liste = new ArrayList<Character>();
-		int LeiterRechte = this.getRechtLeiter(benutzername);
-		int MitarbeiterRechte = this.getRechtMitarbeiter(benutzername);
+		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
+		int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
 		if(LeiterRechte == 1 || MitarbeiterRechte == 1){
 			liste.add('a');
 		}
@@ -128,6 +106,17 @@ public class Rechte {
 			rueckgabe[i] = liste.get(i);
 		}
 		return rueckgabe;
+	}
+	
+	//Gibt die Berechtigungsbezeichnung zu der passenden ID.
+	public static String getRechtBezeichnung(int rechtID){
+		switch(rechtID){
+		case 1: return "Admin";
+		case 2: return "Stricheln";
+		case 3: return "NurEigeneGruppenEinsehbar";
+		case 4: return "AlleGruppenEinsebar";
+		default: return "Keine Berechtigung";
+		}
 	}
 
 }

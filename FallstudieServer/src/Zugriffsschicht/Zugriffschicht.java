@@ -52,7 +52,7 @@ public class Zugriffschicht {
 		ResultSet resultSet;
 		List<Benutzer> rueckgabe = new ArrayList<Benutzer>();
 		try {
-			resultSet = db.executeQueryStatement("SELECT * FROM Benutzer");
+			resultSet = db.executeQueryStatement("SELECT * FROM Benutzer ORDER BY Benutzername");
 			while (resultSet.next()) {
 				rueckgabe.add(new Benutzer(resultSet, db, this));
 			}
@@ -103,32 +103,17 @@ public class Zugriffschicht {
 	/*
 	 * Berechtigung
 	 */
-	public List<Berechtigung> getAlleBerechtigungen(){
-		ResultSet resultSet;
-		List<Berechtigung> rueckgabe = new ArrayList<Berechtigung>();
-		try {
-			resultSet = db.executeQueryStatement("SELECT * FROM Berechtigungen ORDER BY Berechtigungbez");
-			while (resultSet.next()) {
-				rueckgabe.add(new Berechtigung(resultSet, db));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-			return null;
-		}
-		return rueckgabe;
-	}
 	
-	public Berechtigung getBerechtigungzuLeitername(String Benutzername) {
+	public int getBerechtigungzuLeitername(String Benutzername) {
 		ResultSet resultSet;
-		Berechtigung rueckgabe = null;
+		int rueckgabe = 0;
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT b.* FROM OrgaEinheiten a, Berechtigungen b WHERE"
-							+ " a.idLeiterBerechtigung = b.idBerechtigung AND a.Leitername = '"
-							+ Benutzername + "'");
+					.executeQueryStatement("SELECT Leiterberechtigung FROM " +
+							"OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
+							"Leitername = '" + Benutzername + "'");
 			if(resultSet.next())
-			rueckgabe = new Berechtigung(resultSet, db);
+			rueckgabe = resultSet.getInt("Leiterberechtigung");
 			resultSet.close();
 		} catch (SQLException e) {
 			System.out.println(e);
@@ -136,14 +121,16 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 
-	public Berechtigung getBerechtigungzuMitarbeiter(String Benutzername) {
+	public int getBerechtigungzuMitarbeiter(String Benutzername) {
 		ResultSet resultSet;
-		Berechtigung rueckgabe = null;
+		int rueckgabe = 0;
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT b.* FROM Berechtigungen b, OrgaEinheiten c, Benutzer a WHERE b.idBerechtigung = c.idMitarbeiterBerechtigung AND c.idOrgaEinheit = a.idOrgaEinheit AND a.Benutzername = '" + Benutzername+ "'");
+					.executeQueryStatement("SELECT Leiterberechtigung FROM " +
+							"Benutzer NATURAL JOIN OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
+							"Benutzername = '" + Benutzername + "'");
 			if(resultSet.next())
-			rueckgabe = new Berechtigung(resultSet, db);
+			rueckgabe = resultSet.getInt("Leiterberechtigung");
 			resultSet.close();
 		} catch (SQLException e) {
 			System.out.println(e);
@@ -151,26 +138,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 
-	public List<Berechtigung> getBerechtigungenZuWebmethode(int Webmethode) {
-		ResultSet resultSet;
-		List<Berechtigung> rueckgabe = new ArrayList<Berechtigung>();
-		try {
-			resultSet = db
-					.executeQueryStatement("SELECT a.* FROM Berechtigungen a, Berechtigung_Webmethode b "
-							+ "WHERE a.idBerechtigung = b.idBerechtigung AND b.idWebmethode = '"
-							+ Webmethode + "'");
-			while (resultSet.next()) {
-				rueckgabe.add(new Berechtigung(resultSet, db));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-			return null;
-		}
-		return rueckgabe;
-	}
-
-	public Berechtigung getBerechtigungzuidBerechtigung(int idBerechtigung) {
+	/*public Berechtigung getBerechtigungzuidBerechtigung(int idBerechtigung) {
 		Berechtigung rueckgabe = null;
 		ResultSet resultSet;
 		try {
@@ -184,18 +152,18 @@ public class Zugriffschicht {
 			System.out.println("Zugriffschicht/getBerechtigungzuidBerechtigung :"+e);
 		}
 		return rueckgabe;
-	}
+	}*/
 	
 	/*
 	 * ORGAEINHEIT
 	 */
 	
 	public OrgaEinheit neueOrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
-			int idLeiterBerechtigung, boolean Zustand, int idMitarbeiterBerechtigung){
+			boolean Zustand, String OrgaEinheitTyp){
 		OrgaEinheit rueckgabe = null;
 		try {
 			rueckgabe = new OrgaEinheit(idUeberOrgaEinheit, OrgaEinheitBez, Leitername,
-			idLeiterBerechtigung, Zustand, idMitarbeiterBerechtigung, db, this);
+			Zustand, OrgaEinheitTyp, db, this);
 		}
 		catch (SQLException e) {
 			System.out.println(e);
@@ -206,7 +174,7 @@ public class Zugriffschicht {
 	public OrgaEinheit getOrgaEinheitvonBezeichnung(String bezeichnung){
 		OrgaEinheit rueckgabe = null;
 		try {
-			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE OrgaEinheitBez = '" + bezeichnung + "'");
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE OrgaEinheitBez = '" + bezeichnung + "'");
 
 			if(resultSet.next())
 				rueckgabe = new OrgaEinheit(resultSet, db, this);
@@ -224,13 +192,13 @@ public class Zugriffschicht {
 		try {
 			if(nurStrichberechtigte){
 				resultSet = db
-						.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idMitarbeiterBerechtigung = 2 ORDER BY OrgaEinheitBez");
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE MitarbeiterBerechtigung = 2 ORDER BY OrgaEinheitBez");
 			}
 			else{
 				if(nurAktive)resultSet = db
-						.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Zustand = 1 ORDER BY OrgaEinheitBez");
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE Zustand = 1 ORDER BY OrgaEinheitBez");
 				else resultSet = db
-						.executeQueryStatement("SELECT * FROM OrgaEinheiten ORDER BY OrgaEinheitBez");
+						.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp ORDER BY OrgaEinheitBez");
 			}
 			while(resultSet.next()){
 			rueckgabe.add(new OrgaEinheit(resultSet, db, this));
@@ -241,12 +209,13 @@ public class Zugriffschicht {
 		}
 		return rueckgabe;
 	}
+	
 	public OrgaEinheit getOrgaEinheitZuidOrgaEinheit(int idOrgaEinheit){
 		ResultSet resultSet;
 		OrgaEinheit rueckgabe = null;
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE idOrgaEinheit = '"
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE idOrgaEinheit = '"
 							+ idOrgaEinheit + "'");
 			if(resultSet.next())
 			rueckgabe = new OrgaEinheit(resultSet, db, this);
@@ -256,12 +225,13 @@ public class Zugriffschicht {
 		}
 		return rueckgabe;
 	}
+	
 	public OrgaEinheit getOrgaEinheitZuLeitername(String Leitername) {
 		OrgaEinheit rueckgabe = null;
 		ResultSet resultSet;
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten WHERE Leitername = '"
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE Leitername = '"
 							+ Leitername + "'");
 			if(resultSet.next())
 			rueckgabe = new OrgaEinheit(resultSet, db, this);
@@ -271,6 +241,19 @@ public class Zugriffschicht {
 
 		}
 		return rueckgabe;
+	}
+	
+	public List<String> getOrgaEinheitTypen(){
+		try {
+			List<String> listTypen = new ArrayList<String>();
+			ResultSet result = db.executeQueryStatement("SELECT OrgaEinheitTyp FROM OrgaEinheitTyp");
+			while(result.next())listTypen.add(result.getString("OrgaEinheitTyp"));
+			return listTypen;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/*
