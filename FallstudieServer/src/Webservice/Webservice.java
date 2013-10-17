@@ -325,7 +325,7 @@ public class Webservice {
 	// Gibt true zurück wenn erfolgreich.
 	// Getestet, funzt.
 	@WebMethod
-	public boolean stricheln(String benutzer, String passwort, int strichart,
+	public boolean stricheln(String benutzer, String passwort, String strichart,
 			int strichanzahl, boolean aktuelleWoche) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.stricheln)) {
 			return stricheln.schreibeStricheInDatenbank(benutzer, strichart,

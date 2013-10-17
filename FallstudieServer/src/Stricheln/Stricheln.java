@@ -15,8 +15,9 @@ public class Stricheln {
 	}
 
 	//gibt true zurück wenn erfolgreich, speichert strich in datenbank
-	public boolean schreibeStricheInDatenbank(String Benutzername, int idStrichart, 
+	public boolean schreibeStricheInDatenbank(String Benutzername, String strichart, 
 			int strichanzahl, boolean aktuelleWoche) {
+		int idStrichart = dbZugriff.getStrichart(strichart).getIdStrichart();
 		Calendar localCalendar = Calendar.getInstance();
 		Date datum = localCalendar.getTime();
 		int jahr = localCalendar.get(Calendar.YEAR);

@@ -38,13 +38,20 @@ public class Statistikausgabe {
 				if(unsortiert.get(i).getHierarchiestufe()==x){
 					sortiert.add(unsortiert.get(i));
 					unsortiert.remove(i);
-					wiederholen = false;
+//					wiederholen = false;
 				}
+				if(i+1>=unsortiert.size())wiederholen=false;
 				i++;
 			}
 		}
 		return sortiert;
 	}
+	
+//	private ComStatistik listeDurchsuchen(List<ComStatistik> liste){
+//		for(int i=0; i<liste.size(); i++){
+//			
+//		}
+//	}
 	
 	//Gibt eine Liste von comStatistik zurück.
 	//Entweder aus Datenbank oder temporäre, wenn diese oder letzte woche abgefragt wird.

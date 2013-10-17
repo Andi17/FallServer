@@ -88,7 +88,6 @@ public class Rechte {
 //	}
 
 	public List<Character> erlaubteAnzeigen(String benutzername) {
-		// TODO Auto-generated method stub
 		List<Character> rueckgabe = new ArrayList<Character>();
 		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
 		int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
