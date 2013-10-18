@@ -22,7 +22,7 @@ import Com.ComStatistik;
 import Com.ComStrichart;
 import Optionen.Optionen;
 import Statistikausgabe.Statistikausgabe;
-import Statistikerstellung.Statistikerstellung;
+import Statistikerstellung.JedeWocheAusfuehren;
 import Stricheln.Stricheln;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -72,7 +72,7 @@ public class Webservice {
 		    date.set(Calendar.MILLISECOND, 0);
 		    // Schedule to run every Sunday in midnight
 		    jedeWocheStatistikErstellen.schedule(
-		      new Statistikerstellung(dbZugriff),
+		      new JedeWocheAusfuehren(dbZugriff),
 		      date.getTime(),
 		      1000 * 60 * 60 * 24 * 7
 		    );

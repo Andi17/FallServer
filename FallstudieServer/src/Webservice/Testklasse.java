@@ -1,7 +1,5 @@
 package Webservice;
 
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 
@@ -12,7 +10,6 @@ import Com.ComOrgaEinheit;
 import Com.ComStatistik;
 import Com.ComStrichart;
 import Optionen.Optionen;
-import Statistikerstellung.Statistikerstellung;
 
 public class Testklasse {
 

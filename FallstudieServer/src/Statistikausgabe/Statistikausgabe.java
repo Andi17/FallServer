@@ -2,13 +2,11 @@ package Statistikausgabe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import Com.ComStatistik;
 import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.OrgaEinheit;
-import Zugriffsschicht.Statistik;
 import Zugriffsschicht.Strichart;
 import Zugriffsschicht.Zugriffschicht;
 

@@ -10,14 +10,16 @@ import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Strichart;
 import Zugriffsschicht.Zugriffschicht;
 
-public class Statistikerstellung extends TimerTask{
+public class JedeWocheAusfuehren extends TimerTask{
 	
 	private Zugriffschicht dbZugriff;
 	
-	public Statistikerstellung(Zugriffschicht dbZugriff){
+	public JedeWocheAusfuehren(Zugriffschicht dbZugriff){
 		this.dbZugriff = dbZugriff;
 	}
 
+	//Diese Methode wird immer Montags, um 1:00 aufgerufen
+	//Erstellt Statistiken und löscht Arbeitsschritte
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
