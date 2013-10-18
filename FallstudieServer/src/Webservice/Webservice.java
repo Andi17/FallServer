@@ -248,6 +248,9 @@ public class Webservice {
 			return false;
 	}
 	
+	//Ändert den Leiter einer Organisationseinheit.
+	//Getestet, funzt.
+	@WebMethod
 	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort, int idOrgaEinheit, String leitername){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(idOrgaEinheit, leitername);
@@ -345,7 +348,7 @@ public class Webservice {
 		/*Übergaben: int Jahr ist immer >0  int kw=0 --> Es soll die 
 		 * Jahresstatistik geliefert werden  Liste wird nach Bereichen 
 		 * sortiert ausgegeben */
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.statistikSehen)) {
 			return statistikausgabe.getBereichsStatistik(benutzer, kalendarwoche, jahr);
 		}
 		return null;
@@ -358,7 +361,7 @@ public class Webservice {
 		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
 		 *  gibBereichsStatistik) * Liste wird anders sortiert, (nach 
 		 *  Kategorie übergeben) */
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleGruppenEinsehbar)) {
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.statistikSehen)) {
 			return statistikausgabe.getStrichartStatistik(benutzer, kalendarwoche, jahr);
 		}
 		return null; 
@@ -372,7 +375,7 @@ public class Webservice {
 	@WebMethod
 	public List<Character> anzeige(String benutzer, String passwort) {
 		/*
-		 * 'd'->Dash/Strichelfenster 'b'->Adminrechte 's'->Statistikfenster
+		 * 'd'->Dash/Strichelfenster 'a'->Adminrechte 's'->Statistikfenster
 		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
 			return rightsManagement.erlaubteAnzeigen(benutzer);

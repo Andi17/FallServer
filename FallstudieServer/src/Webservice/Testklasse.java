@@ -60,21 +60,21 @@ public class Testklasse {
 			System.out.println("");
 		}
 		
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 4);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter3", "1", 4);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter4", "1", 5);
-//		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 5);
-
-//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 7, true));
-//		System.out.println(webservice.stricheln("mitarbeiter3", "1", 1, 3, true));
-//		System.out.println(webservice.stricheln("mitarbeiter4", "1", 2, 4, true));
-//		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 6, true));
-//		System.out.println(webservice.stricheln("mitarbeiter2", "1", 2, 1, true));
-//		System.out.println(webservice.stricheln("mitarbeiter3", "1", 1, 5, true));
-//		System.out.println(webservice.stricheln("mitarbeiter4", "1", 2, 7, true));
-//		System.out.println(webservice.stricheln("mitarbeiter5", "1", 1, 12, true));
+		webservice.benutzerErstellen("admin", "aic", "mitarbeiter2", "1", 4);
+		webservice.benutzerErstellen("admin", "aic", "mitarbeiter3", "1", 4);
+		webservice.benutzerErstellen("admin", "aic", "mitarbeiter4", "1", 5);
+		webservice.benutzerErstellen("admin", "aic", "mitarbeiter5", "1", 5);
+		System.out.println(webservice.stricheln("mitarbeiter2", "1", "Briefwechsel", 7, true));
+		System.out.println(webservice.stricheln("mitarbeiter3", "1", "Beratung", 3, true));
+		System.out.println(webservice.stricheln("mitarbeiter4", "1", "Beratung", 4, true));
+		System.out.println(webservice.stricheln("mitarbeiter5", "1", "Briefwechsel", 6, true));
+		System.out.println(webservice.stricheln("mitarbeiter2", "1", "Beratung", 1, true));
+		System.out.println(webservice.stricheln("mitarbeiter3", "1", "Briefwechsel", 5, true));
+		System.out.println(webservice.stricheln("mitarbeiter4", "1", "Beratung", 7, true));
+		System.out.println(webservice.stricheln("mitarbeiter5", "1", "Briefwechsel", 12, true));
 		System.out.println(webservice.stricheln("mitarbeiter2", "1", "Briefwechsel", 7, true));
 		webservice.benutzerErstellen("Admin", "aic", "Zentralbereichsleiter", "1", 2);
+		System.out.println(webservice.orgaEinheitLeiterAendern("admin", "aic", 2, "Zentralbereichsleiter"));
 		
 		List<ComStatistik> statistiken = webservice.getBereichsStatistik("Zentralbereichsleiter", "1", 42, 2013);
 		if(statistiken != null)

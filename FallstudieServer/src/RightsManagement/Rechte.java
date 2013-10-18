@@ -12,9 +12,8 @@ public class Rechte {
 	
 	public static int nurAdmin = 1;
 	public static int stricheln = 2;
-	public static int nurEigeneGruppenEinsehbar = 3;
-	public static int alleGruppenEinsehbar = 4;
-	public static int alleBenutzer = 5;
+	public static int statistikSehen = 3;
+	public static int alleBenutzer = 4;
 	
 	private Zugriffschicht dbZugriff;
 
@@ -35,24 +34,6 @@ public class Rechte {
 		return false;
 	}
 
-	/*private int[] getRechtemoeglich(int Vorgang) {
-		
-		 * gibt alle Rechte zum Webservice zurück.
-		 
-		List<Berechtigung> BerechtigungListe = dbZugriff.getBerechtigungenZuWebmethode(Vorgang);
-		
-		int[] ret = null;
-		if (BerechtigungListe!=null){
-			ret = new int[BerechtigungListe.size()];
-			int zaehler = 0;
-			for(Berechtigung B : BerechtigungListe){
-				ret[zaehler] = B.getIdBerechtigung();
-				zaehler++;
-			}
-		}
-		return ret;
-	}*/
-
 	public boolean vorgangMoeglich(String benutzername, String Passwort,
 			int Vorgang) {
 		/*
@@ -66,27 +47,14 @@ public class Rechte {
 			else {
 				int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
 				int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
-				if(LeiterRechte == Vorgang || MitarbeiterRechte == Vorgang)return true;
-//				int[] MoeglicheRechte = this.getRechtemoeglich(Vorgang);
-//				for(int i = 0; i < MoeglicheRechte.length;i++){
-//					if (MoeglicheRechte[i] == MitarbeiterRechte || MoeglicheRechte[i] == LeiterRechte){
-//						return true;
-//					}					
-//				}
+				if(LeiterRechte == Vorgang || MitarbeiterRechte == Vorgang)
+					return true;
 			}	
 		}
 		return false;
 	}
-	
-//	public List<ComBerechtigung> getAlleBerechtigung (){
-//		List<Berechtigung> listeBerechtigung = dbZugriff.getAlleBerechtigungen();
-//		List<ComBerechtigung> rueckgabe = new ArrayList<ComBerechtigung>();
-//		for (Berechtigung berechtigung : listeBerechtigung){
-//				rueckgabe.add(new ComBerechtigung(berechtigung.getIdBerechtigung(), berechtigung.getBerechtigungbez()));
-//		}
-//		return rueckgabe;
-//	}
 
+	//Gibt eine liste von chars zurück, a für Adminrechte, d für Strichelrechte und s für Statistikrechte
 	public List<Character> erlaubteAnzeigen(String benutzername) {
 		List<Character> rueckgabe = new ArrayList<Character>();
 		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
