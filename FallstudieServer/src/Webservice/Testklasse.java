@@ -73,7 +73,7 @@ public class Testklasse {
 //		webservice.benutzerErstellen("Admin", "aic", "Zentralbereichsleiter", "1", 2);
 //		System.out.println(webservice.orgaEinheitLeiterAendern("admin", "aic", 2, "Zentralbereichsleiter"));
 		
-		List<ComStatistik> statistiken = webservice.getBereichsStatistik("Zentralbereichsleiter", "1", 42, 2013);
+		List<ComStatistik> statistiken = webservice.getBereichsStatistikJahr("Zentralbereichsleiter", "1", 2013);
 		if(statistiken != null)
 		for (int i=0; i<statistiken.size(); i++){
 			ComStatistik stat = statistiken.get(i);

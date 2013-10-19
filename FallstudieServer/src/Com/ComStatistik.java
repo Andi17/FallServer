@@ -11,13 +11,14 @@ public class ComStatistik {
 	private int idStrichBez;
 	private int Strichzahl;
 	private int Hierarchiestufe;
+	private String OrgaEinheitTyp;
 	private List<Integer> unterOrgaEinheiten;
 
 	public ComStatistik(){}
 	
 	public ComStatistik(int idOrgaEinheit, String OrgaEinheitBez,
 			int KalenderWoche, int Jahr, String StrichBez, int idStrichBez,
-			int Strichzahl, int Hierarchiestufe, List<Integer> unterOrgaEinheiten) {
+			int Strichzahl, int Hierarchiestufe, String OrgaEinheitTyp ,List<Integer> unterOrgaEinheiten) {
 		this.idOrgaEinheit = idOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
 		this.KalenderWoche = KalenderWoche;
@@ -26,7 +27,8 @@ public class ComStatistik {
 		this.setIdStrichBez(idStrichBez);
 		this.Strichzahl = Strichzahl;
 		this.Hierarchiestufe = Hierarchiestufe;
-		this.setUnterOrgaEinheiten(unterOrgaEinheiten);
+		this.OrgaEinheitTyp = OrgaEinheitTyp;
+		this.unterOrgaEinheiten= unterOrgaEinheiten;
 	}
 
 	public int getIdOrgaEinheit() {
@@ -65,6 +67,10 @@ public class ComStatistik {
 		return unterOrgaEinheiten;
 	}
 
+	public String getOrgaEinheitTyp() {
+		return OrgaEinheitTyp;
+	}
+
 	public void setIdOrgaEinheit(int idOrgaEinheit) {
 		this.idOrgaEinheit = idOrgaEinheit;
 	}
@@ -99,6 +105,10 @@ public class ComStatistik {
 
 	public void setUnterOrgaEinheiten(List<Integer> unterOrgaEinheiten) {
 		this.unterOrgaEinheiten = unterOrgaEinheiten;
+	}
+
+	public void setOrgaEinheitTyp(String orgaEinheitTyp) {
+		OrgaEinheitTyp = orgaEinheitTyp;
 	}
 
 }

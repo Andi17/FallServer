@@ -354,6 +354,17 @@ public class Webservice {
 		return null;
 		}
 	
+	@WebMethod
+	public List<ComStatistik> getBereichsStatistikJahr(String benutzer, String passwort, int jahr) { 
+		/*Übergaben: int Jahr ist immer >0  int kw=0 --> Es soll die 
+		 * Jahresstatistik geliefert werden  Liste wird nach Bereichen 
+		 * sortiert ausgegeben */
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.statistikSehen)) {
+			return statistikausgabe.getBereichsStatistikJahr(benutzer, jahr);
+		}
+		return null;
+		}
+	
 	//Getestet, funzt.
 	//TODO: Jahresstatistik
 	@WebMethod
@@ -367,7 +378,16 @@ public class Webservice {
 		return null; 
 	}	
 	
-	
+	@WebMethod
+	public List<ComStatistik> getStrichartStatistikJahr(String benutzer, String passwort, int jahr) {
+		/* * Übergaben und Lieferung identisch zu gibStatistik (jetzt
+		 *  gibBereichsStatistik) * Liste wird anders sortiert, (nach 
+		 *  Kategorie übergeben) */
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.statistikSehen)) {
+			return statistikausgabe.getStrichartStatistikJahr(benutzer, jahr);
+		}
+		return null; 
+	}
 
 	// Gibt ein Array aus char zurück, je nachdem welche Fenster angezeigt
 	// werden sollen.

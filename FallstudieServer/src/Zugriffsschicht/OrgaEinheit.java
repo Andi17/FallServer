@@ -251,7 +251,44 @@ public class OrgaEinheit {
 			for(int i=0; i<unterOrga.size();i++){
 				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
 			}
-			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, idUnterOrgaEinheiten));
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp,idUnterOrgaEinheiten));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rueckgabe;
+	}
+	
+	public List<ComStatistik> getJahresStatistikAusDatenbank (int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		int stricheUnterEinheiten = 0;
+		for(int i=0; i<unterOrga.size(); i++){
+			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+			rueckgabe.addAll(unterOrga.get(i).getJahresStatistikAusDatenbank(jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
+			for(int x=0; x<hilfsListe.size(); x++){
+				ComStatistik statistik = hilfsListe.get(x);
+				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
+				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
+			}
+		}
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY " +
+					"idOrgaEinheit, Jahr, idStrichart HAVING " +
+					"idOrgaEinheit = '" + idOrgaEinheit + "' AND " +
+					"Jahr = '" + jahr + "' AND " +
+					"idStrichart = '" + idStrichart + "'");
+			int strichzahl;
+			if(result.next()){
+				strichzahl = result.getInt("Strichzahl");
+			}else{
+				strichzahl = 0;
+			}
+			strichzahl = strichzahl + stricheUnterEinheiten;
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for(int i=0; i<unterOrga.size();i++){
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, 0, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp,idUnterOrgaEinheiten));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,7 +314,9 @@ public class OrgaEinheit {
 		for(int i=0; i<unterOrga.size();i++){
 			idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
 		}
-		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, idUnterOrgaEinheiten));
+		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
 		return rueckgabe;
 	} 
+	
+	
 }

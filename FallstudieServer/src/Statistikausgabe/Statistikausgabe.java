@@ -26,9 +26,22 @@ public class Statistikausgabe {
 		int aktuelleHierarchieStufe = 1;
 		ComStatistik aktuelleOrgaEinheit = null;
 		for(int x=0; x<unsortiert.size(); x++){
-//			if(unsortiert.get(x).getHierarchiestufe() > hoechsteHierarchieStufe){
-//				hoechsteHierarchieStufe = unsortiert.get(x).getHierarchiestufe();
-//			}
+			if(unsortiert.get(x).getHierarchiestufe()==aktuelleHierarchieStufe){
+				sortiert.add(unsortiert.get(x));
+				aktuelleOrgaEinheit = unsortiert.get(x);
+				unsortiert.remove(x);
+			}
+		}
+		sortiert.addAll(getStatistikUnterEinheiten(aktuelleOrgaEinheit, unsortiert));
+		return sortiert;
+	}
+	
+	public List<ComStatistik> getBereichsStatistikJahr(String benutzername, int jahr){
+		List<ComStatistik> unsortiert = getStrichartStatistikJahr(benutzername, jahr);
+		List<ComStatistik> sortiert = new ArrayList<ComStatistik>();
+		int aktuelleHierarchieStufe = 1;
+		ComStatistik aktuelleOrgaEinheit = null;
+		for(int x=0; x<unsortiert.size(); x++){
 			if(unsortiert.get(x).getHierarchiestufe()==aktuelleHierarchieStufe){
 				sortiert.add(unsortiert.get(x));
 				aktuelleOrgaEinheit = unsortiert.get(x);
@@ -94,6 +107,18 @@ public class Statistikausgabe {
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
 				rueckgabe.addAll(orgaEinheit.getTemporaereStatistik(kalendarwoche, jahr, stricharten.get(i).getIdStrichart(), stricharten.get(i).getStrichbez(), 1, hilfsListe));
 			}
+		}
+		return rueckgabe;
+	}
+	
+	public List<ComStatistik> getStrichartStatistikJahr (String benutzername, int jahr){
+		List<ComStatistik> rueckgabe = new ArrayList<ComStatistik>();
+		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
+		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
+		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
+		for(int i=0; i<stricharten.size(); i++){
+			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+			rueckgabe.addAll(orgaEinheit.getJahresStatistikAusDatenbank(jahr, stricharten.get(i).getIdStrichart(), stricharten.get(i).getStrichbez(), 1, hilfsListe));
 		}
 		return rueckgabe;
 	}
