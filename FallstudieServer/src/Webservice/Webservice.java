@@ -104,16 +104,24 @@ public class Webservice {
 		else
 			return null;
 	}
+	
+	@WebMethod
+	public ComBenutzer getEinzelnenBenutzer(String benutzer, String passwort, String benutzername){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
+			return benutzerVerwaltung.getBenutzer(benutzername);
+		else
+			return null;
+	}
 
 	// Methode nur für Admin. Anforderung 4.2.1: Erstellt neuen Benutzer.
 	// gibt true zurück wenn alles geklappt hat.
 	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzerErstellen(String benutzer, String passwort,
-			String benutzername, String neuerBenutzerPasswort, int idOE) {
+			String benutzername, String neuerBenutzerPasswort, String orgaEinheit) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.benutzerErstellen(benutzername,
-					neuerBenutzerPasswort, idOE);
+					neuerBenutzerPasswort, orgaEinheit);
 		else
 			return false;
 	}
@@ -135,10 +143,10 @@ public class Webservice {
 	//Getestet, funzt.
 	@WebMethod
 	public boolean benutzerOrgaEinheitAendern(String benutzer, String passwort,
-			String benutzername, int idorgaEinheit) {
+			String benutzername, String orgaEinheitBez) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
 			return benutzerVerwaltung.orgaEinheitAendern(benutzername,
-					idorgaEinheit);
+					orgaEinheitBez);
 		else
 			return false;
 	}
@@ -214,6 +222,14 @@ public class Webservice {
 		else
 			return null;
 	}
+	
+	@WebMethod
+	public ComOrgaEinheit getOrgaEinheitZuName(String benutzer, String passwort, String orgaEinheitBez){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer))
+			return orgaEinheitVerwaltung.getOrgaEinheit(orgaEinheitBez);
+		else
+			return null;
+	}
 
 	// Organisationseinheit hinzufügen.
 	//Geteste, funzt. Eventuell noch überprüfen ob es den Leitername auch wirklich gibt.
@@ -234,6 +250,14 @@ public class Webservice {
 	public List<String> getAlleMoeglichenOrgaEinheitTypen(String benutzer, String passwort){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin)){
 			return orgaEinheitVerwaltung.getOrgaEinheitTypen();
+		}	
+		else return null;
+	}
+	
+	@WebMethod
+	public List<String> getAlleOrgaEinheitenBezeichnungenVomTyp(String benutzer, String passwort, String typ){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin)){
+			return orgaEinheitVerwaltung.getAlleOrgaEinheitenBezeichnungenMitTyp(typ);
 		}	
 		else return null;
 	}

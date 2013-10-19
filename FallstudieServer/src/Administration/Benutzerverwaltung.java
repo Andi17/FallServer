@@ -6,6 +6,7 @@ import java.util.List;
 import Com.ComBenutzer;
 import Optionen.Optionen;
 import Zugriffsschicht.Benutzer;
+import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Zugriffschicht;
 
 public class Benutzerverwaltung {
@@ -20,11 +21,11 @@ public class Benutzerverwaltung {
 	// welcher darstellt, ob der Benutzer erfolgreich angelegt wurde (true) oder
 	// nicht (false)
 	public boolean benutzerErstellen(String benutzername, String passwort,
-			int oeEinheit) {
+			String orgaEinheit) {
 		Benutzer neu = null;
 		if (!benutzerSchonVorhanden(benutzername)) {
 			neu = dbZugriff.neuerBenutzerErstellen(benutzername, passwort,
-					oeEinheit, Optionen.isInitialbelegungbenutzergesperrt());
+					orgaEinheit, Optionen.isInitialbelegungbenutzergesperrt());
 		}
 		if (neu == null) {
 			return false;
@@ -35,11 +36,14 @@ public class Benutzerverwaltung {
 
 	// Holt sich den entsprechenden Benutzer aus der Zugriffsschicht.
 	// gibt null zurück wenn kein Benutzer mit dem Benutzernamen existiert.
-	public Benutzer getBenutzer(String benutzername) {
-		// idBenutzer -> benutzername
-		Benutzer retBenutzer = dbZugriff
+	public ComBenutzer getBenutzer(String benutzername) {
+		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(benutzername);
-		return retBenutzer;
+		OrgaEinheit orga = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
+		if(benutzer != null) {
+			return new ComBenutzer(benutzer.getBenutzername(), benutzer.getPasswort(), benutzer.getAktuelleOE(), orga.getOrgaEinheitBez(), benutzer.isGesperrt());
+		}
+		else return null;
 	}
 
 	// Rückgabe der verschiedenen Benutzer in einer Liste.
@@ -64,10 +68,11 @@ public class Benutzerverwaltung {
 	// Ändert die OrgaEinheit. Muss aus dem String die entsprechende ID
 	// herrauslesen.
 	public boolean orgaEinheitAendern(String betroffenerBenutzer,
-			int idorgaEinheit) {
+			String orgaEinheitBez) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(betroffenerBenutzer);
-		if(benutzer!=null) return benutzer.setidOrgaEinheit(idorgaEinheit);
+		OrgaEinheit orga = dbZugriff.getOrgaEinheitvonBezeichnung(orgaEinheitBez);
+		if(benutzer!=null) return benutzer.setidOrgaEinheit(orga.getIdOrgaEinheit());
 		else return false;
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComOrgaEinheit;
-import RightsManagement.Rechte;
 import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -16,6 +15,19 @@ public class OrgaEinheitVerwaltung {
 		this.dbZugriff = dbZugriff;
 	}
 
+	public ComOrgaEinheit getOrgaEinheit(String orgaEinheitBez) {
+		OrgaEinheit orga = dbZugriff
+				.getOrgaEinheitvonBezeichnung(orgaEinheitBez);
+		if (orga != null)
+			return new ComOrgaEinheit(orga.getIdOrgaEinheit(),
+					orga.getIdUeberOrgaEinheit(), orga.getOrgaEinheitBez(),
+					orga.getLeitername(), orga.getIdLeiterBerechtigung(),
+					orga.getIdMitarbeiterBerechtigung(), orga.isZustand(),
+					orga.getOrgaEinheitTyp());
+		else
+			return null;
+	}
+
 	// Gibt alle OrgaEinheiten zurück.
 	public List<ComOrgaEinheit> getAlleOrgaEinheiten(boolean nurAktive) {
 
@@ -23,19 +35,24 @@ public class OrgaEinheitVerwaltung {
 				false);
 		List<ComOrgaEinheit> rueckgabe = new ArrayList<ComOrgaEinheit>();
 		for (OrgaEinheit orga : ListOrga) {
-			String leiterberechtigung = Rechte.getRechtBezeichnung(orga
-					.getIdLeiterBerechtigung());
-			String mitarbeiterberechtigung = Rechte.getRechtBezeichnung(orga
-					.getIdMitarbeiterBerechtigung());
 			rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(), orga
 					.getIdUeberOrgaEinheit(), orga.getOrgaEinheitBez(), orga
-					.getLeitername(), orga.getIdLeiterBerechtigung(),
-					leiterberechtigung, orga.getIdMitarbeiterBerechtigung(),
-					mitarbeiterberechtigung, orga.isZustand(), orga
-							.getOrgaEinheitTyp()));
+					.getLeitername(), orga.getIdLeiterBerechtigung(), orga
+					.getIdMitarbeiterBerechtigung(), orga.isZustand(), orga
+					.getOrgaEinheitTyp()));
 		}
 		return rueckgabe;
 
+	}
+
+	public List<String> getAlleOrgaEinheitenBezeichnungenMitTyp(String typ) {
+		List<OrgaEinheit> listeOrgaEinheiten = dbZugriff
+				.getOrgaEinheitenZuTyp(typ);
+		List<String> rueckgabe = new ArrayList<String>();
+		for (OrgaEinheit orga : listeOrgaEinheiten) {
+			rueckgabe.add(orga.getOrgaEinheitBez());
+		}
+		return rueckgabe;
 	}
 
 	// fügt neue OrgaEinheit hinzu, gibt true zurück wenn geklappt
@@ -86,7 +103,7 @@ public class OrgaEinheitVerwaltung {
 			return false;
 	}
 
-	public List<String> getOrgaEinheitTypen(){
+	public List<String> getOrgaEinheitTypen() {
 		return dbZugriff.getOrgaEinheitTypen();
 	}
 }

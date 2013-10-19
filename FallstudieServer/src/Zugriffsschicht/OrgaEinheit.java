@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComStatistik;
-import RightsManagement.Rechte;
 
 import jdbc.JdbcAccess;
 
@@ -45,7 +44,7 @@ public class OrgaEinheit {
 					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
 					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
 					"Zustand = " + stringZustand +" AND "+
-					"OrgaEinheitTyp = " + OrgaEinheitTyp);
+					"OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
@@ -61,7 +60,7 @@ public class OrgaEinheit {
 					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
 					"Leitername = '" + Leitername +"' AND "+
 					"Zustand = " + stringZustand +" AND "+
-					"OrgaEinheitTyp = " + OrgaEinheitTyp);
+					"OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
@@ -78,14 +77,7 @@ public class OrgaEinheit {
 		this.zustand = resultSet.getBoolean("Zustand");
 		this.idMitarbeiterBerechtigung = resultSet.getInt("Mitarbeiterberechtigung");
 		this.OrgaEinheitTyp = resultSet.getString("OrgaEinheitTyp");
-	}
-	
-	public String getLeiterBerechtigungBezeichnung(){
-		int berechtigung = dbZugriff.getBerechtigungzuLeitername(Leitername);
-		return Rechte.getRechtBezeichnung(berechtigung);
-	}
-	
-	
+	}	
 
 	public int getIdOrgaEinheit() {
 		return idOrgaEinheit;
@@ -173,19 +165,6 @@ public class OrgaEinheit {
 	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung) throws SQLException {
 		db.executeUpdateStatement("UPDATE OrgaEinheiten SET idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
-	}
-
-	public String getMitarbeiterBerechtigungBezeichnung() {
-		String mitarbeiterBezeichnung = "Keine Berechtigung";
-		try {
-			ResultSet result = db.executeQueryStatement("SELECT Berechtigungsbez FROM Berechtigung WHERE idBerechtigung = " + idMitarbeiterBerechtigung);
-			mitarbeiterBezeichnung = result.getString("Berechtigungsbez");
-			result.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return mitarbeiterBezeichnung;
 	}
 	
 	public int getAlleStricheInWoche(int kalendarwoche, int jahr, int idStrichart){

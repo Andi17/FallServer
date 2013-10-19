@@ -23,8 +23,11 @@ public class Zugriffschicht {
 	 * BENUTZER
 	 */
 	public Benutzer neuerBenutzerErstellen(String Benutzername,
-			String Passwort, int idOrgaEinheit, boolean Gesperrt) {
+			String Passwort, String orgaEinheit, boolean Gesperrt) {
 		Benutzer rueckgabe = null;
+		int idOrgaEinheit = 0;
+		OrgaEinheit ausgewaehlteOrgaEinheit = getOrgaEinheitvonBezeichnung(orgaEinheit);
+		if(ausgewaehlteOrgaEinheit!=null)idOrgaEinheit = ausgewaehlteOrgaEinheit.getIdOrgaEinheit();
 		try {
 			rueckgabe = new Benutzer(Benutzername, Passwort, idOrgaEinheit,
 					Gesperrt, db);
@@ -244,6 +247,21 @@ public class Zugriffschicht {
 
 		}
 		return rueckgabe;
+	}
+	
+	public List<OrgaEinheit> getOrgaEinheitenZuTyp(String typ){
+		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
+		try {
+			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE OrgaEinheitTyp = '" + typ + "'");
+			while(resultSet.next()){
+				rueckgabe.add(new OrgaEinheit(resultSet, db, this));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rueckgabe;
+		
 	}
 	
 	public List<String> getOrgaEinheitTypen(){
