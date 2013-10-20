@@ -18,12 +18,22 @@ public class OrgaEinheitVerwaltung {
 	public ComOrgaEinheit getOrgaEinheit(String orgaEinheitBez) {
 		OrgaEinheit orga = dbZugriff
 				.getOrgaEinheitvonBezeichnung(orgaEinheitBez);
-		if (orga != null)
+		if (orga != null) {
+			String ueberOrgaEinheitString;
+			OrgaEinheit ueberOrgaEinheit = dbZugriff
+					.getOrgaEinheitZuidOrgaEinheit(orga.getIdUeberOrgaEinheit());
+			if (ueberOrgaEinheit != null) {
+				ueberOrgaEinheitString = ueberOrgaEinheit.getOrgaEinheitBez();
+			} else
+				ueberOrgaEinheitString = "Keine übergeordnete Einheit";
 			return new ComOrgaEinheit(orga.getIdOrgaEinheit(),
-					orga.getIdUeberOrgaEinheit(), orga.getOrgaEinheitBez(),
-					orga.getLeitername(), orga.getIdLeiterBerechtigung(),
+					orga.getIdUeberOrgaEinheit(), ueberOrgaEinheitString,
+					orga.getOrgaEinheitBez(), orga.getLeitername(),
+					orga.getIdLeiterBerechtigung(),
 					orga.getIdMitarbeiterBerechtigung(), orga.isZustand(),
 					orga.getOrgaEinheitTyp());
+		}
+
 		else
 			return null;
 	}
@@ -34,10 +44,19 @@ public class OrgaEinheitVerwaltung {
 		List<OrgaEinheit> ListOrga = dbZugriff.getOrgaEinheiten(nurAktive,
 				false);
 		List<ComOrgaEinheit> rueckgabe = new ArrayList<ComOrgaEinheit>();
+
 		for (OrgaEinheit orga : ListOrga) {
+			String ueberOrgaEinheitString;
+			OrgaEinheit ueberOrgaEinheit = dbZugriff
+					.getOrgaEinheitZuidOrgaEinheit(orga.getIdUeberOrgaEinheit());
+			if (ueberOrgaEinheit != null) {
+				ueberOrgaEinheitString = ueberOrgaEinheit.getOrgaEinheitBez();
+			} else
+				ueberOrgaEinheitString = "Keine übergeordnete Einheit";
 			rueckgabe.add(new ComOrgaEinheit(orga.getIdOrgaEinheit(), orga
-					.getIdUeberOrgaEinheit(), orga.getOrgaEinheitBez(), orga
-					.getLeitername(), orga.getIdLeiterBerechtigung(), orga
+					.getIdUeberOrgaEinheit(), ueberOrgaEinheitString, orga
+					.getOrgaEinheitBez(), orga.getLeitername(), orga
+					.getIdLeiterBerechtigung(), orga
 					.getIdMitarbeiterBerechtigung(), orga.isZustand(), orga
 					.getOrgaEinheitTyp()));
 		}
@@ -83,24 +102,44 @@ public class OrgaEinheitVerwaltung {
 	}
 
 	// Setzt die OrgaEinheit mit der id auf inaktiv.
-	public boolean OrgaEinheitZustandAendern(int idOrgaEinheit,
+	public boolean OrgaEinheitZustandAendern(String OrgaEinheit,
 			boolean neuerZustand) {
 		OrgaEinheit orgaEinheit = dbZugriff
-				.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
 		if (orgaEinheit != null) {
 			return orgaEinheit.setZustand(neuerZustand);
 		} else
 			return false;
 	}
 
-	public boolean OrgaEinheitLeiterAendern(int idOrgaEinheit, String leitername) {
+	public boolean OrgaEinheitLeiterAendern(String OrgaEinheit, String leitername) {
 		OrgaEinheit orgaEinheit = dbZugriff
-				.getOrgaEinheitZuidOrgaEinheit(idOrgaEinheit);
+				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
 		if (orgaEinheit != null
 				&& !dbZugriff.getBenutzervonBenutzername(leitername).isLeiter()) {
 			return orgaEinheit.setLeitername(leitername);
 		} else
 			return false;
+	}
+	
+	public boolean OrgaEinheitBezeichnungAendern(String OrgaEinheit, String bezeichnung) {
+		OrgaEinheit orgaEinheit = dbZugriff
+				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
+		if (orgaEinheit != null
+				&& dbZugriff.getOrgaEinheitvonBezeichnung(bezeichnung)==null) {
+			return orgaEinheit.setOrgaEinheitBez(bezeichnung);
+		} else
+			return false;
+	}
+	
+	public boolean OrgaEinheitUeberOrgaEinheitAendern(String OrgaEinheit, String ueberOrgaEinheit){
+		OrgaEinheit orgaEinheit = dbZugriff
+				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
+		OrgaEinheit ueberOrgaEinheitObject = dbZugriff.getOrgaEinheitvonBezeichnung(ueberOrgaEinheit);
+		if(orgaEinheit != null && ueberOrgaEinheitObject!= null){
+			return orgaEinheit.setIdUeberOrgaEinheit(ueberOrgaEinheitObject.getIdOrgaEinheit());
+		}
+		else return false;
 	}
 
 	public List<String> getOrgaEinheitTypen() {

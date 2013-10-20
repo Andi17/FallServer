@@ -265,9 +265,9 @@ public class Webservice {
 	//Den Zustand der Organisationseinheit neu setzen.
 	//Getetstet, funzt.
 	@WebMethod
-	public boolean orgaEinheitZustandAendern(String benutzer, String passwort, int idOrgaEinheit, boolean neuerZustand){
+	public boolean orgaEinheitZustandAendern(String benutzer, String passwort, String OrgaEinheit, boolean neuerZustand){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
-			return orgaEinheitVerwaltung.OrgaEinheitZustandAendern(idOrgaEinheit, neuerZustand);
+			return orgaEinheitVerwaltung.OrgaEinheitZustandAendern(OrgaEinheit, neuerZustand);
 		else
 			return false;
 	}
@@ -275,9 +275,25 @@ public class Webservice {
 	//Ändert den Leiter einer Organisationseinheit.
 	//Getestet, funzt.
 	@WebMethod
-	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort, int idOrgaEinheit, String leitername){
+	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort, String OrgaEinheit, String leitername){
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
-			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(idOrgaEinheit, leitername);
+			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(OrgaEinheit, leitername);
+		else
+			return false;
+	}
+	
+	@WebMethod
+	public boolean orgaEinheitBezeichnungAendern(String benutzer, String passwort, String OrgaEinheit, String neueBezeichnung){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return orgaEinheitVerwaltung.OrgaEinheitBezeichnungAendern(OrgaEinheit, neueBezeichnung);
+		else
+			return false;
+	}
+	
+	@WebMethod
+	public boolean orgaEinheitUeberOrgaEinheitAendern(String benutzer, String passwort, String OrgaEinheit, String neueUeberOrgaEinheit){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.nurAdmin))
+			return orgaEinheitVerwaltung.OrgaEinheitUeberOrgaEinheitAendern(OrgaEinheit, neueUeberOrgaEinheit);
 		else
 			return false;
 	}

@@ -2,7 +2,8 @@ package Com;
 
 public class ComOrgaEinheit {
 	private int idOrgaEinheit;
-	private int UeberOrgaEinheit;
+	private int idUeberOrgaEinheit;
+	private String ueberOrgaEinheit;
 	private String OrgaEinheitBez;
 	private String Leitername;
 	private int idLeiterBerechtigung;
@@ -12,25 +13,30 @@ public class ComOrgaEinheit {
 
 	public ComOrgaEinheit(){}
 	
-	public ComOrgaEinheit(int idOrgaEinheit, int UeberOrgaEinheit,
+	public ComOrgaEinheit(int idOrgaEinheit, int UeberOrgaEinheit, String ueberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, int idLeiterBerechtigung,
 			int idMitarbeiterBerechtigung, boolean zustand, String OrgaEinheitTyp) {
 		this.idOrgaEinheit = idOrgaEinheit;
-		this.UeberOrgaEinheit = UeberOrgaEinheit;
+		this.idUeberOrgaEinheit = UeberOrgaEinheit;
+		this.ueberOrgaEinheit = ueberOrgaEinheit;
 		this.OrgaEinheitBez = OrgaEinheitBez;
 		this.Leitername = Leitername;
 		this.idLeiterBerechtigung = idLeiterBerechtigung;
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 		this.zustand = zustand;
-		this.setOrgaEinheitTyp(OrgaEinheitTyp);
+		this.OrgaEinheitTyp = OrgaEinheitTyp;
 	}
 
 	public int getIdOrgaEinheit() {
 		return idOrgaEinheit;
 	}
 
-	public int getUeberOrgaEinheit() {
-		return UeberOrgaEinheit;
+	public int getIdUeberOrgaEinheit() {
+		return idUeberOrgaEinheit;
+	}
+
+	public String getUeberOrgaEinheit() {
+		return ueberOrgaEinheit;
 	}
 
 	public String getOrgaEinheitBez() {
@@ -61,8 +67,12 @@ public class ComOrgaEinheit {
 		this.idOrgaEinheit = idOrgaEinheit;
 	}
 
-	public void setUeberOrgaEinheit(int ueberOrgaEinheit) {
-		this.UeberOrgaEinheit = ueberOrgaEinheit;
+	public void setIdUeberOrgaEinheit(int ueberOrgaEinheit) {
+		this.idUeberOrgaEinheit = ueberOrgaEinheit;
+	}
+
+	public void setUeberOrgaEinheit(String ueberOrgaEinheit) {
+		this.ueberOrgaEinheit = ueberOrgaEinheit;
 	}
 
 	public void setOrgaEinheitBez(String orgaEinheitBez) {

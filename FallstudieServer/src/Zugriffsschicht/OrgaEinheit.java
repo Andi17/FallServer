@@ -113,8 +113,20 @@ public class OrgaEinheit {
 
 	public boolean setOrgaEinheitBez(String orgaEinheitBez){
 		try {
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = " + orgaEinheitBez +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = '" + orgaEinheitBez +"' WHERE idOrgaEinheit = " + idOrgaEinheit);
 			OrgaEinheitBez = orgaEinheitBez;
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean setIdUeberOrgaEinheit(int idueberOrgaEinheit){
+		try {
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idUeberOrgaEinheit = " + idueberOrgaEinheit +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			idUeberOrgaEinheit = idueberOrgaEinheit;
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
