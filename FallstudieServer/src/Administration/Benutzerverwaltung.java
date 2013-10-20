@@ -41,7 +41,9 @@ public class Benutzerverwaltung {
 				.getBenutzervonBenutzername(benutzername);
 		OrgaEinheit orga = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
 		if(benutzer != null) {
+			if(orga != null)
 			return new ComBenutzer(benutzer.getBenutzername(), benutzer.getPasswort(), benutzer.getAktuelleOE(), orga.getOrgaEinheitBez(), benutzer.isGesperrt());
+			else return new ComBenutzer(benutzer.getBenutzername(), benutzer.getPasswort(), benutzer.getAktuelleOE(), "Keine aktuelle Einheit", benutzer.isGesperrt());
 		}
 		else return null;
 	}
