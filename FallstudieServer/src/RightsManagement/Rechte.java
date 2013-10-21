@@ -21,6 +21,23 @@ public class Rechte {
 
 		this.dbZugriff = dbZugriff;
 	}
+	
+	public int ersterLogin(String benutzername, String passwort){
+		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
+		
+		if (benutzer!=null && benutzer.getPasswort().equals(passwort) && !benutzer.isGesperrt()){
+			return 1;
+		}
+		else if(benutzer==null){
+			return 2;
+		}
+		else if(benutzer.isGesperrt()){
+			return 3;
+		}
+		else {
+			return 4;
+		}
+	}
 
 	private boolean login(String Benutzername, String Passwort) {
 		/*

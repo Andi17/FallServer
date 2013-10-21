@@ -86,13 +86,14 @@ public class Webservice {
 
 	// Anforderung 4.2.4: Anmelden, bzw. Überprüfen des Benutzernamens und
 	// Passwort.
-	// Gibt true zurück wenn login geklappt hat, wahrscheinlich ändern wir es
-	// noch zum char
-	// dann kann der grund mit zurück gegeben werden.
+	// Gibt 1 zurück für erfolgreich,
+	// 2 für Benutzer gibt es nicht,
+	// 3 für Benutzer ist gesperrt,
+	// 4 für Passwort stimmt nicht.
 	//Getestet, funzt.
 	@WebMethod
-	public boolean login(String benutzer, String passwort) {
-		return rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer);
+	public int login(String benutzer, String passwort) {
+		return rightsManagement.ersterLogin(benutzer, passwort);
 	}
 
 	// Gibt eine Liste mit allen Benutzern zurück.
