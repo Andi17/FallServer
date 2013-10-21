@@ -35,6 +35,12 @@ private Zugriffschicht dbZugriff;
 		return rueckgabe;
 	}
 	
+	public ComStrichart getStrichart(String bezeichnung){
+		Strichart strichart = dbZugriff.getStrichart(bezeichnung);
+		ComStrichart rueckgabe = new ComStrichart(strichart.getIdStrichart(), strichart.getStrichbez(), strichart.getZustand());
+		return rueckgabe;
+	}
+	
 	public boolean strichArtBezeichnungAendern(String bezeichnungAlt, String bezeichnungNeu){
 		if(gibtEsStrichelBezeichnung(bezeichnungNeu))return false;
 		else{

@@ -319,6 +319,14 @@ public class Webservice {
 		} else
 			return null;
 	}
+	
+	@WebMethod
+	public ComStrichart getStrichelArt(String benutzer, String passwort, String bezeichnung){
+		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
+			return strichArtVerwaltung.getStrichart(bezeichnung);
+		} else
+			return null;
+	}
 
 	// Anforderung 4.2.10: Eine neue Strichbezeichnung hinzufügen.
 	//Getestet, funzt.
