@@ -78,15 +78,17 @@ public class OrgaEinheitVerwaltung {
 	public boolean neueOrgaEinheit(int idUeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, boolean Zustand,
 			String OrgaEinheitTyp) {
-		if (gibtEsOrgaEinheit(OrgaEinheitBez))
+		if (gibtEsOrgaEinheit(OrgaEinheitBez) || dbZugriff.getBenutzervonBenutzername(Leitername).isLeiter())
 			return false;
 		else {
 			OrgaEinheit orga = dbZugriff.neueOrgaEinheit(idUeberOrgaEinheit,
 					OrgaEinheitBez, Leitername, Zustand, OrgaEinheitTyp);
 			if (orga == null)
 				return false;
-			else
+			else{
+				dbZugriff.getBenutzervonBenutzername(Leitername).setidOrgaEinheit(orga.getIdOrgaEinheit());
 				return true;
+			}
 		}
 
 	}
@@ -117,7 +119,10 @@ public class OrgaEinheitVerwaltung {
 				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
 		if (orgaEinheit != null
 				&& !dbZugriff.getBenutzervonBenutzername(leitername).isLeiter()) {
-			return orgaEinheit.setLeitername(leitername);
+			if(dbZugriff.getBenutzervonBenutzername(leitername).setidOrgaEinheit(orgaEinheit.getIdOrgaEinheit()) &&
+					orgaEinheit.setLeitername(leitername))
+			return true;
+			else return false;
 		} else
 			return false;
 	}

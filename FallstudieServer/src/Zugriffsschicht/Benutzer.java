@@ -119,7 +119,7 @@ public class Benutzer {
 
 	public boolean setidOrgaEinheit(int aktuelleOE){
 		try {
-			db.executeUpdateStatement("UPDATE Benutzer SET idOrgaEinheit = '" + aktuelleOE+"' WHERE Benutzername = '"+benutzername+"'");
+			db.executeUpdateStatement("UPDATE Benutzer SET idOrgaEinheit = " + aktuelleOE+" WHERE Benutzername = '"+benutzername+"'");
 			this.idOrgaEinheit = aktuelleOE;
 			return true;
 		} catch (SQLException e) {
