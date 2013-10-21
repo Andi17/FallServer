@@ -1,8 +1,10 @@
 package Zugriffsschicht;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Administration.Verschluesselung;
 import jdbc.JdbcAccess;
 
 public class Benutzer {
@@ -25,6 +27,10 @@ public class Benutzer {
 		if (Gesperrt){
 			GesperrtString = "1";
 		}
+		
+		Passwort = Verschluesselung.verschluesseln(Passwort);
+		
+		
 		db.executeUpdateStatement("INSERT INTO Benutzer (Benutzername, " +
 				"Passwort, idOrgaEinheit, Gesperrt) " +
 				"VALUES ( '" + Benutzername + "', '" + Passwort + "', '" + idOrgaEinheit +
@@ -107,6 +113,7 @@ public class Benutzer {
 
 	public boolean setPasswort(String passwort){
 		try {
+			passwort = Verschluesselung.verschluesseln(passwort);
 			db.executeUpdateStatement("UPDATE Benutzer SET Passwort = '" + passwort+"' WHERE Benutzername = '"+benutzername+"'");
 			this.Passwort = passwort;
 			return true;
@@ -114,7 +121,8 @@ public class Benutzer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-		}
+		} 
+		
 	}
 
 	public boolean setidOrgaEinheit(int aktuelleOE){

@@ -3,6 +3,7 @@ package RightsManagement;
 import java.util.ArrayList;
 import java.util.List;
 
+import Administration.Verschluesselung;
 import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -25,6 +26,8 @@ public class Rechte {
 	public int ersterLogin(String benutzername, String passwort){
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		
+		passwort = Verschluesselung.verschluesseln(passwort);
+		
 		if (benutzer!=null && benutzer.getPasswort().equals(passwort) && !benutzer.isGesperrt()){
 			return 1;
 		}
@@ -44,6 +47,9 @@ public class Rechte {
 		 * Überprüfung ob die Logindaten übereinstimmen: Passt Passwort zu
 		 * Benutzername.
 		 */
+		
+		Passwort = Verschluesselung.verschluesseln(Passwort);
+		
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(Benutzername);
 		if (benutzer!=null && benutzer.getPasswort().equals(Passwort) && !benutzer.isGesperrt()){
 			return true;
