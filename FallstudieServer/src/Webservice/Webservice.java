@@ -1,5 +1,7 @@
 package Webservice;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -8,6 +10,8 @@ import java.util.Timer;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.xml.ws.Endpoint;
 
 import jdbc.JdbcAccess;
@@ -493,23 +497,30 @@ public class Webservice {
 	 * Den Service mittels in Java 6 enthaltenen HTTP-Server veröffentlichen
 	 */
 	public static void main(String[] args) {
-		Timer jedeWocheStatistikErstellen = new Timer();
+		final Timer jedeWocheStatistikErstellen = new Timer();
 
-		Webservice webservice = new Webservice(jedeWocheStatistikErstellen);
-		Endpoint endpoint = Endpoint.publish(Optionen.getWebserverURL(),
+		final Webservice webservice = new Webservice(jedeWocheStatistikErstellen);
+		final Endpoint endpoint = Endpoint.publish(Optionen.getWebserverURL(),
 				webservice);
 		// Hier wartet der Server
-		System.out.println("web service server running ... press key to stop");
+		JFrame fenster = new JFrame("Webserver");
+		fenster.setBounds(100, 100, 250, 100);
+		JButton beenden = new JButton("Stop");
+		fenster.setVisible(true);
+		fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fenster.getContentPane().add(beenden);
+		beenden.addActionListener(new ActionListener(){
 
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		jedeWocheStatistikErstellen.cancel();
-		endpoint.stop();
-		webservice.dbZugriffBeenden();
-		System.out.println("Web service Server stopped");
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				jedeWocheStatistikErstellen.cancel();
+				endpoint.stop();
+				webservice.dbZugriffBeenden();
+				System.exit(0);
+			}
+			
+		});
 	}
 
 }
