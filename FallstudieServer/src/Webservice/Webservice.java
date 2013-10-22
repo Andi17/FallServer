@@ -167,7 +167,7 @@ public class Webservice {
 			return false;
 	}
 	
-	//Gibt true zurück wenn Benutzer schon Leiter ist. False wenn er noch kein Leiter ist.
+	//Gibt "Nein" zurück wenn Benutzer kein Leiter ist. Sonst den Namen der OrgaEinheit.
 	//Getestet, funzt.
 	@WebMethod
 	public String istBenutzerSchonLeiter(String benutzer, String passwort, String benutzername){
