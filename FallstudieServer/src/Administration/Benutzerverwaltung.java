@@ -111,11 +111,19 @@ public class Benutzerverwaltung {
 		else return false;
 	}
 	
-	public boolean istBenutzerSchonLeiter(String benutzername){
+	public String istBenutzerSchonLeiter(String benutzername){
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(benutzername);
-		if(benutzer!=null) return benutzer.isLeiter();
-		else return false;
+		if(benutzer!=null){
+			if(benutzer.isLeiter()){
+				OrgaEinheit orga = dbZugriff.getOrgaEinheitZuLeitername(benutzer.getBenutzername());
+				return orga.getOrgaEinheitBez();
+			}
+			else {
+				return "Nein";
+			}
+		}
+		else return "Nein";
 		
 	}
 }

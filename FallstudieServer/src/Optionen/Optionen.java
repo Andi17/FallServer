@@ -7,7 +7,7 @@ public class Optionen {
 	private final static String jdbcurl = "jdbc:mysql://localhost/Elastico";
 	private final static String jdbcuser = "root";
 	private final static String jdbcpw = "1234";
-	private final static String webserverURL = "http://localhost:8888/Elastico/simple";
+	private final static String webserverURL = "http://" + System.getenv("Computername") + ":8888/Elastico/simple";
 	// Anforderung 4.3.1: Speicherdauer soll konfigurierbar sein.
 	private final static int speicherdauerTage = 90;
 
