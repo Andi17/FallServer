@@ -11,9 +11,11 @@ public class Statistik {
 	private int jahr;
 	private int idStrichart;
 	private int strichzahl;
+	private JdbcAccess db;
 
 	// Konstruktor wenn die Statistik schon existiert.
 	public Statistik(ResultSet resultSet, JdbcAccess db) throws SQLException {
+		this.db = db;
 		werteSetzen(resultSet);
 	}
 
@@ -21,6 +23,7 @@ public class Statistik {
 	public Statistik(int idOrgaEinheit, int kalenderwoche, int jahr,
 			int idStrichart, int strichanzahl, JdbcAccess db)
 			throws SQLException {
+		this.db = db;
 		db.executeUpdateStatement("INSERT INTO Statistiken (idOrgaEinheit, " +
 				"Kalenderwoche, Jahr, idStrichart, Strichzahl) " +
 				"VALUES ( " + idOrgaEinheit + ", " + kalenderwoche + ", " + jahr +
@@ -63,6 +66,21 @@ public class Statistik {
 
 	public int getStrichanzahl() {
 		return strichzahl;
+	}
+	
+	public String getStrichartBez(){
+		try {
+			ResultSet result = db.executeQueryStatement("SELECT Strichbez FROM Stricharten WHERE idStrichart = " + idStrichart);
+			if(result.next()){
+				return result.getString("Strichbez");
+			}else{
+				return null;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

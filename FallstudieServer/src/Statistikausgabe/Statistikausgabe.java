@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import Com.ComStatistik;
+import Com.ComStatistikNeu;
 import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Strichart;
@@ -34,6 +35,19 @@ public class Statistikausgabe {
 		}
 		sortiert.addAll(getStatistikUnterEinheiten(aktuelleOrgaEinheit, unsortiert));
 		return sortiert;
+	}
+	
+	public List<ComStatistikNeu> getBereichsStatistikNeu(String benutzername, int kw, int jahr){
+		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
+		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
+		List<ComStatistikNeu> statistikListe = new ArrayList<ComStatistikNeu>();
+		return orgaEinheit.getStatistikAusDatenbankNeu(kw, jahr, 1, statistikListe);
+//		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
+//		statistikListe = orgaEinheit.getStatistikAusDatenbankNeu(kw, jahr, 1, statistikListe);
+//		
+//		for(int i=0; i<statistikListe.size(); i++){
+//			
+//		}
 	}
 	
 	public List<ComStatistik> getBereichsStatistikJahr(String benutzername, int jahr){

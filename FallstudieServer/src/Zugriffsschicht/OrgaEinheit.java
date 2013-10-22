@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComStatistik;
+import Com.ComStatistikNeu;
 
 import jdbc.JdbcAccess;
 
@@ -21,63 +22,83 @@ public class OrgaEinheit {
 	private int idMitarbeiterBerechtigung;
 	private String OrgaEinheitTyp;
 
-
-	public OrgaEinheit(ResultSet resultSet, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
+	public OrgaEinheit(ResultSet resultSet, JdbcAccess db,
+			Zugriffschicht dbZugriff) throws SQLException {
 		werteSetzen(resultSet);
 		this.db = db;
 		this.dbZugriff = dbZugriff;
 	}
 
-	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
-			boolean zustand, String OrgaEinheitTyp, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException{
+	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez,
+			String Leitername, boolean zustand, String OrgaEinheitTyp,
+			JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException {
 		this.db = db;
 		this.dbZugriff = dbZugriff;
 		String stringZustand;
-		if(zustand)stringZustand ="1";
-		else stringZustand ="0";
-		if(Leitername==null){
-			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
-					"idUeberOrgaEinheit, OrgaEinheitBez, Zustand, OrgaEinheitTyp) " +
-					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', " 
-					+ stringZustand +", '" + OrgaEinheitTyp +"')");
-			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
-					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
-					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
-					"Zustand = " + stringZustand +" AND "+
-					"OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
+		if (zustand)
+			stringZustand = "1";
+		else
+			stringZustand = "0";
+		if (Leitername == null) {
+			db.executeUpdateStatement("INSERT INTO OrgaEinheiten ("
+					+ "idUeberOrgaEinheit, OrgaEinheitBez, Zustand, OrgaEinheitTyp) "
+					+ "VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez
+					+ "', " + stringZustand + ", '" + OrgaEinheitTyp + "')");
+			ResultSet resultSet = db
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE "
+							+ "idUeberOrgaEinheit = "
+							+ idUeberOrgaEinheit
+							+ " AND "
+							+ "OrgaEinheitBez = '"
+							+ OrgaEinheitBez
+							+ "' AND "
+							+ "Zustand = "
+							+ stringZustand
+							+ " AND "
+							+ "OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
 		}
-				
+
 		else {
-			db.executeUpdateStatement("INSERT INTO OrgaEinheiten (" +
-					"idUeberOrgaEinheit, OrgaEinheitBez, Leitername,  Zustand, OrgaEinheitTyp) " +
-					"VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez + "', '" + Leitername +
-					"', "  + stringZustand +", '" + OrgaEinheitTyp +"')");
-			ResultSet resultSet = db.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE " +
-					"idUeberOrgaEinheit = " + idUeberOrgaEinheit +" AND "+
-					"OrgaEinheitBez = '" + OrgaEinheitBez +"' AND "+
-					"Leitername = '" + Leitername +"' AND "+
-					"Zustand = " + stringZustand +" AND "+
-					"OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
+			db.executeUpdateStatement("INSERT INTO OrgaEinheiten ("
+					+ "idUeberOrgaEinheit, OrgaEinheitBez, Leitername,  Zustand, OrgaEinheitTyp) "
+					+ "VALUES (" + idUeberOrgaEinheit + ", '" + OrgaEinheitBez
+					+ "', '" + Leitername + "', " + stringZustand + ", '"
+					+ OrgaEinheitTyp + "')");
+			ResultSet resultSet = db
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE "
+							+ "idUeberOrgaEinheit = "
+							+ idUeberOrgaEinheit
+							+ " AND "
+							+ "OrgaEinheitBez = '"
+							+ OrgaEinheitBez
+							+ "' AND "
+							+ "Leitername = '"
+							+ Leitername
+							+ "' AND "
+							+ "Zustand = "
+							+ stringZustand
+							+ " AND "
+							+ "OrgaEinheitTyp = '" + OrgaEinheitTyp + "'");
 			resultSet.next();
 			werteSetzen(resultSet);
 			resultSet.close();
 		}
 	}
-	
-	public void werteSetzen(ResultSet resultSet) throws SQLException{
+
+	public void werteSetzen(ResultSet resultSet) throws SQLException {
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.idUeberOrgaEinheit = resultSet.getInt("idUeberOrgaEinheit");
 		this.OrgaEinheitBez = resultSet.getString("OrgaEinheitBez");
 		this.Leitername = resultSet.getString("Leitername");
-		this.idLeiterBerechtigung = resultSet
-				.getInt("Leiterberechtigung");
+		this.idLeiterBerechtigung = resultSet.getInt("Leiterberechtigung");
 		this.zustand = resultSet.getBoolean("Zustand");
-		this.idMitarbeiterBerechtigung = resultSet.getInt("Mitarbeiterberechtigung");
+		this.idMitarbeiterBerechtigung = resultSet
+				.getInt("Mitarbeiterberechtigung");
 		this.OrgaEinheitTyp = resultSet.getString("OrgaEinheitTyp");
-	}	
+	}
 
 	public int getIdOrgaEinheit() {
 		return idOrgaEinheit;
@@ -106,14 +127,17 @@ public class OrgaEinheit {
 	public int getIdMitarbeiterBerechtigung() {
 		return idMitarbeiterBerechtigung;
 	}
-	
-	public String getOrgaEinheitTyp(){
+
+	public String getOrgaEinheitTyp() {
 		return OrgaEinheitTyp;
 	}
 
-	public boolean setOrgaEinheitBez(String orgaEinheitBez){
+	public boolean setOrgaEinheitBez(String orgaEinheitBez) {
 		try {
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = '" + orgaEinheitBez +"' WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = '"
+					+ orgaEinheitBez
+					+ "' WHERE idOrgaEinheit = "
+					+ idOrgaEinheit);
 			OrgaEinheitBez = orgaEinheitBez;
 			return true;
 		} catch (SQLException e) {
@@ -122,10 +146,13 @@ public class OrgaEinheit {
 			return false;
 		}
 	}
-	
-	public boolean setIdUeberOrgaEinheit(int idueberOrgaEinheit){
+
+	public boolean setIdUeberOrgaEinheit(int idueberOrgaEinheit) {
 		try {
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idUeberOrgaEinheit = " + idueberOrgaEinheit +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idUeberOrgaEinheit = "
+					+ idueberOrgaEinheit
+					+ " WHERE idOrgaEinheit = "
+					+ idOrgaEinheit);
 			idUeberOrgaEinheit = idueberOrgaEinheit;
 			return true;
 		} catch (SQLException e) {
@@ -137,7 +164,8 @@ public class OrgaEinheit {
 
 	public boolean setLeitername(String leitername) {
 		try {
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = '" + leitername + "' WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = '"
+					+ leitername + "' WHERE idOrgaEinheit = " + idOrgaEinheit);
 			Leitername = leitername;
 			return true;
 		} catch (SQLException e) {
@@ -149,7 +177,10 @@ public class OrgaEinheit {
 
 	public boolean setIdLeiterBerechtigung(int idLeiterBerechtigung) {
 		try {
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idLeiterBerechtigung = " + idLeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET idLeiterBerechtigung = "
+					+ idLeiterBerechtigung
+					+ " WHERE idOrgaEinheit = "
+					+ idOrgaEinheit);
 			this.idLeiterBerechtigung = idLeiterBerechtigung;
 			return true;
 		} catch (SQLException e) {
@@ -159,12 +190,15 @@ public class OrgaEinheit {
 		}
 	}
 
-	public boolean setZustand(boolean neuerZustand){
+	public boolean setZustand(boolean neuerZustand) {
 		try {
 			String stringZustand;
-			if(neuerZustand)stringZustand = "1";
-			else stringZustand = "0";
-			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Zustand = " + stringZustand +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+			if (neuerZustand)
+				stringZustand = "1";
+			else
+				stringZustand = "0";
+			db.executeUpdateStatement("UPDATE OrgaEinheiten SET Zustand = "
+					+ stringZustand + " WHERE idOrgaEinheit = " + idOrgaEinheit);
 			zustand = neuerZustand;
 			return true;
 		} catch (SQLException e) {
@@ -174,36 +208,51 @@ public class OrgaEinheit {
 		}
 	}
 
-	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung) throws SQLException {
-		db.executeUpdateStatement("UPDATE OrgaEinheiten SET idMitarbeiterBerechtigung = " + idMitarbeiterBerechtigung +" WHERE idOrgaEinheit = " + idOrgaEinheit);
+	public void setIdMitarbeiterBerechtigung(int idMitarbeiterBerechtigung)
+			throws SQLException {
+		db.executeUpdateStatement("UPDATE OrgaEinheiten SET idMitarbeiterBerechtigung = "
+				+ idMitarbeiterBerechtigung
+				+ " WHERE idOrgaEinheit = "
+				+ idOrgaEinheit);
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 	}
-	
-	public int getAlleStricheInWoche(int kalendarwoche, int jahr, int idStrichart){
+
+	public int getAlleStricheInWoche(int kalendarwoche, int jahr,
+			int idStrichart) {
 		try {
-			ResultSet result = db.executeQueryStatement("SELECT SUM(Strichzahl) FROM Arbeitsschritte " +
-					"GROUP BY idOrgaEinheit, idStrichart, Kalendarwoche, Jahr HAVING " +
-					"idOrgaEinheit = " + idOrgaEinheit + " AND " +
-					"idStrichart = " + idStrichart + " AND " +
-					"Kalendarwoche = " + kalendarwoche + " AND " +
-					"Jahr = " + jahr);
-			if(result.next()) return result.getInt(1);
-			else return 0;
+			ResultSet result = db
+					.executeQueryStatement("SELECT SUM(Strichzahl) FROM Arbeitsschritte "
+							+ "GROUP BY idOrgaEinheit, idStrichart, Kalendarwoche, Jahr HAVING "
+							+ "idOrgaEinheit = "
+							+ idOrgaEinheit
+							+ " AND "
+							+ "idStrichart = "
+							+ idStrichart
+							+ " AND "
+							+ "Kalendarwoche = "
+							+ kalendarwoche
+							+ " AND "
+							+ "Jahr = " + jahr);
+			if (result.next())
+				return result.getInt(1);
+			else
+				return 0;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 0;
 		}
 	}
-	
-	private List<OrgaEinheit> getUnterOrgaEinheiten(){
+
+	public List<OrgaEinheit> getUnterOrgaEinheiten() {
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
 		try {
 			resultSet = db
-					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE idUeberOrgaEinheit = " + this.idOrgaEinheit);
-			while(resultSet.next()){
-			rueckgabe.add(new OrgaEinheit(resultSet, db, dbZugriff));
+					.executeQueryStatement("SELECT * FROM OrgaEinheiten NATURAL JOIN OrgaEinheitTyp WHERE idUeberOrgaEinheit = "
+							+ this.idOrgaEinheit);
+			while (resultSet.next()) {
+				rueckgabe.add(new OrgaEinheit(resultSet, db, dbZugriff));
 			}
 			resultSet.close();
 		} catch (SQLException e) {
@@ -212,102 +261,176 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	
-	public List<ComStatistik> getStatistikAusDatenbank (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+	public List<ComStatistik> getStatistikAusDatenbank(int kalendarwoche,
+			int jahr, int idStrichart, String strichBezeichnung,
+			int hierarchieStufe, List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
-		for(int i=0; i<unterOrga.size(); i++){
+		for (int i = 0; i < unterOrga.size(); i++) {
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getStatistikAusDatenbank(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
-			for(int x=0; x<hilfsListe.size(); x++){
+			rueckgabe.addAll(unterOrga.get(i).getStatistikAusDatenbank(
+					kalendarwoche, jahr, idStrichart, strichBezeichnung,
+					hierarchieStufe + 1, hilfsListe));
+			for (int x = 0; x < hilfsListe.size(); x++) {
 				ComStatistik statistik = hilfsListe.get(x);
-				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
-				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
+				if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
+					stricheUnterEinheiten = stricheUnterEinheiten
+							+ statistik.getStrichzahl();
 			}
 		}
 		try {
-			ResultSet result = db.executeQueryStatement("SELECT * FROM Statistiken WHERE " +
-					"idOrgaEinheit = '" + idOrgaEinheit + "' AND " +
-					"Kalenderwoche = '" + kalendarwoche + "' AND " +
-					"Jahr = '" + jahr + "' AND " +
-					"idStrichart = '" + idStrichart + "'");
+			ResultSet result = db
+					.executeQueryStatement("SELECT * FROM Statistiken WHERE "
+							+ "idOrgaEinheit = '" + idOrgaEinheit + "' AND "
+							+ "Kalenderwoche = '" + kalendarwoche + "' AND "
+							+ "Jahr = '" + jahr + "' AND " + "idStrichart = '"
+							+ idStrichart + "'");
 			int strichzahl;
-			if(result.next()){
+			if (result.next()) {
 				strichzahl = result.getInt("Strichzahl");
-			}else{
+			} else {
 				strichzahl = 0;
 			}
 			strichzahl = strichzahl + stricheUnterEinheiten;
 			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-			for(int i=0; i<unterOrga.size();i++){
+			for (int i = 0; i < unterOrga.size(); i++) {
 				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
 			}
-			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp,idUnterOrgaEinheiten));
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez,
+					kalendarwoche, jahr, strichBezeichnung, idStrichart,
+					strichzahl, hierarchieStufe, OrgaEinheitTyp,
+					idUnterOrgaEinheiten));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rueckgabe;
 	}
-	
-	public List<ComStatistik> getJahresStatistikAusDatenbank (int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+
+	public List<ComStatistikNeu> getStatistikAusDatenbankNeu(int kalendarwoche,
+			int jahr, int hierarchieStufe, List<ComStatistikNeu> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
-		for(int i=0; i<unterOrga.size(); i++){
-			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getJahresStatistikAusDatenbank(jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
-			for(int x=0; x<hilfsListe.size(); x++){
-				ComStatistik statistik = hilfsListe.get(x);
-				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
-				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
-			}
+		for (int i = 0; i < unterOrga.size(); i++) {
+			List<ComStatistikNeu> hilfsListe = new ArrayList<ComStatistikNeu>();
+			rueckgabe.addAll(unterOrga.get(i).getStatistikAusDatenbankNeu(
+					kalendarwoche, jahr, hierarchieStufe + 1, hilfsListe));
+			// for(int x=0; x<hilfsListe.size(); x++){
+			// ComStatistikNeu statistik = hilfsListe.get(x);
+			// if(statistik.getHierarchiestufe()==hierarchieStufe+1)
+			// stricheUnterEinheiten = stricheUnterEinheiten +
+			// statistik.getStrichzahl();
+			// }
 		}
 		try {
-			ResultSet result = db.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY " +
-					"idOrgaEinheit, Jahr, idStrichart HAVING " +
-					"idOrgaEinheit = '" + idOrgaEinheit + "' AND " +
-					"Jahr = '" + jahr + "' AND " +
-					"idStrichart = '" + idStrichart + "'");
+			ResultSet result = db
+					.executeQueryStatement("SELECT * FROM Statistiken WHERE "
+							+ "idOrgaEinheit = " + idOrgaEinheit + " AND "
+							+ "Kalenderwoche = " + kalendarwoche + " AND "
+							+ "Jahr = " + jahr);
 			int strichzahl;
-			if(result.next()){
-				strichzahl = result.getInt("Strichzahl");
-			}else{
-				strichzahl = 0;
+			List<String> strichartBezeichnungen = new ArrayList<String>();
+			List<Integer> strichartAnzahl = new ArrayList<Integer>();
+			while (result.next()) {
+				Statistik stat = new Statistik(result, db);
+				List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+				for (int i = 0; i < unterOrga.size(); i++) {
+					idUnterOrgaEinheiten.add(unterOrga.get(i)
+							.getIdOrgaEinheit());
+				}
+				strichartBezeichnungen.add(stat.getStrichartBez());
+				strichartAnzahl.add(stat.getStrichanzahl());
 			}
-			strichzahl = strichzahl + stricheUnterEinheiten;
-			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-			for(int i=0; i<unterOrga.size();i++){
-				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
-			}
-			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, 0, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp,idUnterOrgaEinheiten));
+			rueckgabe.add(new ComStatistikNeu(OrgaEinheitBez, kalendarwoche,
+					jahr, strichartBezeichnungen, strichartAnzahl,
+					hierarchieStufe, OrgaEinheitTyp));
+			// strichzahl = strichzahl + stricheUnterEinheiten;
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rueckgabe;
 	}
-	
-	public List<ComStatistik> getTemporaereStatistik (int kalendarwoche, int jahr, int idStrichart, String strichBezeichnung, int hierarchieStufe, List<ComStatistik> rueckgabe){
+
+	public List<ComStatistik> getJahresStatistikAusDatenbank(int jahr,
+			int idStrichart, String strichBezeichnung, int hierarchieStufe,
+			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
-		for(int i=0; i<unterOrga.size(); i++){
+		for (int i = 0; i < unterOrga.size(); i++) {
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getTemporaereStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, hierarchieStufe+1, hilfsListe));
-			for(int x=0; x<hilfsListe.size(); x++){
+			rueckgabe.addAll(unterOrga.get(i).getJahresStatistikAusDatenbank(
+					jahr, idStrichart, strichBezeichnung, hierarchieStufe + 1,
+					hilfsListe));
+			for (int x = 0; x < hilfsListe.size(); x++) {
 				ComStatistik statistik = hilfsListe.get(x);
-				if(statistik.getHierarchiestufe()==hierarchieStufe+1)
-				stricheUnterEinheiten = stricheUnterEinheiten + statistik.getStrichzahl();
+				if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
+					stricheUnterEinheiten = stricheUnterEinheiten
+							+ statistik.getStrichzahl();
+			}
+		}
+		try {
+			ResultSet result = db
+					.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY "
+							+ "idOrgaEinheit, Jahr, idStrichart HAVING "
+							+ "idOrgaEinheit = '"
+							+ idOrgaEinheit
+							+ "' AND "
+							+ "Jahr = '"
+							+ jahr
+							+ "' AND "
+							+ "idStrichart = '"
+							+ idStrichart + "'");
+			int strichzahl;
+			if (result.next()) {
+				strichzahl = result.getInt("Strichzahl");
+			} else {
+				strichzahl = 0;
+			}
+			strichzahl = strichzahl + stricheUnterEinheiten;
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for (int i = 0; i < unterOrga.size(); i++) {
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, 0,
+					jahr, strichBezeichnung, idStrichart, strichzahl,
+					hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rueckgabe;
+	}
+
+	public List<ComStatistik> getTemporaereStatistik(int kalendarwoche,
+			int jahr, int idStrichart, String strichBezeichnung,
+			int hierarchieStufe, List<ComStatistik> rueckgabe) {
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		int stricheUnterEinheiten = 0;
+		for (int i = 0; i < unterOrga.size(); i++) {
+			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+			rueckgabe.addAll(unterOrga.get(i).getTemporaereStatistik(
+					kalendarwoche, jahr, idStrichart, strichBezeichnung,
+					hierarchieStufe + 1, hilfsListe));
+			for (int x = 0; x < hilfsListe.size(); x++) {
+				ComStatistik statistik = hilfsListe.get(x);
+				if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
+					stricheUnterEinheiten = stricheUnterEinheiten
+							+ statistik.getStrichzahl();
 			}
 		}
 		int strichzahl = getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
 		strichzahl = strichzahl + stricheUnterEinheiten;
 		List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-		for(int i=0; i<unterOrga.size();i++){
+		for (int i = 0; i < unterOrga.size(); i++) {
 			idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
 		}
-		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung, idStrichart, strichzahl, hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
+		rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez,
+				kalendarwoche, jahr, strichBezeichnung, idStrichart,
+				strichzahl, hierarchieStufe, OrgaEinheitTyp,
+				idUnterOrgaEinheiten));
 		return rueckgabe;
-	} 
-	
-	
+	}
+
 }
