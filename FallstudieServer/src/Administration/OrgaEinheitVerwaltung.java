@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Com.ComOrgaEinheit;
+import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Zugriffschicht;
 
@@ -22,13 +23,15 @@ public class OrgaEinheitVerwaltung {
 			String ueberOrgaEinheitString;
 			OrgaEinheit ueberOrgaEinheit = dbZugriff
 					.getOrgaEinheitZuidOrgaEinheit(orga.getIdUeberOrgaEinheit());
-			if (ueberOrgaEinheit != null) {
-				ueberOrgaEinheitString = ueberOrgaEinheit.getOrgaEinheitBez();
-			} else
-				ueberOrgaEinheitString = "Keine übergeordnete Einheit";
+			if (ueberOrgaEinheit != null) ueberOrgaEinheitString = ueberOrgaEinheit.getOrgaEinheitBez();
+			else ueberOrgaEinheitString = "Keine übergeordnete Einheit";
+			
+			String leitername = orga.getLeitername();
+			if(leitername == null || leitername.equals(""))leitername = "Kein Leiter";
+			
 			return new ComOrgaEinheit(orga.getIdOrgaEinheit(),
 					orga.getIdUeberOrgaEinheit(), ueberOrgaEinheitString,
-					orga.getOrgaEinheitBez(), orga.getLeitername(),
+					orga.getOrgaEinheitBez(), leitername,
 					orga.getIdLeiterBerechtigung(),
 					orga.getIdMitarbeiterBerechtigung(), orga.isZustand(),
 					orga.getOrgaEinheitTyp());
@@ -78,17 +81,24 @@ public class OrgaEinheitVerwaltung {
 	public boolean neueOrgaEinheit(int idUeberOrgaEinheit,
 			String OrgaEinheitBez, String Leitername, boolean Zustand,
 			String OrgaEinheitTyp) {
-		if (gibtEsOrgaEinheit(OrgaEinheitBez) || dbZugriff.getBenutzervonBenutzername(Leitername).isLeiter())
-			return false;
+		Benutzer leiter = dbZugriff.getBenutzervonBenutzername(Leitername);
+		if(leiter!=null){
+			if (gibtEsOrgaEinheit(OrgaEinheitBez) || dbZugriff.getBenutzervonBenutzername(Leitername).isLeiter())
+				return false;
+			else {
+				OrgaEinheit orga = dbZugriff.neueOrgaEinheit(idUeberOrgaEinheit,
+						OrgaEinheitBez, Leitername, Zustand, OrgaEinheitTyp);
+				dbZugriff.getBenutzervonBenutzername(Leitername).setidOrgaEinheit(orga.getIdOrgaEinheit());
+				return true;
+			}
+		}
 		else {
+			Leitername = null;
 			OrgaEinheit orga = dbZugriff.neueOrgaEinheit(idUeberOrgaEinheit,
 					OrgaEinheitBez, Leitername, Zustand, OrgaEinheitTyp);
 			if (orga == null)
 				return false;
-			else{
-				dbZugriff.getBenutzervonBenutzername(Leitername).setidOrgaEinheit(orga.getIdOrgaEinheit());
-				return true;
-			}
+			else return true;
 		}
 
 	}
