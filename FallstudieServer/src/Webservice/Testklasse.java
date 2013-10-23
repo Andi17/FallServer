@@ -8,7 +8,6 @@ import javax.xml.ws.Endpoint;
 import Com.ComBenutzer;
 import Com.ComOrgaEinheit;
 import Com.ComStatistik;
-import Com.ComStatistikNeu;
 import Com.ComStrichart;
 import Optionen.Optionen;
 
@@ -74,10 +73,10 @@ public class Testklasse {
 //		webservice.benutzerErstellen("Admin", "aic", "Zentralbereichsleiter", "1", 2);
 //		System.out.println(webservice.orgaEinheitLeiterAendern("admin", "aic", 2, "Zentralbereichsleiter"));
 		
-		List<ComStatistikNeu> statistiken = webservice.getBereichsStatistikNeu("abt", "", 1, 2013);
+		List<ComStatistik> statistiken = webservice.getStrichartStatistik("ztb", "ztb", 1, 2013);
 		if(statistiken != null)
 		for (int i=0; i<statistiken.size(); i++){
-			ComStatistikNeu stat = statistiken.get(i);
+			ComStatistik stat = statistiken.get(i);
 			System.out.println("OEBez: " + stat.getOrgaEinheitBez() + "\t\t   StrichBez: " + stat.getStrichBez() + "\t Anzahl: " + stat.getStrichzahl() 
 					+ " \t Hierarchieebene: " + stat.getHierarchiestufe());
 		}

@@ -22,7 +22,6 @@ import Administration.StrichArtVerwaltung;
 import Com.ComBenutzer;
 import Com.ComOrgaEinheit;
 import Com.ComStatistik;
-import Com.ComStatistikNeu;
 import Com.ComStrichart;
 import Optionen.Optionen;
 import Statistikausgabe.Statistikausgabe;
@@ -458,17 +457,6 @@ public class Webservice {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getBereichsStatistik(benutzer,
-					kalendarwoche, jahr);
-		}
-		return null;
-	}
-
-	@WebMethod
-	public List<ComStatistikNeu> getBereichsStatistikNeu(String benutzer,
-			String passwort, int kalendarwoche, int jahr) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
-				Rechte.statistikSehen)) {
-			return statistikausgabe.getBereichsStatistikNeu(benutzer,
 					kalendarwoche, jahr);
 		}
 		return null;
