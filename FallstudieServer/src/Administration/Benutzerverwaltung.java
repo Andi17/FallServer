@@ -36,6 +36,7 @@ public class Benutzerverwaltung {
 
 	// Holt sich den entsprechenden Benutzer aus der Zugriffsschicht.
 	// gibt null zurück wenn kein Benutzer mit dem Benutzernamen existiert.
+	@SuppressWarnings("unused")
 	public ComBenutzer getBenutzer(String benutzername) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(benutzername);

@@ -430,13 +430,13 @@ public class Webservice {
 	// Ebene unter ihm sehen.
 	//Gibt eine Liste von Kommunikationsobjekten aus, die jeweils Informationen über eine Woche
 	//einer bestimmten Gruppe mit einer bestimmten Strichart enthält.
-	//Die Liste ist nach Bereichen sortiert.
+	//Die Liste ist nach OrgaEinheiten sortiert.
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistik(String benutzer,
 			String passwort, int kalendarwoche, int jahr) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
-			return statistikausgabe.getBereichsStatistik(benutzer,
+			return statistikausgabe.getOrgaEinheitStatistik(benutzer,
 					kalendarwoche, jahr);
 		}
 		return null;
@@ -450,7 +450,7 @@ public class Webservice {
 			String passwort, int jahr) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
-			return statistikausgabe.getBereichsStatistikJahr(benutzer, jahr);
+			return statistikausgabe.getOrgaEinheitStatistikJahr(benutzer, jahr);
 		}
 		return null;
 	}

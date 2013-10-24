@@ -22,8 +22,8 @@ public class Statistikausgabe {
 	
 	//Gibt eine Liste von Kommunikationsobjekten aus, die jeweils Informationen über eine Woche
 	//einer bestimmten Gruppe mit einer bestimmten Strichart enthält.
-	//Die Liste ist nach Bereichen sortiert.
-	public List<ComStatistik> getBereichsStatistik(String benutzername, int kalendarwoche, int jahr){
+	//Die Liste ist nach OrgaEinheiten sortiert.
+	public List<ComStatistik> getOrgaEinheitStatistik(String benutzername, int kalendarwoche, int jahr){
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
 		List<ComStatistik> statistikListe = new ArrayList<ComStatistik>();
@@ -38,7 +38,7 @@ public class Statistikausgabe {
 	//Gibt eine Liste in Form von getBereichsStatistik zurück, lediglich enthalten hier die 
 	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
 	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
-	public List<ComStatistik> getBereichsStatistikJahr(String benutzername, int jahr){
+	public List<ComStatistik> getOrgaEinheitStatistikJahr(String benutzername, int jahr){
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
 		List<ComStatistik> statistikListe = new ArrayList<ComStatistik>();
