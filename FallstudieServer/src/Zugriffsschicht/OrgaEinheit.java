@@ -317,7 +317,7 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
@@ -388,7 +388,7 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
@@ -438,7 +438,7 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
