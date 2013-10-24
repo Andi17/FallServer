@@ -21,6 +21,7 @@ public class OrgaEinheit {
 	private int idMitarbeiterBerechtigung;
 	private String OrgaEinheitTyp;
 
+	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
 	public OrgaEinheit(ResultSet resultSet, JdbcAccess db,
 			Zugriffschicht dbZugriff) throws SQLException {
 		werteSetzen(resultSet);
@@ -28,6 +29,8 @@ public class OrgaEinheit {
 		this.dbZugriff = dbZugriff;
 	}
 
+	//Konstruktor, der eine neue OrgaEinheit erstellt. Wirft eine Exception wenn etwas
+	//nicht funktioniert hat.
 	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez,
 			String Leitername, boolean zustand, String OrgaEinheitTyp,
 			JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException {
@@ -87,7 +90,8 @@ public class OrgaEinheit {
 		}
 	}
 
-	public void werteSetzen(ResultSet resultSet) throws SQLException {
+	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
+	private void werteSetzen(ResultSet resultSet) throws SQLException {
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.idUeberOrgaEinheit = resultSet.getInt("idUeberOrgaEinheit");
 		this.OrgaEinheitBez = resultSet.getString("OrgaEinheitBez");
@@ -131,6 +135,8 @@ public class OrgaEinheit {
 		return OrgaEinheitTyp;
 	}
 
+	//Alle Setter Methoden ändern zuerst den Wert in der Datenbank und nur wenn das geklappt hat
+	//auch den Wert in diesem Objekt. False wenn ein Fehler aufgetreten ist.
 	public boolean setOrgaEinheitBez(String orgaEinheitBez) {
 		try {
 			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = '"
@@ -140,7 +146,6 @@ public class OrgaEinheit {
 			OrgaEinheitBez = orgaEinheitBez;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -155,7 +160,6 @@ public class OrgaEinheit {
 			idUeberOrgaEinheit = idueberOrgaEinheit;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -168,7 +172,6 @@ public class OrgaEinheit {
 			Leitername = leitername;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -183,7 +186,6 @@ public class OrgaEinheit {
 			this.idLeiterBerechtigung = idLeiterBerechtigung;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -201,7 +203,6 @@ public class OrgaEinheit {
 			zustand = neuerZustand;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -216,6 +217,8 @@ public class OrgaEinheit {
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 	}
 
+	//Gibt alle Striche aufaddiert der übergebenen strichart in der übergebenen kalendarwoche und jahr zurück.
+	//Holt die Werte aus der Tabelle Arbeitsschritte.
 	public int getAlleStricheInWoche(int kalendarwoche, int jahr,
 			int idStrichart) {
 		try {
@@ -237,12 +240,12 @@ public class OrgaEinheit {
 			else
 				return 0;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 0;
 		}
 	}
 
+	//Gibt eine Liste mit allen OrgaEinheiten, die diese als UeberOrgaEinheit gespeichert haben.
 	public List<OrgaEinheit> getUnterOrgaEinheiten() {
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
@@ -260,14 +263,212 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	public List<ComStatistik> getStatistikAusDatenbank(int kalendarwoche,
+	//liest alle Statistiken aus der Tabelle Statistiken, die in der übergebenen kalendarwoche und
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach OrgaEinheit sortiert.
+	public List<ComStatistik> getOrgaEinheitStatistikAusDatenbank(
+			int kalendarwoche, int jahr, int hierarchieStufe,
+			List<ComStatistik> rueckgabe) {
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
+		if (OrgaEinheitTyp.equals("Gruppe")) {
+			try {
+				for (Strichart strichart : stricharten) {
+					ResultSet result = db
+							.executeQueryStatement("SELECT * FROM Statistiken WHERE "
+									+ "idOrgaEinheit = "
+									+ idOrgaEinheit
+									+ " AND Kalenderwoche = "
+									+ kalendarwoche
+									+ " AND Jahr = "
+									+ jahr
+									+ " AND idStrichart = "
+									+ strichart.getIdStrichart());
+					if (result.next()) {
+						Statistik stat = new Statistik(result, db);
+						rueckgabe.add(new ComStatistik(idOrgaEinheit,
+								OrgaEinheitBez, kalendarwoche, jahr, stat
+										.getStrichartBez(),
+								stat.getStrichart(), stat.getStrichanzahl(),
+								hierarchieStufe, OrgaEinheitTyp, null));
+					} else {
+						rueckgabe.add(new ComStatistik(idOrgaEinheit,
+								OrgaEinheitBez, kalendarwoche, jahr, strichart
+										.getStrichbez(), strichart
+										.getIdStrichart(), 0, hierarchieStufe,
+								OrgaEinheitTyp, null));
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			for (int i = 0; i < unterOrga.size(); i++) {
+				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+				rueckgabe.addAll(unterOrga.get(i)
+						.getOrgaEinheitStatistikAusDatenbank(kalendarwoche, jahr,
+								hierarchieStufe + 1, hilfsListe));
+			}
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for (int i = 0; i < unterOrga.size(); i++) {
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
+			for (Strichart strichart : stricharten) {
+				int stricheUnterEinheiten = 0;
+				for (ComStatistik stat : rueckgabe) {
+					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+						stricheUnterEinheiten = stricheUnterEinheiten
+								+ stat.getStrichzahl();
+					}
+				}
+				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
+						OrgaEinheitBez, kalendarwoche, jahr, strichart
+								.getStrichbez(), strichart.getIdStrichart(),
+						stricheUnterEinheiten, hierarchieStufe, OrgaEinheitTyp,
+						idUnterOrgaEinheiten));
+			}
+			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
+			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
+				rueckgabe.add(0, eigeneStatistiken.get(x));
+			}
+
+		}
+		return rueckgabe;
+	}
+
+	//liest alle Statistiken aus der Tabelle Statistiken, die in dem übergebenen
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach OrgaEinheit sortiert.
+	public List<ComStatistik> getJahresOrgaEinheitStatistikAusDatenbank(int jahr,
+			int hierarchieStufe, List<ComStatistik> rueckgabe) {
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
+		if (OrgaEinheitTyp.equals("Gruppe")) {
+			try {
+				for (Strichart strichart : stricharten) {
+					ResultSet result = db
+							.executeQueryStatement("SELECT * FROM Statistiken WHERE "
+									+ "idOrgaEinheit = "
+									+ idOrgaEinheit
+									+ " AND Jahr = "
+									+ jahr
+									+ " AND idStrichart = "
+									+ strichart.getIdStrichart());
+					if (result.next()) {
+						Statistik stat = new Statistik(result, db);
+						rueckgabe.add(new ComStatistik(idOrgaEinheit,
+								OrgaEinheitBez, 0, jahr,
+								stat.getStrichartBez(), stat.getStrichart(),
+								stat.getStrichanzahl(), hierarchieStufe,
+								OrgaEinheitTyp, null));
+					} else {
+						rueckgabe.add(new ComStatistik(idOrgaEinheit,
+								OrgaEinheitBez, 0, jahr, strichart
+										.getStrichbez(), strichart
+										.getIdStrichart(), 0, hierarchieStufe,
+								OrgaEinheitTyp, null));
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			for (int i = 0; i < unterOrga.size(); i++) {
+				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+				rueckgabe.addAll(unterOrga.get(i)
+						.getJahresOrgaEinheitStatistikAusDatenbank(jahr,
+								hierarchieStufe + 1, hilfsListe));
+			}
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for (int i = 0; i < unterOrga.size(); i++) {
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
+			for (Strichart strichart : stricharten) {
+				int stricheUnterEinheiten = 0;
+				for (ComStatistik stat : rueckgabe) {
+					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+						stricheUnterEinheiten = stricheUnterEinheiten
+								+ stat.getStrichzahl();
+					}
+				}
+				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
+						OrgaEinheitBez, 0, jahr, strichart.getStrichbez(),
+						strichart.getIdStrichart(), stricheUnterEinheiten,
+						hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
+			}
+			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
+			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
+				rueckgabe.add(0, eigeneStatistiken.get(x));
+			}
+
+		}
+		return rueckgabe;
+	}
+
+	//liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der übergebenen Kalendarwoche und
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach OrgaEinheit sortiert.
+	public List<ComStatistik> getTemporaereOrgaEinheitStatistik(int kalendarwoche,
+			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
+		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
+		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
+		if (OrgaEinheitTyp.equals("Gruppe")) {
+			for (Strichart strichart : stricharten) {
+				int anzahlStriche = getAlleStricheInWoche(kalendarwoche, jahr,
+						strichart.getIdStrichart());
+				rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez,
+						kalendarwoche, jahr, strichart.getStrichbez(),
+						strichart.getIdStrichart(), anzahlStriche,
+						hierarchieStufe, OrgaEinheitTyp, null));
+			}
+		} else {
+			for (int i = 0; i < unterOrga.size(); i++) {
+				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
+				rueckgabe.addAll(unterOrga.get(i)
+						.getTemporaereOrgaEinheitStatistik(kalendarwoche, jahr,
+								hierarchieStufe + 1, hilfsListe));
+			}
+			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
+			for (int i = 0; i < unterOrga.size(); i++) {
+				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+			}
+			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
+			for (Strichart strichart : stricharten) {
+				int stricheUnterEinheiten = 0;
+				for (ComStatistik stat : rueckgabe) {
+					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
+						stricheUnterEinheiten = stricheUnterEinheiten
+								+ stat.getStrichzahl();
+					}
+				}
+				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
+						OrgaEinheitBez, kalendarwoche, jahr, strichart
+								.getStrichbez(), strichart.getIdStrichart(),
+						stricheUnterEinheiten, hierarchieStufe, OrgaEinheitTyp,
+						idUnterOrgaEinheiten));
+			}
+			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
+			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
+				rueckgabe.add(0, eigeneStatistiken.get(x));
+			}
+
+		}
+		return rueckgabe;
+	}
+
+	//liest alle Statistiken aus der Tabelle Statistiken, die in der übergebenen kalendarwoche und
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach Strichart sortiert.
+	public List<ComStatistik> getStrichartStatistikAusDatenbank(int kalendarwoche,
 			int jahr, int idStrichart, String strichBezeichnung,
 			int hierarchieStufe, List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
 		for (int i = 0; i < unterOrga.size(); i++) {
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getStatistikAusDatenbank(
+			rueckgabe.addAll(unterOrga.get(i).getStrichartStatistikAusDatenbank(
 					kalendarwoche, jahr, idStrichart, strichBezeichnung,
 					hierarchieStufe + 1, hilfsListe));
 			for (int x = 0; x < hilfsListe.size(); x++) {
@@ -305,202 +506,17 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	public List<ComStatistik> getBereichsStatistikAusDatenbank(
-			int kalendarwoche, int jahr, int hierarchieStufe,
-			List<ComStatistik> rueckgabe) {
-		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
-		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Gruppe")) {
-			try {
-				for (Strichart strichart : stricharten) {
-					ResultSet result = db
-							.executeQueryStatement("SELECT * FROM Statistiken WHERE "
-									+ "idOrgaEinheit = "
-									+ idOrgaEinheit
-									+ " AND Kalenderwoche = "
-									+ kalendarwoche
-									+ " AND Jahr = "
-									+ jahr
-									+ " AND idStrichart = "
-									+ strichart.getIdStrichart());
-					if (result.next()) {
-						Statistik stat = new Statistik(result, db);
-						rueckgabe.add(new ComStatistik(idOrgaEinheit,
-								OrgaEinheitBez, kalendarwoche, jahr, stat
-										.getStrichartBez(),
-								stat.getStrichart(), stat.getStrichanzahl(),
-								hierarchieStufe, OrgaEinheitTyp, null));
-					} else {
-						rueckgabe.add(new ComStatistik(idOrgaEinheit,
-								OrgaEinheitBez, kalendarwoche, jahr, strichart
-										.getStrichbez(), strichart
-										.getIdStrichart(), 0, hierarchieStufe,
-								OrgaEinheitTyp, null));
-					}
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			for (int i = 0; i < unterOrga.size(); i++) {
-				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i)
-						.getBereichsStatistikAusDatenbank(kalendarwoche, jahr,
-								hierarchieStufe + 1, hilfsListe));
-			}
-			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-			for (int i = 0; i < unterOrga.size(); i++) {
-				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
-			}
-			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
-			for (Strichart strichart : stricharten) {
-				int stricheUnterEinheiten = 0;
-				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
-						stricheUnterEinheiten = stricheUnterEinheiten
-								+ stat.getStrichzahl();
-					}
-				}
-				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
-						OrgaEinheitBez, kalendarwoche, jahr, strichart
-								.getStrichbez(), strichart.getIdStrichart(),
-						stricheUnterEinheiten, hierarchieStufe, OrgaEinheitTyp,
-						idUnterOrgaEinheiten));
-			}
-			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
-			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
-				rueckgabe.add(0, eigeneStatistiken.get(x));
-			}
-
-		}
-		return rueckgabe;
-	}
-
-	public List<ComStatistik> getJahresBereichsStatistikAusDatenbank(int jahr,
-			int hierarchieStufe, List<ComStatistik> rueckgabe) {
-		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
-		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Gruppe")) {
-			try {
-				for (Strichart strichart : stricharten) {
-					ResultSet result = db
-							.executeQueryStatement("SELECT * FROM Statistiken WHERE "
-									+ "idOrgaEinheit = "
-									+ idOrgaEinheit
-									+ " AND Jahr = "
-									+ jahr
-									+ " AND idStrichart = "
-									+ strichart.getIdStrichart());
-					if (result.next()) {
-						Statistik stat = new Statistik(result, db);
-						rueckgabe.add(new ComStatistik(idOrgaEinheit,
-								OrgaEinheitBez, 0, jahr,
-								stat.getStrichartBez(), stat.getStrichart(),
-								stat.getStrichanzahl(), hierarchieStufe,
-								OrgaEinheitTyp, null));
-					} else {
-						rueckgabe.add(new ComStatistik(idOrgaEinheit,
-								OrgaEinheitBez, 0, jahr, strichart
-										.getStrichbez(), strichart
-										.getIdStrichart(), 0, hierarchieStufe,
-								OrgaEinheitTyp, null));
-					}
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			for (int i = 0; i < unterOrga.size(); i++) {
-				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i)
-						.getJahresBereichsStatistikAusDatenbank(jahr,
-								hierarchieStufe + 1, hilfsListe));
-			}
-			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-			for (int i = 0; i < unterOrga.size(); i++) {
-				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
-			}
-			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
-			for (Strichart strichart : stricharten) {
-				int stricheUnterEinheiten = 0;
-				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
-						stricheUnterEinheiten = stricheUnterEinheiten
-								+ stat.getStrichzahl();
-					}
-				}
-				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
-						OrgaEinheitBez, 0, jahr, strichart.getStrichbez(),
-						strichart.getIdStrichart(), stricheUnterEinheiten,
-						hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
-			}
-			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
-			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
-				rueckgabe.add(0, eigeneStatistiken.get(x));
-			}
-
-		}
-		return rueckgabe;
-	}
-
-	public List<ComStatistik> getTemporaereBereichsStatistik(int kalendarwoche,
-			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
-		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
-		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Gruppe")) {
-			for (Strichart strichart : stricharten) {
-				int anzahlStriche = getAlleStricheInWoche(kalendarwoche, jahr,
-						strichart.getIdStrichart());
-				rueckgabe.add(new ComStatistik(idOrgaEinheit, OrgaEinheitBez,
-						kalendarwoche, jahr, strichart.getStrichbez(),
-						strichart.getIdStrichart(), anzahlStriche,
-						hierarchieStufe, OrgaEinheitTyp, null));
-			}
-		} else {
-			for (int i = 0; i < unterOrga.size(); i++) {
-				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i)
-						.getTemporaereBereichsStatistik(kalendarwoche, jahr,
-								hierarchieStufe + 1, hilfsListe));
-			}
-			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
-			for (int i = 0; i < unterOrga.size(); i++) {
-				idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
-			}
-			List<ComStatistik> eigeneStatistiken = new ArrayList<ComStatistik>();
-			for (Strichart strichart : stricharten) {
-				int stricheUnterEinheiten = 0;
-				for (ComStatistik stat : rueckgabe) {
-					if (stat.getIdStrichBez() == strichart.getIdStrichart()) {
-						stricheUnterEinheiten = stricheUnterEinheiten
-								+ stat.getStrichzahl();
-					}
-				}
-				eigeneStatistiken.add(new ComStatistik(idOrgaEinheit,
-						OrgaEinheitBez, kalendarwoche, jahr, strichart
-								.getStrichbez(), strichart.getIdStrichart(),
-						stricheUnterEinheiten, hierarchieStufe, OrgaEinheitTyp,
-						idUnterOrgaEinheiten));
-			}
-			// eigeneStatistiken in richtiger Reihenfolge oben ausgeben:
-			for (int x = eigeneStatistiken.size() - 1; x >= 0; x--) {
-				rueckgabe.add(0, eigeneStatistiken.get(x));
-			}
-
-		}
-		return rueckgabe;
-	}
-
-	public List<ComStatistik> getJahresStatistikAusDatenbank(int jahr,
+	//liest alle Statistiken aus der Tabelle Statistiken, die in dem übergebenen
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach Strichart sortiert.
+	public List<ComStatistik> getJahresStrichartStatistikAusDatenbank(int jahr,
 			int idStrichart, String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
 		for (int i = 0; i < unterOrga.size(); i++) {
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getJahresStatistikAusDatenbank(
+			rueckgabe.addAll(unterOrga.get(i).getJahresStrichartStatistikAusDatenbank(
 					jahr, idStrichart, strichBezeichnung, hierarchieStufe + 1,
 					hilfsListe));
 			for (int x = 0; x < hilfsListe.size(); x++) {
@@ -537,20 +553,22 @@ public class OrgaEinheit {
 					jahr, strichBezeichnung, idStrichart, strichzahl,
 					hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rueckgabe;
 	}
 
-	public List<ComStatistik> getTemporaereStatistik(int kalendarwoche,
+	//liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der übergebenen Kalendarwoche und
+	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
+	//Ist nach Strichart sortiert.
+	public List<ComStatistik> getTemporaereStrichartStatistik(int kalendarwoche,
 			int jahr, int idStrichart, String strichBezeichnung,
 			int hierarchieStufe, List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		int stricheUnterEinheiten = 0;
 		for (int i = 0; i < unterOrga.size(); i++) {
 			List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-			rueckgabe.addAll(unterOrga.get(i).getTemporaereStatistik(
+			rueckgabe.addAll(unterOrga.get(i).getTemporaereStrichartStatistik(
 					kalendarwoche, jahr, idStrichart, strichBezeichnung,
 					hierarchieStufe + 1, hilfsListe));
 			for (int x = 0; x < hilfsListe.size(); x++) {

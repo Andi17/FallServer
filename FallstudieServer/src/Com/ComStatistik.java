@@ -13,6 +13,9 @@ public class ComStatistik {
 	private int Hierarchiestufe;
 	private String OrgaEinheitTyp;
 	private List<Integer> unterOrgaEinheiten;
+	
+	//Kommunikationsklasse, welches an den Client übergeben werden kann.
+	//Enthält alle Informationen über eine Statistik.
 
 	public ComStatistik(){}
 	

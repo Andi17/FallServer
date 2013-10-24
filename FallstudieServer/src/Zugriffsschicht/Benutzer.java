@@ -1,6 +1,5 @@
 package Zugriffsschicht;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,12 +14,15 @@ public class Benutzer {
 	private int idOrgaEinheit;
 	private boolean gesperrt;
 
+	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
 	public Benutzer(ResultSet resultSet, JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException {
 		this.db = db;
 		this.dbZugriff = dbZugriff;
 		werteSetzen(resultSet);
 	}
 
+	//Konstruktor, der einen neuen Benutzer erstellt. Wirft eine Exception wenn etwas
+	//nicht funktioniert hat.
 	public Benutzer(String Benutzername, String Passwort, int idOrgaEinheit,
 			boolean Gesperrt, JdbcAccess db) throws SQLException{
 		String GesperrtString = "0";
@@ -41,6 +43,8 @@ public class Benutzer {
 		werteSetzen(resultSet);
 		resultSet.close();
 	}
+	
+	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
 	private void werteSetzen(ResultSet resultSet) throws SQLException{
 		this.benutzername = resultSet.getString("Benutzername");
 		this.Passwort = resultSet.getString("Passwort");
@@ -76,12 +80,13 @@ public class Benutzer {
 			if(result.next())return true;
 			else return false;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
 
+	//Alle Setter Methoden ändern zuerst den Wert in der Datenbank und nur wenn das geklappt hat
+	//auch den Wert in diesem Objekt. False wenn ein Fehler aufgetreten ist.
 	public boolean setGesperrt(boolean gesperrt) {
 		String stringGesperrt;
 		if(gesperrt) stringGesperrt = "1";
@@ -91,7 +96,6 @@ public class Benutzer {
 			this.gesperrt = gesperrt;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -104,7 +108,6 @@ public class Benutzer {
 			this.benutzername = neuerBenutzername;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -118,7 +121,6 @@ public class Benutzer {
 			this.Passwort = passwort;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		} 
@@ -131,7 +133,6 @@ public class Benutzer {
 			this.idOrgaEinheit = aktuelleOE;
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -142,7 +143,6 @@ public class Benutzer {
 			db.executeUpdateStatement("DELETE FROM Benutzer WHERE Benutzername = '"+benutzername+"'");
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}

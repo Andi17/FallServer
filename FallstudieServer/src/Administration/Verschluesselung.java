@@ -11,6 +11,7 @@ public class Verschluesselung {
 	
 	private static String password = "";
 	
+	//Verschlüsslt das Passwort und gibt den verschlüsselten String zurück.
 	public static String verschluesseln(String passwort) {
 		password = passwort;
 

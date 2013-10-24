@@ -8,6 +8,7 @@ import Zugriffsschicht.Benutzer;
 import Zugriffsschicht.Zugriffschicht;
 
 //Anforderung 4.2.8 wird hier realisiert.
+//Klasse zum Verwalten und Überprüfen von Rechten.
 
 public class Rechte {
 	
@@ -23,6 +24,10 @@ public class Rechte {
 		this.dbZugriff = dbZugriff;
 	}
 	
+	//Methode für den ersten Login. gibt 1 zurück wenn der Benutzer sich anmelden darf.
+	//2, falls es den Benutzer nicht in der DB gibt
+	//3, falls der Benutzer gesperrt ist
+	//4, falls das Passwort einfach nicht mit dem Passwort in der Datenbank übereinstimmt.
 	public int ersterLogin(String benutzername, String passwort){
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		
@@ -42,11 +47,10 @@ public class Rechte {
 		}
 	}
 
+	//Mehtode beim Überprüfen für die Rechte. Einfach nur zur Sicherheit noch einmal überprüfen,
+	//dass Benutzername und Passwort auch wirklich übereinstimmen.
+	//Gibt true zurück wenn sie übereinstimmen.
 	private boolean login(String Benutzername, String Passwort) {
-		/*
-		 * Überprüfung ob die Logindaten übereinstimmen: Passt Passwort zu
-		 * Benutzername.
-		 */
 		
 		Passwort = Verschluesselung.verschluesseln(Passwort);
 		
@@ -57,12 +61,10 @@ public class Rechte {
 		return false;
 	}
 
+	//Gibt true zurück, wenn der Benutzer für das Ausführen der Webmethode 
+	//(wird über den Integer vorgang übergeben) auch berechtig ist.
 	public boolean vorgangMoeglich(String benutzername, String Passwort,
 			int Vorgang) {
-		/*
-		 * überprüfung ob login gültig ist rechte suchen vergleichen ob Vorgang
-		 * mit erhaltenen rechten möglich ist.
-		 */
 		if (login(benutzername, Passwort)) {
 			if (Vorgang == alleBenutzer) {
 				return true;
@@ -77,7 +79,9 @@ public class Rechte {
 		return false;
 	}
 
-	//Gibt eine liste von chars zurück, 3 für Adminrechte, 1 für Strichelrechte und 2 für Statistikrechte
+	//Gibt eine liste von chars zurück, 3 für Adminrechte, 1 für Strichelrechte 
+	//und 2 für Statistikrechte.
+	//Wird für den Client benötigt, damit er weiß welche Seiten er anzeigen darf.
 	public List<Integer> erlaubteAnzeigen(String benutzername) {
 		List<Integer> rueckgabe = new ArrayList<Integer>();
 		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
@@ -92,17 +96,6 @@ public class Rechte {
 			rueckgabe.add(2);
 		}
 		return rueckgabe;
-	}
-	
-	//Gibt die Berechtigungsbezeichnung zu der passenden ID.
-	public static String getRechtBezeichnung(int rechtID){
-		switch(rechtID){
-		case 1: return "Admin";
-		case 2: return "Stricheln";
-		case 3: return "NurEigeneGruppenEinsehbar";
-		case 4: return "AlleGruppenEinsebar";
-		default: return "Keine Berechtigung";
-		}
 	}
 
 }

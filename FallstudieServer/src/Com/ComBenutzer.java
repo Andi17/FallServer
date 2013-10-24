@@ -7,6 +7,9 @@ public class ComBenutzer {
 	private String OrgaEinheitBez;
 	private boolean Gesperrt;
 	
+	//Kommunikationsklasse, welches an den Client übergeben werden kann.
+	//Enthält alle Informationen über einen Benutzer.
+	
 	public ComBenutzer(){}
 	
 	public ComBenutzer(String Benutzername, String Passwort, int idOrgaEinheit, String OrgaEinheitBez, boolean Gesperrt){

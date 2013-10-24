@@ -16,6 +16,7 @@ public class OrgaEinheitVerwaltung {
 		this.dbZugriff = dbZugriff;
 	}
 
+	//Gibt ein Kommunikationsobjekt zurück. null wenn die orgaEinheitBez nicht vergeben ist.
 	public ComOrgaEinheit getOrgaEinheit(String orgaEinheitBez) {
 		OrgaEinheit orga = dbZugriff
 				.getOrgaEinheitvonBezeichnung(orgaEinheitBez);
@@ -67,6 +68,7 @@ public class OrgaEinheitVerwaltung {
 
 	}
 
+	//Gibt eine Liste von Strings zurück, die die Bezeichnungen aller OrgaEinheiten enthält.
 	public List<String> getAlleOrgaEinheitenBezeichnungenMitTyp(String typ) {
 		List<OrgaEinheit> listeOrgaEinheiten = dbZugriff
 				.getOrgaEinheitenZuTyp(typ);
@@ -103,7 +105,7 @@ public class OrgaEinheitVerwaltung {
 
 	}
 
-	// Gibt true zurück wenn es schon eine OrgaEinheit mit der Bezeichnung gibt.
+	// Gibt true zurück wenn es schon eine OrgaEinheit mit der Bezeichnung gibt, sonst false.
 	public boolean gibtEsOrgaEinheit(String bezeichnung) {
 		OrgaEinheit orgaEinheit = null;
 		orgaEinheit = dbZugriff.getOrgaEinheitvonBezeichnung(bezeichnung);
@@ -113,7 +115,8 @@ public class OrgaEinheitVerwaltung {
 			return true;
 	}
 
-	// Setzt die OrgaEinheit mit der id auf inaktiv.
+	// Setzt die OrgaEinheit mit der Bezeichnung auf inaktiv.
+	//Gibt true zurück, wenn der Zustand geändert wurde, ansonsten false.
 	public boolean OrgaEinheitZustandAendern(String OrgaEinheit,
 			boolean neuerZustand) {
 		OrgaEinheit orgaEinheit = dbZugriff
@@ -124,6 +127,8 @@ public class OrgaEinheitVerwaltung {
 			return false;
 	}
 
+	//Ändert den Leiter der entsprechenden OrgaEinheit auf den String leitername.
+	//Gibt true zurück, wenn der Leiter geändert wurde, ansonsten false.
 	public boolean OrgaEinheitLeiterAendern(String OrgaEinheit, String leitername) {
 		OrgaEinheit orgaEinheit = dbZugriff
 				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
@@ -137,16 +142,21 @@ public class OrgaEinheitVerwaltung {
 			return false;
 	}
 	
-	public boolean OrgaEinheitBezeichnungAendern(String OrgaEinheit, String bezeichnung) {
+	//Ändert die Bezeichnung der entsprechenden OrgaEinheit auf den String neueBezeichnung.
+	//Gibt true zurück, wenn die Bezeichnung geändert wurde, ansonsten false.
+	public boolean OrgaEinheitBezeichnungAendern(String betroffeneOrgaEinheit, String neueBezeichnung) {
 		OrgaEinheit orgaEinheit = dbZugriff
-				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
+				.getOrgaEinheitvonBezeichnung(betroffeneOrgaEinheit);
 		if (orgaEinheit != null
-				&& dbZugriff.getOrgaEinheitvonBezeichnung(bezeichnung)==null) {
-			return orgaEinheit.setOrgaEinheitBez(bezeichnung);
+				&& dbZugriff.getOrgaEinheitvonBezeichnung(neueBezeichnung)==null) {
+			return orgaEinheit.setOrgaEinheitBez(neueBezeichnung);
 		} else
 			return false;
 	}
 	
+	//Ändert die übergeordnete Einheit der entsprechenden OrgaEinheit auf die ID, 
+	//die der Bezeichnung des Strings ueberOrgaEinheit entspricht.
+	//Gibt true zurück, wenn die idUeberOrgaEinheit geändert wurde, ansonsten false.
 	public boolean OrgaEinheitUeberOrgaEinheitAendern(String OrgaEinheit, String ueberOrgaEinheit){
 		OrgaEinheit orgaEinheit = dbZugriff
 				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
@@ -157,6 +167,7 @@ public class OrgaEinheitVerwaltung {
 		else return false;
 	}
 
+	//Gibt eine Liste mit Strings zurück, die alle möglichen Typen repräsentiert.
 	public List<String> getOrgaEinheitTypen() {
 		return dbZugriff.getOrgaEinheitTypen();
 	}

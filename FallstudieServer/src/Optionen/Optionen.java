@@ -1,5 +1,7 @@
 package Optionen;
 
+//Hier werden sind alle Optionen enthalten.
+
 public class Optionen {
 	private final static boolean initialbelegungBenutzerGesperrt = false;
 	private final static boolean initialbelegungOrgaEinheitZustand = true;

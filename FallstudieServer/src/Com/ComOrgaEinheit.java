@@ -10,6 +10,9 @@ public class ComOrgaEinheit {
 	private int idMitarbeiterBerechtigung;
 	private boolean zustand;
 	private String OrgaEinheitTyp;
+	
+	//Kommunikationsklasse, welches an den Client übergeben werden kann.
+	//Enthält alle Informationen über eine Organisationseinheit.
 
 	public ComOrgaEinheit(){}
 	

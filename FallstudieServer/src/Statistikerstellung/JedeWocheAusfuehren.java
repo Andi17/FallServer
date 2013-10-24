@@ -10,6 +10,9 @@ import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Strichart;
 import Zugriffsschicht.Zugriffschicht;
 
+//Diese Klasse ist ein TimerTask, die run() Methode wird in einem bestimmten Intervall 
+//immer wieder ausgeführt. Aktuelle Einstellung: Bei Start des Servers und dann immer Montags um 1:00.
+
 public class JedeWocheAusfuehren extends TimerTask{
 	
 	private Zugriffschicht dbZugriff;
@@ -18,8 +21,7 @@ public class JedeWocheAusfuehren extends TimerTask{
 		this.dbZugriff = dbZugriff;
 	}
 
-	//Diese Methode wird immer Montags, um 1:00 aufgerufen
-	//Erstellt Statistiken und löscht Arbeitsschritte
+	//Erstellt permanente Statistiken und löscht Arbeitsschritte
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -39,7 +41,7 @@ public class JedeWocheAusfuehren extends TimerTask{
 				int idStrichart = stricharten.get(x).getIdStrichart();
 				int strichanzahl = orgaEinheit.getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
 				if(strichanzahl!=0)
-				dbZugriff.neueStatistik(orgaEinheit.getIdOrgaEinheit(), kalendarwoche , jahr, idStrichart, strichanzahl);
+				dbZugriff.neueStatistikErstellen(orgaEinheit.getIdOrgaEinheit(), kalendarwoche , jahr, idStrichart, strichanzahl);
 			
 			}
 		}

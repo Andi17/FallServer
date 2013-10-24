@@ -16,6 +16,8 @@ private Zugriffschicht dbZugriff;
 		this.dbZugriff = dbZugriff;
 	}
 	
+	//Fügt eine neue Strichart mit den übergebenen Attributen hinzu.
+	//Gibt true zurück wenn erfolgreich, ansonsten false.
 	public boolean strichArtHinzufuegen(String strichbezeichnung, boolean zustand){
 		if(!gibtEsStrichelBezeichnung(strichbezeichnung)){
 			Strichart strichart = dbZugriff.neueStrichartErstellen(strichbezeichnung, zustand);
@@ -26,6 +28,8 @@ private Zugriffschicht dbZugriff;
 		
 	}
 	
+	//Gibt eine Liste mit Kommunikationsobjekten, die jeweils eine Strichart darstellen, zurück.
+	//ist nurAktive true werden nur die aktiven Stricharten zurückgegeben.
 	public List<ComStrichart> getAlleStricharten(boolean nurAktive){
 		List<Strichart> listeStrichart = dbZugriff.getAlleStricharten(nurAktive);
 		List<ComStrichart> rueckgabe = new ArrayList<ComStrichart>();
@@ -35,12 +39,19 @@ private Zugriffschicht dbZugriff;
 		return rueckgabe;
 	}
 	
+	//Gibt ein Kommunikationsobjekt zurück, dass die Werte von der Strichart mit der übergebenen Bezeichnung enthält.
+	//Gibt es keine Strichart mit der Bezeichnung wird null zurück gegeben.
 	public ComStrichart getStrichart(String bezeichnung){
 		Strichart strichart = dbZugriff.getStrichart(bezeichnung);
-		ComStrichart rueckgabe = new ComStrichart(strichart.getIdStrichart(), strichart.getStrichbez(), strichart.getZustand());
-		return rueckgabe;
+		if(strichart!=null){
+			ComStrichart rueckgabe = new ComStrichart(strichart.getIdStrichart(), strichart.getStrichbez(), strichart.getZustand());
+			return rueckgabe;
+		}
+		else return null;
 	}
 	
+	//Ändert die Bezeichnung von der Strichart mit der Bezeichnung bezeichnungAlt zu bezeichnungNeu
+	//Gibt true zurück, wenn es geklappt hat.
 	public boolean strichArtBezeichnungAendern(String bezeichnungAlt, String bezeichnungNeu){
 		if(gibtEsStrichelBezeichnung(bezeichnungNeu))return false;
 		else{
@@ -49,12 +60,15 @@ private Zugriffschicht dbZugriff;
 		}
 	}
 
+	//Gibt true zurück, wenn es schon eine Strichart mit der Bezeichnung strichArtBezeichnung gibt.
 	public boolean gibtEsStrichelBezeichnung(String strichArtBezeichnung) {
 		Strichart strichart = dbZugriff.getStrichart(strichArtBezeichnung);
 		if(strichart == null) return false;
 		else return true;
 	}
 
+	//Ändert den Zustand von der Strichart mit der Bezeichnung strichArtBezeichnung zu neuerZustand
+	//Gibt true zurück, wenn es geklappt hat.
 	public boolean strichArtZustandSetzen(String strichArtBezeichnung, boolean neuerZustand){
 		if(gibtEsStrichelBezeichnung(strichArtBezeichnung))
 			return dbZugriff.getStrichart(strichArtBezeichnung).setZustand(neuerZustand);

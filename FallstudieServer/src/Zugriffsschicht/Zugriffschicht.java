@@ -22,6 +22,8 @@ public class Zugriffschicht {
 	/*
 	 * BENUTZER
 	 */
+	
+	//Erstellt einen neuen Benutzer.
 	public Benutzer neuerBenutzerErstellen(String Benutzername,
 			String Passwort, String orgaEinheit, boolean Gesperrt) {
 		Benutzer rueckgabe = null;
@@ -36,6 +38,8 @@ public class Zugriffschicht {
 		}
 		return rueckgabe;
 	}
+	
+	//Gibt den Benutzer mit dem Benutzernamen zurück oder null.
 	public Benutzer getBenutzervonBenutzername(String Benutzername) {
 		Benutzer rueckgabe = null;
 		try {
@@ -52,8 +56,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 
-
-
+	//Gibt eine Liste mit allen Benutzern zurück.
 	public List<Benutzer> getAlleBenutzer() {
 		ResultSet resultSet;
 		List<Benutzer> rueckgabe = new ArrayList<Benutzer>();
@@ -71,45 +74,11 @@ public class Zugriffschicht {
 	}
 
 	/*
-	 * Statistik
-	 */
-	public Statistik neueStatistikErstellen(int idOrgaEinheit,
-			int kalenderWoche, int jahr, int idStrichart, int strichanzahl) {
-		Statistik rueckgabe = null;
-		try {
-			rueckgabe = new Statistik(idOrgaEinheit, kalenderWoche, jahr,
-					idStrichart, strichanzahl, db);
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return rueckgabe;
-	}
-
-	public List<Statistik> getStatistikzuOrgaEinheitinKWundJahr(int idOrgaEinheit,
-			int kalenderWoche, int jahr) {
-		ResultSet resultSet;
-		List<Statistik> rueckgabe = new ArrayList<Statistik>();
-		try {
-			resultSet = db
-					.executeQueryStatement("SELECT * FROM Statistik WHERE idOrgaEinheit = '"
-							+ idOrgaEinheit
-							+ "' AND KalenderWoche = '"
-							+ kalenderWoche + "' AND Jahr = '" + jahr + "'");
-			while (resultSet.next()) {
-				rueckgabe.add(new Statistik(resultSet, db));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-			return null;
-		}
-		return rueckgabe;
-	}
-
-	/*
 	 * Berechtigung
 	 */
-	
+	//Gibt die Berechtigungsnummer für den Leiter einer OrgaEinheit zurück,
+	//falls der Benutzer Leiter einer Einheit ist.
+	//Ansonsten gibt die Mehtode 0 zurück.
 	public int getBerechtigungzuLeitername(String Benutzername) {
 		ResultSet resultSet;
 		int rueckgabe = 0;
@@ -126,7 +95,8 @@ public class Zugriffschicht {
 		}
 		return rueckgabe;
 	}
-
+	
+	//Gibt die Berechtigungesnummer für den Mitarbeiter einer OrgaEinheit zurück.
 	public int getBerechtigungzuMitarbeiter(String Benutzername) {
 		ResultSet resultSet;
 		int rueckgabe = 0;
@@ -144,26 +114,26 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 
-	/*public Berechtigung getBerechtigungzuidBerechtigung(int idBerechtigung) {
-		Berechtigung rueckgabe = null;
-		ResultSet resultSet;
+	/*
+	 * Statistik
+	 */
+	//Erstellt eine neue Statistik.
+	public Statistik neueStatistikErstellen(int idOrgaEinheit,
+			int kalenderWoche, int jahr, int idStrichart, int strichanzahl) {
+		Statistik rueckgabe = null;
 		try {
-			resultSet = db
-					.executeQueryStatement("SELECT * FROM Berechtigungen WHERE idBerechtigung = '"
-							+ idBerechtigung + "'");
-			if(resultSet.next())
-			rueckgabe = new Berechtigung(resultSet, db);
-			resultSet.close();
+			rueckgabe = new Statistik(idOrgaEinheit, kalenderWoche, jahr,
+					idStrichart, strichanzahl, db);
 		} catch (SQLException e) {
-			System.out.println("Zugriffschicht/getBerechtigungzuidBerechtigung :"+e);
+			System.out.println(e);
 		}
 		return rueckgabe;
-	}*/
+	}
 	
 	/*
 	 * ORGAEINHEIT
 	 */
-	
+	//Erstellt eine neue OrgaEinheit.
 	public OrgaEinheit neueOrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez, String Leitername,
 			boolean Zustand, String OrgaEinheitTyp){
 		OrgaEinheit rueckgabe = null;
@@ -177,6 +147,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Gibt die OrgaEinheit mit der übergebenen Bezeichnung zurück oder null.
 	public OrgaEinheit getOrgaEinheitvonBezeichnung(String bezeichnung){
 		OrgaEinheit rueckgabe = null;
 		try {
@@ -186,12 +157,13 @@ public class Zugriffschicht {
 				rueckgabe = new OrgaEinheit(resultSet, db, this);
 			resultSet.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rueckgabe;
 	}
 	
+	//Gibt eine Liste mit OrgaEinheiten zurück.
+	//ist nurAktive true werden nur
 	public List<OrgaEinheit> getOrgaEinheiten(boolean nurAktive, boolean nurStrichberechtigte){
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
@@ -216,6 +188,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Gibt die OrgaEinheit mit der übergebenen id zurück oder null.
 	public OrgaEinheit getOrgaEinheitZuidOrgaEinheit(int idOrgaEinheit){
 		ResultSet resultSet;
 		OrgaEinheit rueckgabe = null;
@@ -232,6 +205,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Gibt eine OrgaEinheit mit dem übergebenen Leiter zurück oder null.
 	public OrgaEinheit getOrgaEinheitZuLeitername(String Leitername) {
 		OrgaEinheit rueckgabe = null;
 		ResultSet resultSet;
@@ -249,6 +223,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Gibt eine Liste mit allen OrgaEinheiten mit dem übergebenen Typ zurück.
 	public List<OrgaEinheit> getOrgaEinheitenZuTyp(String typ){
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
 		try {
@@ -257,13 +232,12 @@ public class Zugriffschicht {
 				rueckgabe.add(new OrgaEinheit(resultSet, db, this));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rueckgabe;
-		
 	}
 	
+	//Gibt eine Liste mit allen OrgaEinheitTypen zurück.
 	public List<String> getOrgaEinheitTypen(){
 		try {
 			List<String> listTypen = new ArrayList<String>();
@@ -271,7 +245,6 @@ public class Zugriffschicht {
 			while(result.next())listTypen.add(result.getString("OrgaEinheitTyp"));
 			return listTypen;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -280,6 +253,7 @@ public class Zugriffschicht {
 	/*
 	 * Strichart
 	 */
+	//ERstellt eine neue Strichart.
 	public Strichart neueStrichartErstellen(String strichbezeichnung, boolean zustand){
 		Strichart rueckgabe = null;
 		try {
@@ -290,7 +264,7 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
-	//Gibt Strichart zurück, wenns die Strichart nicht gibt null
+	//Gibt Strichart zurück mit übergebener Strichbezeichnung oder null.
 	public Strichart getStrichart(String strichbezeichnung){
 		Strichart rueckgabe = null;
 		ResultSet resultSet;
@@ -323,7 +297,11 @@ public class Zugriffschicht {
 		}
 		return listeStricharten;
 	}
-
+	
+	/*
+	 * Arbeitsschritt
+	 */
+	//Erstellt einen neuen Arbeitsschritt.
 	public Arbeitsschritt neuerArbeitsschritt(int idOrgaEinheit, Date datum, int idStrichart,
 			int strichzahl, int kalendarwoche, int jahr){
 		Arbeitsschritt rueckgabe = null;
@@ -336,6 +314,8 @@ public class Zugriffschicht {
 		return rueckgabe;
 	}
 	
+	//Löscht alle Arbeitsschritte, die mehr als die Speicherdauer (in Optionen)
+	//dem übergebenen Datum zurückliegen.
 	public boolean arbeitsschritteLoeschen(Date datum){
 		long aktuelleZeit = datum.getTime();
 		long zuLoeschenZeit = aktuelleZeit + Optionen.getSpeicherdauer() * 24 * 60 * 60 * 1000;
@@ -345,23 +325,9 @@ public class Zugriffschicht {
 			db.executeUpdateStatement("DELETE FROM Arbeitsschritte WHERE Timestamp < '" + timestamp + "'");
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-	}
-	
-
-	public Statistik neueStatistik(int idOrgaEinheit, int kalendarwoche, int jahr,
-			int idStrichart, int strichanzahl){
-		Statistik rueckgabe = null;
-		try {
-			rueckgabe = new Statistik(idOrgaEinheit, kalendarwoche, jahr, idStrichart, strichanzahl, db);
-		}
-		catch (SQLException e) {
-			System.out.println(e);
-		}
-		return rueckgabe;
 	}
 	
 

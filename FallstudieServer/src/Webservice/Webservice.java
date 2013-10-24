@@ -37,7 +37,7 @@ import Zugriffsschicht.Zugriffschicht;
  */
 /**
  * Diese Klasse realisiert einen einfachen Web-Service mit 4 Methoden - die WSDL
- * Datei kann über http://localhost:8888/WSExample/simple?wsdl angezeigt werden
+ * Datei kann über http://Domain:8888/Elastico/simple?wsdl angezeigt werden
  * - Änderungen werden erst nach Recompile und Neustart dieses Programms wirksam
  */
 @WebService
@@ -85,14 +85,12 @@ public class Webservice {
 	// 2 für Benutzer gibt es nicht,
 	// 3 für Benutzer ist gesperrt,
 	// 4 für Passwort stimmt nicht.
-	// Getestet, funzt.
 	@WebMethod
 	public int login(String benutzer, String passwort) {
 		return rightsManagement.ersterLogin(benutzer, passwort);
 	}
 
 	// Gibt eine Liste mit allen Benutzern zurück.
-	// Getestet, funzt.
 	@WebMethod
 	public List<ComBenutzer> getBenutzer(String benutzer, String passwort) {
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
@@ -102,6 +100,7 @@ public class Webservice {
 			return null;
 	}
 
+	//Gibt einen einzelnen Benutzer oder null zurück.
 	@WebMethod
 	public ComBenutzer getEinzelnenBenutzer(String benutzer, String passwort,
 			String benutzername) {
@@ -114,7 +113,6 @@ public class Webservice {
 
 	// Methode nur für Admin. Anforderung 4.2.1: Erstellt neuen Benutzer.
 	// gibt true zurück wenn alles geklappt hat.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean benutzerErstellen(String benutzer, String passwort,
 			String benutzername, String neuerBenutzerPasswort,
@@ -127,9 +125,7 @@ public class Webservice {
 			return false;
 	}
 
-	// Anforderung 4.2.2: Löscht den Benutzer mit der entsprechenden ID aus der
-	// Datenbank.
-	// Getestet, funzt.
+	// Anforderung 4.2.2: Löscht den Benutzer mit dem entsprechenden Namen aus der Datenbank.
 	@WebMethod
 	public boolean benutzerLoeschen(String benutzer, String passwort,
 			String zuLoeschenderBenutzer) {
@@ -140,8 +136,7 @@ public class Webservice {
 			return false;
 	}
 
-	// Anforderung 4.2.3: Ändert den Benutzer mit der entsprechenden ID zu der
-	// entsprechenden Organisationseinheit.
+	// Anforderung 4.2.3: Ändert die OrgaEinheit des Benutzers zu der OrgaEinheit mit der Bezeichnung orgaEinheitBez.
 	// Getestet, funzt.
 	@WebMethod
 	public boolean benutzerOrgaEinheitAendern(String benutzer, String passwort,
@@ -155,7 +150,6 @@ public class Webservice {
 	}
 
 	// Aendert Benutzername.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean benutzernameAendern(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuerBenutzername) {
@@ -167,9 +161,8 @@ public class Webservice {
 			return false;
 	}
 
-	// Gibt "Nein" zurück wenn Benutzer kein Leiter ist. Sonst den Namen der
-	// OrgaEinheit.
-	// Getestet, funzt.
+	//gibt "Nein" zurück, wenn der Benutzer noch kein Leiter ist.
+	//Ansonsten wird der Name der Einheit, wo der Benutzer Leiter ist, zurück gegeben.
 	@WebMethod
 	public String istBenutzerSchonLeiter(String benutzer, String passwort,
 			String benutzername) {
@@ -180,8 +173,7 @@ public class Webservice {
 			return "Keine Rechte";
 	}
 
-	// Fragt, ob es benutzer schon gibt.
-	// Getestet, funzt.
+	// Gibt true zurück wenn es schon einen Benutzer mit dem Namen neuerBenutzername gibt.
 	@WebMethod
 	public boolean gibtesBenutzerschon(String benutzer, String passwort,
 			String neuerBenutzername) {
@@ -193,7 +185,6 @@ public class Webservice {
 	}
 
 	// Anforderung 4.2.5: Setzt das Passwort zurück.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean neuesPasswortSetzen(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuesPasswort) {
@@ -206,15 +197,13 @@ public class Webservice {
 	}
 
 	// Anforderung 4.2.6: Sperrt den Benutzer. Kein Rückgabewert.
-	// Getestet, funzt.
 	@WebMethod
 	public void passwortSperren(String benutzername) {
 		benutzerVerwaltung.passwortGesperrtSetzen(benutzername, true);
 	}
 
-	// Anforderung 4.2.6: Entsperrt den Benutzer wieder. Gibt true zurück wenn
-	// geklappt.
-	// Getestet, funzt.
+	// Anforderung 4.2.6: Entsperrt den Benutzer wieder. Gibt true zurück wenn es
+	// geklappt hat.
 	@WebMethod
 	public boolean passwortEntsperren(String benutzer, String passwort,
 			String benutzername) {
@@ -238,6 +227,8 @@ public class Webservice {
 			return null;
 	}
 
+	//Gibt eine einzelne Organisationseinheit mit der Bezeichnung orgaEinheitBez zurück.
+	//Null wenn es keine mit der Bezeichnung gibt.
 	@WebMethod
 	public ComOrgaEinheit getOrgaEinheitZuName(String benutzer,
 			String passwort, String orgaEinheitBez) {
@@ -248,10 +239,7 @@ public class Webservice {
 			return null;
 	}
 
-	// Organisationseinheit hinzufügen.
-	// Geteste, funzt. Eventuell noch überprüfen ob es den Leitername auch
-	// wirklich gibt.
-	// TODO: wenn es noch keinen leiter gibt!!
+	// Organisationseinheit mit den übergebenen Werten hinzufügen.
 	@WebMethod
 	public boolean OrgaEinheitErstellen(String benutzer, String passwort,
 			String OrgaEinheitBez, String Leitername, String OrgaEinheitTyp,
@@ -266,7 +254,7 @@ public class Webservice {
 			return false;
 	}
 
-	// Alle möglichen OrgaEinheitenTypen werden zurück gegeben.
+	// Alle möglichen OrgaEinheitenTypen werden in einer Liste als Strings zurück gegeben.
 	@WebMethod
 	public List<String> getAlleMoeglichenOrgaEinheitTypen(String benutzer,
 			String passwort) {
@@ -277,6 +265,7 @@ public class Webservice {
 			return null;
 	}
 
+	//Alle Bezeichnungen von OrgaEinheiten mit dem übergebenden Typ werden in einer Liste als Strings zurück.
 	@WebMethod
 	public List<String> getAlleOrgaEinheitenBezeichnungenVomTyp(
 			String benutzer, String passwort, String typ) {
@@ -289,7 +278,6 @@ public class Webservice {
 	}
 
 	// Den Zustand der Organisationseinheit neu setzen.
-	// Getetstet, funzt.
 	@WebMethod
 	public boolean orgaEinheitZustandAendern(String benutzer, String passwort,
 			String OrgaEinheit, boolean neuerZustand) {
@@ -302,7 +290,6 @@ public class Webservice {
 	}
 
 	// Ändert den Leiter einer Organisationseinheit.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort,
 			String OrgaEinheit, String leitername) {
@@ -314,6 +301,7 @@ public class Webservice {
 			return false;
 	}
 
+	//Ändert die Bezeichnung einer Organisationseinheit.
 	@WebMethod
 	public boolean orgaEinheitBezeichnungAendern(String benutzer,
 			String passwort, String OrgaEinheit, String neueBezeichnung) {
@@ -325,6 +313,7 @@ public class Webservice {
 			return false;
 	}
 
+	//Ändert die übergeordnete Einheit der OrgaEinheit mit der Bezeichnung OrgaEinheit zu der übergebenen.
 	@WebMethod
 	public boolean orgaEinheitUeberOrgaEinheitAendern(String benutzer,
 			String passwort, String OrgaEinheit, String neueUeberOrgaEinheit) {
@@ -337,7 +326,6 @@ public class Webservice {
 	}
 
 	// Gibt true zurück wenn es die OrgaEinheit schon gibt.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean gibtEsOrgaEinheitSchon(String benutzer, String passwort,
 			String orgaEinheitBezeichnung) {
@@ -351,7 +339,6 @@ public class Webservice {
 
 	// Gibt eine Liste von allen möglichen Stricharten zurück.
 	// Ist nurAktive true werden nur die aktiven zurückgegeben.
-	// Getestet, funzt.
 	@WebMethod
 	public List<ComStrichart> getStrichelArten(String benutzer,
 			String passwort, boolean nurAktive) {
@@ -362,6 +349,8 @@ public class Webservice {
 			return null;
 	}
 
+	//Gibt ein Kommunikationsobjekt zurück, dass die Werte von der Strichart mit der übergebenen Bezeichnung enthält.
+	//Gibt es keine Strichart mit der Bezeichnung wird null zurück gegeben.
 	@WebMethod
 	public ComStrichart getStrichelArt(String benutzer, String passwort,
 			String bezeichnung) {
@@ -373,7 +362,6 @@ public class Webservice {
 	}
 
 	// Anforderung 4.2.10: Eine neue Strichbezeichnung hinzufügen.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean neueStrichelart(String benutzer, String passwort,
 			String strichbezeichnung) {
@@ -386,7 +374,6 @@ public class Webservice {
 	}
 
 	// Ändert die Bezeichnung von einer Strichelart.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean StrichelArtBezeichnungAendern(String benutzer,
 			String passwort, String strichelbezeichnungAlt,
@@ -400,7 +387,6 @@ public class Webservice {
 	}
 
 	// Gibt true zurück wenn es die Strichelbezeichnung shcon gibt.
-	// getestet, funzt.
 	@WebMethod
 	public boolean gibtEsStrichelBezeichnungSchon(String benutzer,
 			String passwort, String strichArtBezeichnung) {
@@ -413,7 +399,6 @@ public class Webservice {
 	}
 
 	// Setzt den Zustand der StrichelArt neu.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean strichelArtZustandAendern(String benutzer, String passwort,
 			String strichArtBezeichnung, boolean neuerZustand) {
@@ -428,7 +413,6 @@ public class Webservice {
 	// alle Anforderungen aus 4.1 werden hierüber abgedeckt.
 	// Speichert Striche entweder für letzte oder diese Woche in die Datenbank.
 	// Gibt true zurück wenn erfolgreich.
-	// Getestet, funzt.
 	@WebMethod
 	public boolean stricheln(String benutzer, String passwort,
 			String strichart, int strichanzahl, boolean aktuelleWoche) {
@@ -444,16 +428,12 @@ public class Webservice {
 	// Anforderung 4.4.4: Einsicht für bestimmten Zeitraum
 	// Anforderung 4.4.5: Leiter einer Organisationseinheit kann Daten in der
 	// Ebene unter ihm sehen.
-	// Getestet, funzt.
-	// TODO: Jahresstatistik
+	//Gibt eine Liste von Kommunikationsobjekten aus, die jeweils Informationen über eine Woche
+	//einer bestimmten Gruppe mit einer bestimmten Strichart enthält.
+	//Die Liste ist nach Bereichen sortiert.
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistik(String benutzer,
 			String passwort, int kalendarwoche, int jahr) {
-		/*
-		 * Übergaben: int Jahr ist immer >0 int kw=0 --> Es soll die
-		 * Jahresstatistik geliefert werden Liste wird nach Bereichen sortiert
-		 * ausgegeben
-		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getBereichsStatistik(benutzer,
@@ -462,14 +442,12 @@ public class Webservice {
 		return null;
 	}
 
+	//Gibt eine Liste in Form von getBereichsStatistik zurück, lediglich enthalten hier die 
+	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
+	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistikJahr(String benutzer,
 			String passwort, int jahr) {
-		/*
-		 * Übergaben: int Jahr ist immer >0 int kw=0 --> Es soll die
-		 * Jahresstatistik geliefert werden Liste wird nach Bereichen sortiert
-		 * ausgegeben
-		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getBereichsStatistikJahr(benutzer, jahr);
@@ -477,16 +455,12 @@ public class Webservice {
 		return null;
 	}
 
-	// Getestet, funzt.
-	// TODO: Jahresstatistik
+	//Gibt eine Liste von Kommunikationsobjekten aus, die jeweils Informationen über eine Woche
+	//einer bestimmten Gruppe mit einer bestimmten Strichart enthält.
+	//Die Liste ist nach Stricharten sortiert.
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistik(String benutzer,
 			String passwort, int kalendarwoche, int jahr) {
-		/*
-		 *  * Übergaben und Lieferung identisch zu gibStatistik (jetzt
-		 * gibBereichsStatistik) * Liste wird anders sortiert, (nach Kategorie
-		 * übergeben)
-		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getStrichartStatistik(benutzer,
@@ -495,14 +469,12 @@ public class Webservice {
 		return null;
 	}
 
+	//Gibt eine Liste in Form von getStrichartStatistik zurück, lediglich enthalten hier die 
+	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
+	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistikJahr(String benutzer,
 			String passwort, int jahr) {
-		/*
-		 *  * Übergaben und Lieferung identisch zu gibStatistik (jetzt
-		 * gibBereichsStatistik) * Liste wird anders sortiert, (nach Kategorie
-		 * übergeben)
-		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getStrichartStatistikJahr(benutzer, jahr);
@@ -510,14 +482,12 @@ public class Webservice {
 		return null;
 	}
 
-	// Gibt ein Array aus char zurück, je nachdem welche Fenster angezeigt
-	// werden sollen.
-	// Getestet, funzt.
+	// Gibt ein Array aus Integer zurück, je nachdem welche Fenster angezeigt
+	// werden sollen. In der Liste steht eine 1 zurück wenn der Benutzer das Strichelfenster sehen darf.
+	// eine 2, falls er das Statistikfenster sehen darf
+	// eine 3, falls er das Adminfenster sehen darf.
 	@WebMethod
 	public List<Integer> anzeige(String benutzer, String passwort) {
-		/*
-		 * 1->Dash/Strichelfenster 2->Statistikfenster 3->Adminrechte
-		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer)) {
 			return rightsManagement.erlaubteAnzeigen(benutzer);
@@ -525,18 +495,7 @@ public class Webservice {
 			return null;
 	}
 
-	/*
-	 * //gibt alle Berechtigungen zurück. //Getestet, funzt.
-	 * 
-	 * @WebMethod public List<ComBerechtigung> getAlleBerechtigungen (String
-	 * benutzer, String passwort){ if
-	 * (rightsManagement.vorgangMoeglich(benutzer, passwort,
-	 * Rechte.alleBenutzer)) { return rightsManagement.getAlleBerechtigung(); }
-	 * else return null; }
-	 */
-
 	// Gibt das aktuelle Jahr zurück.
-	// Getestet, funzt.
 	@WebMethod
 	public int getAktuellesJahr() {
 		Calendar localCalendar = Calendar.getInstance();
@@ -545,7 +504,6 @@ public class Webservice {
 	}
 
 	// Gibt die aktuelle Kalendarwoche zurück.
-	// Getestet, funzt.
 	@WebMethod
 	public int getAktuelleKalendarwoche() {
 		Calendar localCalendar = Calendar.getInstance();

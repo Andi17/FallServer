@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+//Klasse zum Herstellen der Connection zu der Datenbank.
+
 public class JdbcAccess {
 	private String jdbcUrl;
 

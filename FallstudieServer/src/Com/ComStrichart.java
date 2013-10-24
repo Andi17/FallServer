@@ -6,6 +6,9 @@ public class ComStrichart {
     private String StrichBez;
     private boolean Zustand;
     
+	//Kommunikationsklasse, welches an den Client übergeben werden kann.
+	//Enthält alle Informationen über eine Strichart.
+    
     public ComStrichart(){}
     
     public ComStrichart(int idStrichart, String StrichBez, boolean Zustand){

@@ -18,11 +18,14 @@ public class Arbeitsschritt {
 	private int kalendarwoche;
 	private int jahr;
 
+	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
 	public Arbeitsschritt(ResultSet resultSet, JdbcAccess db)
 			throws SQLException {
 		werteSetzen(resultSet);
 	}
 
+	//Konstruktor, der einen neuen Arbeitsschritt erstellt. Wirft eine Exception wenn etwas
+	//nicht funktioniert hat.
 	public Arbeitsschritt(int idOrgaEinheit, int idStrichart, Date datum,
 			int strichanzahl, int kalendarWoche, int jahr, JdbcAccess db) throws SQLException {
 		PreparedStatement statement = db.getConnection().prepareStatement("INSERT INTO Arbeitsschritte ("
@@ -47,7 +50,8 @@ public class Arbeitsschritt {
 		resultSet.close();
 	}
 
-	public void werteSetzen(ResultSet resultSet) throws SQLException {
+	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
+	private void werteSetzen(ResultSet resultSet) throws SQLException {
 		this.idArbeitsschritt = resultSet.getInt("idArbeitsschritt");
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.idStrichart = resultSet.getInt("idStrichart");
@@ -57,12 +61,13 @@ public class Arbeitsschritt {
 		this.jahr = resultSet.getInt("Jahr");
 	}
 
-
+	//Ändert ein sqlTimestamp in ein java Date um.
 	public Date sqlTimestampToDate(Timestamp timestamp) {
 		Date date = new Date(timestamp.getTime());
 		return date;
 	}
 
+	//Ändert ein java Date in ein sqlTimestamp um.
 	public Timestamp dateToSqlTimestamp(Date date) {
 		Timestamp timestamp = new Timestamp(date.getTime());
 		return timestamp;

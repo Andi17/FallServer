@@ -13,13 +13,14 @@ public class Statistik {
 	private int strichzahl;
 	private JdbcAccess db;
 
-	// Konstruktor wenn die Statistik schon existiert.
+	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
 	public Statistik(ResultSet resultSet, JdbcAccess db) throws SQLException {
 		this.db = db;
 		werteSetzen(resultSet);
 	}
 
-	// Konstruktor bei Neuanlegen
+	//Konstruktor, der eine neue Statistik erstellt. Wirft eine Exception wenn etwas
+	//nicht funktioniert hat.
 	public Statistik(int idOrgaEinheit, int kalenderwoche, int jahr,
 			int idStrichart, int strichanzahl, JdbcAccess db)
 			throws SQLException {
@@ -39,7 +40,7 @@ public class Statistik {
 		resultSet.close();
 	}
 	
-	//Methode nur um Kurs zu sparen
+	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
 	private void werteSetzen(ResultSet resultSet) throws SQLException{
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.kalenderWoche = resultSet.getInt("KalenderWoche");
@@ -77,7 +78,6 @@ public class Statistik {
 				return null;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

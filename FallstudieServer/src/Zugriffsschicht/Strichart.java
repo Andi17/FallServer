@@ -11,6 +11,14 @@ public class Strichart {
 	private String StrichBez;
 	private boolean zustand;
 
+	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
+	public Strichart(ResultSet resultSet, JdbcAccess db)throws SQLException{
+		werteSetzen(resultSet);
+		this.db = db;
+	}
+	
+	//Konstruktor, der eine neue Strichart erstellt. Wirft eine Exception wenn etwas
+	//nicht funktioniert hat.
 	public Strichart(String StrichBez, boolean Zustand,
 			JdbcAccess db) throws SQLException {
 		db.executeUpdateStatement("INSERT INTO Stricharten (StrichBez, " +
@@ -23,12 +31,9 @@ public class Strichart {
 		werteSetzen(resultSet);
 		resultSet.close();
 	}
-	public Strichart(ResultSet resultSet, JdbcAccess db)throws SQLException{
-		werteSetzen(resultSet);
-		this.db = db;
-	}
 	
-	public void werteSetzen(ResultSet resultSet) throws SQLException{
+	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
+	private void werteSetzen(ResultSet resultSet) throws SQLException{
 		this.idStrichart = resultSet.getInt("idStrichart");
 		this.StrichBez = resultSet.getString("StrichBez");
 		this.zustand = resultSet.getBoolean("Zustand");
@@ -38,14 +43,16 @@ public class Strichart {
 		return idStrichart;
 	}
 
-	public void setIdStrichart(int idStrichart) {
-		this.idStrichart = idStrichart;
-	}
-
 	public String getStrichbez() {
 		return StrichBez;
 	}
 
+	public boolean getZustand() {
+		return zustand;
+	}
+
+	//Alle Setter Methoden ändern zuerst den Wert in der Datenbank und nur wenn das geklappt hat
+	//auch den Wert in diesem Objekt. False wenn ein Fehler aufgetreten ist.
 	public boolean setStrichbez(String strichbez) {
 		try {
 			db.executeUpdateStatement("UPDATE Stricharten SET Strichbez = '" + strichbez + "' WHERE idStrichart = " + idStrichart);
@@ -55,10 +62,6 @@ public class Strichart {
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	public boolean getZustand() {
-		return zustand;
 	}
 
 	public boolean setZustand(boolean neuerZustand) {

@@ -60,7 +60,7 @@ public class Benutzerverwaltung {
 		return rueckgabe;
 	}
 
-	// LÃ¶scht den Benuttzer mit der entsprechenden ID.
+	// LÃ¶scht den Benuttzer mit dem entsprechenden Benutzernamen.
 	public boolean benutzerLoeschen(String benutzername) {
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		if(benutzer!=null) return benutzer.loeschen();
@@ -78,7 +78,7 @@ public class Benutzerverwaltung {
 		else return false;
 	}
 
-	// setzt das Passwort des Benutzers mit der entsprechenden benutzerID auf
+	// setzt das Passwort des Benutzers mit der entsprechenden benutzernamen auf
 	// das neue Passwort
 	public boolean setPasswort(String betroffenerBenutzer, String neuesPasswort) {
 		Benutzer benutzer = dbZugriff
@@ -94,6 +94,7 @@ public class Benutzerverwaltung {
 		else return false;
 	}
 
+	//Gibt true zurück, wenn der Benutzer schon vorhanden ist.
 	public boolean benutzerSchonVorhanden(String neuerBenutzername) {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(neuerBenutzername);
@@ -103,6 +104,7 @@ public class Benutzerverwaltung {
 		return false;
 	}
 
+	//Ändert den Benutzernamen zu dem Übergabewert neuerBenutzername
 	public boolean Benutzernameaendern(String betroffenerBenutzer,
 			String neuerBenutzername) {
 		Benutzer benutzer = dbZugriff
@@ -111,6 +113,8 @@ public class Benutzerverwaltung {
 		else return false;
 	}
 	
+	//gibt "Nein" zurück, wenn der Benutzer noch kein Leiter ist.
+	//Ansonsten wird der Name der Einheit, wo der Benutzer Leiter ist, zurück gegeben.
 	public String istBenutzerSchonLeiter(String benutzername){
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(benutzername);

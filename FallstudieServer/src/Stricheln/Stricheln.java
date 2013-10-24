@@ -14,7 +14,7 @@ public class Stricheln {
 		this.dbZugriff = dbZugriff;
 	}
 
-	//gibt true zurück wenn erfolgreich, speichert strich in datenbank
+	//gibt true zurück wenn erfolgreich, speichert Arbeitsschritt in datenbank.
 	public boolean schreibeStricheInDatenbank(String Benutzername, String strichart, 
 			int strichanzahl, boolean aktuelleWoche) {
 		int idStrichart = dbZugriff.getStrichart(strichart).getIdStrichart();
