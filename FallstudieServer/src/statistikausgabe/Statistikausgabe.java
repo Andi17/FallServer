@@ -32,8 +32,10 @@ public class Statistikausgabe {
 		Calendar localCalendar = Calendar.getInstance();
 		int aktuellesJahr = localCalendar.get(Calendar.YEAR);
 		int aktuelleKalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
+		//Ist die Statistik 2 Wochen oder älter kann sie direkt aus der Datenbank gelesen werden.
 		if(kalendarwoche+2<=aktuelleKalendarwoche && jahr <= aktuellesJahr)
 		return orgaEinheit.getOrgaEinheitStatistikAusDatenbank(kalendarwoche, jahr, 1, statistikListe);
+		//Andernfalls muss eine temporäre Statistik erstellt werden.
 		else return orgaEinheit.getTemporaereOrgaEinheitStatistik(kalendarwoche, aktuellesJahr, 1, statistikListe);
 	}
 	
@@ -58,12 +60,14 @@ public class Statistikausgabe {
 		Calendar localCalendar = Calendar.getInstance();
 		int aktuellesJahr = localCalendar.get(Calendar.YEAR);
 		int aktuelleKalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
+		//Ist die Statistik 2 Wochen oder älter kann sie direkt aus der Datenbank gelesen werden.
 		if(kalendarwoche+2<=aktuelleKalendarwoche && jahr <= aktuellesJahr){
 			for(Strichart strichart : stricharten){
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
 				rueckgabe.addAll(orgaEinheit.getStrichartStatistikAusDatenbank(kalendarwoche, jahr, strichart.getIdStrichart(), strichart.getStrichbez(), 1, hilfsListe));
 			}
 		}
+		//Andernfalls muss eine temporäre Statistik erstellt werden.
 		else {
 			for(Strichart strichart : stricharten){
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();

@@ -3,6 +3,7 @@ package zugriffsschicht;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import jdbc.JdbcAccess;
@@ -369,6 +370,9 @@ public class OrgaEinheit {
 	// Ist nach OrgaEinheit sortiert.
 	public List<ComStatistik> getJahresOrgaEinheitStatistikAusDatenbank(
 			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
+		Calendar localCalendar = Calendar.getInstance();
+		int aktuellesJahr = localCalendar.get(Calendar.YEAR);
+		int aktuelleKalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
 		if (OrgaEinheitTyp.equals("Stabstelle")) {
@@ -385,6 +389,41 @@ public class OrgaEinheit {
 		} else if (OrgaEinheitTyp.equals("Gruppe")) {
 			try {
 				for (Strichart strichart : stricharten) {
+					int stricheLetzteZweiWochen = 0;
+					if (jahr == aktuellesJahr) {
+						// Liest alle STriche für diese Woche aus
+						ResultSet result = db
+								.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Arbeitsschritte GROUP BY "
+										+ "idOrgaEinheit, Jahr, idStrichart, Kalendarwoche HAVING "
+										+ "idOrgaEinheit = "
+										+ idOrgaEinheit
+										+ " AND Jahr = "
+										+ jahr
+										+ " AND idStrichart = "
+										+ strichart.getIdStrichart()
+										+ " AND Kalendarwoche = "
+										+ aktuelleKalendarwoche);
+						if (result.next()) {
+							stricheLetzteZweiWochen = stricheLetzteZweiWochen
+									+ result.getInt("Strichzahl");
+						}
+						// Liest alle Striche für letze Woche aus.
+						result = db
+								.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Arbeitsschritte GROUP BY "
+										+ "idOrgaEinheit, Jahr, idStrichart, Kalendarwoche HAVING "
+										+ "idOrgaEinheit = "
+										+ idOrgaEinheit
+										+ " AND Jahr = "
+										+ jahr
+										+ " AND idStrichart = "
+										+ strichart.getIdStrichart()
+										+ " AND Kalendarwoche = "
+										+ (aktuelleKalendarwoche - 1));
+						if (result.next()) {
+							stricheLetzteZweiWochen = stricheLetzteZweiWochen
+									+ result.getInt("Strichzahl");
+						}
+					}
 					ResultSet result = db
 							.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY "
 									+ "idOrgaEinheit, Jahr, idStrichart HAVING "
@@ -398,13 +437,13 @@ public class OrgaEinheit {
 						rueckgabe.add(new ComStatistik(idOrgaEinheit,
 								OrgaEinheitBez, 0, jahr,
 								strichart.getStrichbez(), strichart.getIdStrichart(),
-								result.getInt("Strichzahl"), hierarchieStufe,
+								result.getInt("Strichzahl")+stricheLetzteZweiWochen, hierarchieStufe,
 								OrgaEinheitTyp, null));
 					} else {
 						rueckgabe.add(new ComStatistik(idOrgaEinheit,
 								OrgaEinheitBez, 0, jahr, strichart
 										.getStrichbez(), strichart
-										.getIdStrichart(), 0, hierarchieStufe,
+										.getIdStrichart(), stricheLetzteZweiWochen, hierarchieStufe,
 								OrgaEinheitTyp, null));
 					}
 				}
@@ -598,6 +637,9 @@ public class OrgaEinheit {
 	public List<ComStatistik> getJahresStrichartStatistikAusDatenbank(int jahr,
 			int idStrichart, String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
+		Calendar localCalendar = Calendar.getInstance();
+		int aktuellesJahr = localCalendar.get(Calendar.YEAR);
+		int aktuelleKalendarwoche = localCalendar.get(Calendar.WEEK_OF_YEAR);
 		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
@@ -629,6 +671,39 @@ public class OrgaEinheit {
 				}
 			}
 			try {
+				int stricheLetzteZweiWochen = 0;
+				if(jahr==aktuellesJahr){
+					//Liest alle STriche für diese Woche aus
+					ResultSet result = db
+							.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Arbeitsschritte GROUP BY "
+									+ "idOrgaEinheit, Jahr, idStrichart, Kalendarwoche HAVING "
+									+ "idOrgaEinheit = "
+									+ idOrgaEinheit
+									+ " AND Jahr = "
+									+ jahr
+									+ " AND idStrichart = "
+									+ idStrichart
+									+ " AND Kalendarwoche = "
+									+ aktuelleKalendarwoche);
+					if(result.next()){
+						stricheLetzteZweiWochen = stricheLetzteZweiWochen + result.getInt("Strichzahl");
+					}
+					//Liest alle Striche für letze Woche aus.
+					result = db
+							.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Arbeitsschritte GROUP BY "
+									+ "idOrgaEinheit, Jahr, idStrichart, Kalendarwoche HAVING "
+									+ "idOrgaEinheit = "
+									+ idOrgaEinheit
+									+ " AND Jahr = "
+									+ jahr
+									+ " AND idStrichart = "
+									+ idStrichart
+									+ " AND Kalendarwoche = "
+									+ (aktuelleKalendarwoche-1));
+					if(result.next()){
+						stricheLetzteZweiWochen = stricheLetzteZweiWochen + result.getInt("Strichzahl");
+					}
+				}
 				ResultSet result = db
 						.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY "
 								+ "idOrgaEinheit, Jahr, idStrichart HAVING "
@@ -640,9 +715,9 @@ public class OrgaEinheit {
 								+ idStrichart);
 				int strichzahl;
 				if (result.next()) {
-					strichzahl = result.getInt("Strichzahl");
+					strichzahl = result.getInt("Strichzahl") + stricheLetzteZweiWochen;
 				} else {
-					strichzahl = 0;
+					strichzahl = stricheLetzteZweiWochen;
 				}
 				strichzahl = strichzahl + stricheUnterEinheiten;
 				List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
