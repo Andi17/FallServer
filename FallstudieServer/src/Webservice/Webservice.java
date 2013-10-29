@@ -44,7 +44,7 @@ import Zugriffsschicht.Zugriffschicht;
 public class Webservice {
 
 	private Zugriffschicht dbZugriff;
-	private Rechte rightsManagement;
+	private Rechte rechteManagement;
 	private Benutzerverwaltung benutzerVerwaltung;
 	private Stricheln stricheln;
 	private Statistikausgabe statistikausgabe;
@@ -57,7 +57,7 @@ public class Webservice {
 					Optionen.getJdbcuser(), Optionen.getJdbcpw());
 			jdbc.connect();
 			dbZugriff = new Zugriffschicht(jdbc);
-			rightsManagement = new Rechte(dbZugriff);
+			rechteManagement = new Rechte(dbZugriff);
 			stricheln = new Stricheln(dbZugriff);
 			benutzerVerwaltung = new Benutzerverwaltung(dbZugriff);
 			statistikausgabe = new Statistikausgabe(dbZugriff);
@@ -87,13 +87,13 @@ public class Webservice {
 	// 4 für Passwort stimmt nicht.
 	@WebMethod
 	public int login(String benutzer, String passwort) {
-		return rightsManagement.ersterLogin(benutzer, passwort);
+		return rechteManagement.ersterLogin(benutzer, passwort);
 	}
 
 	// Gibt eine Liste mit allen Benutzern zurück.
 	@WebMethod
 	public List<ComBenutzer> getBenutzer(String benutzer, String passwort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return benutzerVerwaltung.getAlleBenutzer();
 		else
@@ -104,7 +104,7 @@ public class Webservice {
 	@WebMethod
 	public ComBenutzer getEinzelnenBenutzer(String benutzer, String passwort,
 			String benutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return benutzerVerwaltung.getBenutzer(benutzername);
 		else
@@ -117,7 +117,7 @@ public class Webservice {
 	public boolean benutzerErstellen(String benutzer, String passwort,
 			String benutzername, String neuerBenutzerPasswort,
 			String orgaEinheit) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.benutzerErstellen(benutzername,
 					neuerBenutzerPasswort, orgaEinheit);
@@ -129,7 +129,7 @@ public class Webservice {
 	@WebMethod
 	public boolean benutzerLoeschen(String benutzer, String passwort,
 			String zuLoeschenderBenutzer) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.benutzerLoeschen(zuLoeschenderBenutzer);
 		else
@@ -141,7 +141,7 @@ public class Webservice {
 	@WebMethod
 	public boolean benutzerOrgaEinheitAendern(String benutzer, String passwort,
 			String benutzername, String orgaEinheitBez) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.orgaEinheitAendern(benutzername,
 					orgaEinheitBez);
@@ -153,7 +153,7 @@ public class Webservice {
 	@WebMethod
 	public boolean benutzernameAendern(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuerBenutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.Benutzernameaendern(betroffenerBenutzer,
 					neuerBenutzername);
@@ -166,7 +166,7 @@ public class Webservice {
 	@WebMethod
 	public String istBenutzerSchonLeiter(String benutzer, String passwort,
 			String benutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return benutzerVerwaltung.istBenutzerSchonLeiter(benutzername);
 		else
@@ -177,7 +177,7 @@ public class Webservice {
 	@WebMethod
 	public boolean gibtesBenutzerschon(String benutzer, String passwort,
 			String neuerBenutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return benutzerVerwaltung.benutzerSchonVorhanden(neuerBenutzername);
 		else
@@ -188,7 +188,7 @@ public class Webservice {
 	@WebMethod
 	public boolean neuesPasswortSetzen(String benutzer, String passwort,
 			String betroffenerBenutzer, String neuesPasswort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.setPasswort(betroffenerBenutzer,
 					neuesPasswort);
@@ -207,7 +207,7 @@ public class Webservice {
 	@WebMethod
 	public boolean passwortEntsperren(String benutzer, String passwort,
 			String benutzername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return benutzerVerwaltung.passwortGesperrtSetzen(benutzername,
 					false);
@@ -220,7 +220,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComOrgaEinheit> getOrgaEinheiten(String benutzer,
 			String passwort, boolean nurAktive) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return orgaEinheitVerwaltung.getAlleOrgaEinheiten(nurAktive);
 		else
@@ -232,7 +232,7 @@ public class Webservice {
 	@WebMethod
 	public ComOrgaEinheit getOrgaEinheitZuName(String benutzer,
 			String passwort, String orgaEinheitBez) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return orgaEinheitVerwaltung.getOrgaEinheit(orgaEinheitBez);
 		else
@@ -244,7 +244,7 @@ public class Webservice {
 	public boolean OrgaEinheitErstellen(String benutzer, String passwort,
 			String OrgaEinheitBez, String Leitername, String OrgaEinheitTyp,
 			int idUeberOrgaEinheit) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.neueOrgaEinheit(idUeberOrgaEinheit,
 					OrgaEinheitBez, Leitername,
@@ -258,7 +258,7 @@ public class Webservice {
 	@WebMethod
 	public List<String> getAlleMoeglichenOrgaEinheitTypen(String benutzer,
 			String passwort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin)) {
 			return orgaEinheitVerwaltung.getOrgaEinheitTypen();
 		} else
@@ -269,7 +269,7 @@ public class Webservice {
 	@WebMethod
 	public List<String> getAlleOrgaEinheitenBezeichnungenVomTyp(
 			String benutzer, String passwort, String typ) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin)) {
 			return orgaEinheitVerwaltung
 					.getAlleOrgaEinheitenBezeichnungenMitTyp(typ);
@@ -281,7 +281,7 @@ public class Webservice {
 	@WebMethod
 	public boolean orgaEinheitZustandAendern(String benutzer, String passwort,
 			String OrgaEinheit, boolean neuerZustand) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.OrgaEinheitZustandAendern(OrgaEinheit,
 					neuerZustand);
@@ -293,7 +293,7 @@ public class Webservice {
 	@WebMethod
 	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort,
 			String OrgaEinheit, String leitername) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(OrgaEinheit,
 					leitername);
@@ -305,7 +305,7 @@ public class Webservice {
 	@WebMethod
 	public boolean orgaEinheitBezeichnungAendern(String benutzer,
 			String passwort, String OrgaEinheit, String neueBezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.OrgaEinheitBezeichnungAendern(
 					OrgaEinheit, neueBezeichnung);
@@ -317,7 +317,7 @@ public class Webservice {
 	@WebMethod
 	public boolean orgaEinheitUeberOrgaEinheitAendern(String benutzer,
 			String passwort, String OrgaEinheit, String neueUeberOrgaEinheit) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return orgaEinheitVerwaltung.OrgaEinheitUeberOrgaEinheitAendern(
 					OrgaEinheit, neueUeberOrgaEinheit);
@@ -329,7 +329,7 @@ public class Webservice {
 	@WebMethod
 	public boolean gibtEsOrgaEinheitSchon(String benutzer, String passwort,
 			String orgaEinheitBezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return orgaEinheitVerwaltung
 					.gibtEsOrgaEinheit(orgaEinheitBezeichnung);
@@ -342,7 +342,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComStrichart> getStrichelArten(String benutzer,
 			String passwort, boolean nurAktive) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer)) {
 			return strichArtVerwaltung.getAlleStricharten(nurAktive);
 		} else
@@ -354,7 +354,7 @@ public class Webservice {
 	@WebMethod
 	public ComStrichart getStrichelArt(String benutzer, String passwort,
 			String bezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer)) {
 			return strichArtVerwaltung.getStrichart(bezeichnung);
 		} else
@@ -365,7 +365,7 @@ public class Webservice {
 	@WebMethod
 	public boolean neueStrichelart(String benutzer, String passwort,
 			String strichbezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return strichArtVerwaltung.strichArtHinzufuegen(strichbezeichnung,
 					Optionen.isinitialbelegungStrichartZustand());
@@ -378,7 +378,7 @@ public class Webservice {
 	public boolean StrichelArtBezeichnungAendern(String benutzer,
 			String passwort, String strichelbezeichnungAlt,
 			String strichelbezeichnungNeu) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return strichArtVerwaltung.strichArtBezeichnungAendern(
 					strichelbezeichnungAlt, strichelbezeichnungNeu);
@@ -390,7 +390,7 @@ public class Webservice {
 	@WebMethod
 	public boolean gibtEsStrichelBezeichnungSchon(String benutzer,
 			String passwort, String strichArtBezeichnung) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer))
 			return strichArtVerwaltung
 					.gibtEsStrichelBezeichnung(strichArtBezeichnung);
@@ -402,7 +402,7 @@ public class Webservice {
 	@WebMethod
 	public boolean strichelArtZustandAendern(String benutzer, String passwort,
 			String strichArtBezeichnung, boolean neuerZustand) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
 			return strichArtVerwaltung.strichArtZustandSetzen(
 					strichArtBezeichnung, neuerZustand);
@@ -416,7 +416,7 @@ public class Webservice {
 	@WebMethod
 	public boolean stricheln(String benutzer, String passwort,
 			String strichart, int strichanzahl, boolean aktuelleWoche) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.stricheln)) {
 			return stricheln.schreibeStricheInDatenbank(benutzer, strichart,
 					strichanzahl, aktuelleWoche);
@@ -434,7 +434,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistik(String benutzer,
 			String passwort, int kalendarwoche, int jahr) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getOrgaEinheitStatistik(benutzer,
 					kalendarwoche, jahr);
@@ -448,7 +448,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistikJahr(String benutzer,
 			String passwort, int jahr) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getOrgaEinheitStatistikJahr(benutzer, jahr);
 		}
@@ -461,7 +461,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistik(String benutzer,
 			String passwort, int kalendarwoche, int jahr) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getStrichartStatistik(benutzer,
 					kalendarwoche, jahr);
@@ -475,7 +475,7 @@ public class Webservice {
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistikJahr(String benutzer,
 			String passwort, int jahr) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.statistikSehen)) {
 			return statistikausgabe.getStrichartStatistikJahr(benutzer, jahr);
 		}
@@ -488,9 +488,9 @@ public class Webservice {
 	// eine 3, falls er das Adminfenster sehen darf.
 	@WebMethod
 	public List<Integer> anzeige(String benutzer, String passwort) {
-		if (rightsManagement.vorgangMoeglich(benutzer, passwort,
+		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.alleBenutzer)) {
-			return rightsManagement.erlaubteAnzeigen(benutzer);
+			return rechteManagement.erlaubteAnzeigen(benutzer);
 		} else
 			return null;
 	}

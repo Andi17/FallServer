@@ -132,14 +132,14 @@ public class OrgaEinheitVerwaltung {
 	public boolean OrgaEinheitLeiterAendern(String OrgaEinheit, String leitername) {
 		OrgaEinheit orgaEinheit = dbZugriff
 				.getOrgaEinheitvonBezeichnung(OrgaEinheit);
-		if(leitername.equals("Kein Leiter")){
+		if(orgaEinheit!=null && leitername.equals("Kein Leiter")){
 			orgaEinheit.setLeitername(null);
 			return true;
 		}
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(leitername);
 		if (orgaEinheit != null && benutzer!=null
 				&& !benutzer.isLeiter()) {
-			if(dbZugriff.getBenutzervonBenutzername(leitername).setidOrgaEinheit(orgaEinheit.getIdOrgaEinheit()) &&
+			if(benutzer.setidOrgaEinheit(orgaEinheit.getIdOrgaEinheit()) &&
 					orgaEinheit.setLeitername(leitername))
 			return true;
 			else return false;

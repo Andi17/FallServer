@@ -75,7 +75,8 @@ public class Benutzerverwaltung {
 		Benutzer benutzer = dbZugriff
 				.getBenutzervonBenutzername(betroffenerBenutzer);
 		OrgaEinheit orga = dbZugriff.getOrgaEinheitvonBezeichnung(orgaEinheitBez);
-		if(benutzer!=null) return benutzer.setidOrgaEinheit(orga.getIdOrgaEinheit());
+		if(benutzer!=null && orga!=null) return benutzer.setidOrgaEinheit(orga.getIdOrgaEinheit());
+		else if(orga==null && orgaEinheitBez.equals("Keine Einheit")) return benutzer.setidOrgaEinheit(0);
 		else return false;
 	}
 
