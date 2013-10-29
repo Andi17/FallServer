@@ -1,13 +1,13 @@
-package Zugriffsschicht;
+package zugriffsschicht;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComStatistik;
 
 import jdbc.JdbcAccess;
+import kommunikationsklassen.ComStatistik;
 
 public class OrgaEinheit {
 	private JdbcAccess db;
@@ -21,7 +21,8 @@ public class OrgaEinheit {
 	private int idMitarbeiterBerechtigung;
 	private String OrgaEinheitTyp;
 
-	//Konstruktor über ein ResultSet. Abfrage muss dann vorher schon stattgefunden haben.
+	// Konstruktor über ein ResultSet. Abfrage muss dann vorher schon
+	// stattgefunden haben.
 	public OrgaEinheit(ResultSet resultSet, JdbcAccess db,
 			Zugriffschicht dbZugriff) throws SQLException {
 		werteSetzen(resultSet);
@@ -29,8 +30,9 @@ public class OrgaEinheit {
 		this.dbZugriff = dbZugriff;
 	}
 
-	//Konstruktor, der eine neue OrgaEinheit erstellt. Wirft eine Exception wenn etwas
-	//nicht funktioniert hat.
+	// Konstruktor, der eine neue OrgaEinheit erstellt. Wirft eine Exception
+	// wenn etwas
+	// nicht funktioniert hat.
 	public OrgaEinheit(int idUeberOrgaEinheit, String OrgaEinheitBez,
 			String Leitername, boolean zustand, String OrgaEinheitTyp,
 			JdbcAccess db, Zugriffschicht dbZugriff) throws SQLException {
@@ -90,7 +92,7 @@ public class OrgaEinheit {
 		}
 	}
 
-	//Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
+	// Liest die Werte aus dem ResultSet und setzt die Werte entsprechend.
 	private void werteSetzen(ResultSet resultSet) throws SQLException {
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.idUeberOrgaEinheit = resultSet.getInt("idUeberOrgaEinheit");
@@ -135,8 +137,9 @@ public class OrgaEinheit {
 		return OrgaEinheitTyp;
 	}
 
-	//Alle Setter Methoden ändern zuerst den Wert in der Datenbank und nur wenn das geklappt hat
-	//auch den Wert in diesem Objekt. False wenn ein Fehler aufgetreten ist.
+	// Alle Setter Methoden ändern zuerst den Wert in der Datenbank und nur wenn
+	// das geklappt hat
+	// auch den Wert in diesem Objekt. False wenn ein Fehler aufgetreten ist.
 	public boolean setOrgaEinheitBez(String orgaEinheitBez) {
 		try {
 			db.executeUpdateStatement("UPDATE OrgaEinheiten SET orgaEinheitBez = '"
@@ -167,14 +170,15 @@ public class OrgaEinheit {
 
 	public boolean setLeitername(String leitername) {
 		try {
-			if(leitername!=null){
+			if (leitername != null) {
 				db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = '"
-						+ leitername + "' WHERE idOrgaEinheit = " + idOrgaEinheit);
-			}
-			else{
+						+ leitername
+						+ "' WHERE idOrgaEinheit = "
+						+ idOrgaEinheit);
+			} else {
 				db.executeUpdateStatement("UPDATE OrgaEinheiten SET Leitername = "
 						+ "NULL WHERE idOrgaEinheit = " + idOrgaEinheit);
-			}	
+			}
 			Leitername = leitername;
 			return true;
 		} catch (SQLException e) {
@@ -223,8 +227,9 @@ public class OrgaEinheit {
 		this.idMitarbeiterBerechtigung = idMitarbeiterBerechtigung;
 	}
 
-	//Gibt alle Striche aufaddiert der übergebenen strichart in der übergebenen kalendarwoche und jahr zurück.
-	//Holt die Werte aus der Tabelle Arbeitsschritte.
+	// Gibt alle Striche aufaddiert der übergebenen strichart in der übergebenen
+	// kalendarwoche und jahr zurück.
+	// Holt die Werte aus der Tabelle Arbeitsschritte.
 	public int getAlleStricheInWoche(int kalendarwoche, int jahr,
 			int idStrichart) {
 		try {
@@ -251,7 +256,8 @@ public class OrgaEinheit {
 		}
 	}
 
-	//Gibt eine Liste mit allen OrgaEinheiten, die diese als UeberOrgaEinheit gespeichert haben.
+	// Gibt eine Liste mit allen OrgaEinheiten, die diese als UeberOrgaEinheit
+	// gespeichert haben.
 	public List<OrgaEinheit> getUnterOrgaEinheiten() {
 		ResultSet resultSet;
 		List<OrgaEinheit> rueckgabe = new ArrayList<OrgaEinheit>();
@@ -269,24 +275,26 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	//liest alle Statistiken aus der Tabelle Statistiken, die in der übergebenen kalendarwoche und
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach OrgaEinheit sortiert.
+	// liest alle Statistiken aus der Tabelle Statistiken, die in der
+	// übergebenen kalendarwoche und
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach OrgaEinheit sortiert.
 	public List<ComStatistik> getOrgaEinheitStatistikAusDatenbank(
 			int kalendarwoche, int jahr, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getOrgaEinheitStatistikAusDatenbank(kalendarwoche, jahr, 1, rueckgabe);
-			}
-			else {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				return zentralbereich.getOrgaEinheitStatistikAusDatenbank(
+						kalendarwoche, jahr, 1, rueckgabe);
+			} else {
 				return rueckgabe;
 			}
-		}
-		else if (OrgaEinheitTyp.equals("Gruppe")) {
+		} else if (OrgaEinheitTyp.equals("Gruppe")) {
 			try {
 				for (Strichart strichart : stricharten) {
 					ResultSet result = db
@@ -321,8 +329,8 @@ public class OrgaEinheit {
 			for (int i = 0; i < unterOrga.size(); i++) {
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
 				rueckgabe.addAll(unterOrga.get(i)
-						.getOrgaEinheitStatistikAusDatenbank(kalendarwoche, jahr,
-								hierarchieStufe + 1, hilfsListe));
+						.getOrgaEinheitStatistikAusDatenbank(kalendarwoche,
+								jahr, hierarchieStufe + 1, hilfsListe));
 			}
 			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
 			for (int i = 0; i < unterOrga.size(); i++) {
@@ -332,7 +340,9 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe == stat.getHierarchiestufe() - 1
+							&& stat.getIdStrichBez() == strichart
+									.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
@@ -352,23 +362,26 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	//liest alle Statistiken aus der Tabelle Statistiken, die in dem übergebenen
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach OrgaEinheit sortiert.
-	public List<ComStatistik> getJahresOrgaEinheitStatistikAusDatenbank(int jahr,
-			int hierarchieStufe, List<ComStatistik> rueckgabe) {
+	// liest alle Statistiken aus der Tabelle Statistiken, die in dem
+	// übergebenen
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach OrgaEinheit sortiert.
+	public List<ComStatistik> getJahresOrgaEinheitStatistikAusDatenbank(
+			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getJahresOrgaEinheitStatistikAusDatenbank(jahr, 1, rueckgabe);
-			}
-			else {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				return zentralbereich
+						.getJahresOrgaEinheitStatistikAusDatenbank(jahr, 1,
+								rueckgabe);
+			} else {
 				return rueckgabe;
 			}
-		}
-		else if (OrgaEinheitTyp.equals("Gruppe")) {
+		} else if (OrgaEinheitTyp.equals("Gruppe")) {
 			try {
 				for (Strichart strichart : stricharten) {
 					ResultSet result = db
@@ -412,7 +425,9 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe == stat.getHierarchiestufe() - 1
+							&& stat.getIdStrichBez() == strichart
+									.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
@@ -431,23 +446,26 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	//liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der übergebenen Kalendarwoche und
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach OrgaEinheit sortiert.
-	public List<ComStatistik> getTemporaereOrgaEinheitStatistik(int kalendarwoche,
-			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
+	// liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der
+	// übergebenen Kalendarwoche und
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach OrgaEinheit sortiert.
+	public List<ComStatistik> getTemporaereOrgaEinheitStatistik(
+			int kalendarwoche, int jahr, int hierarchieStufe,
+			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getTemporaereOrgaEinheitStatistik(kalendarwoche, jahr, 1, rueckgabe);
-			}
-			else {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				return zentralbereich.getTemporaereOrgaEinheitStatistik(
+						kalendarwoche, jahr, 1, rueckgabe);
+			} else {
 				return rueckgabe;
 			}
-		}
-		else if (OrgaEinheitTyp.equals("Gruppe")) {
+		} else if (OrgaEinheitTyp.equals("Gruppe")) {
 			for (Strichart strichart : stricharten) {
 				int anzahlStriche = getAlleStricheInWoche(kalendarwoche, jahr,
 						strichart.getIdStrichart());
@@ -471,7 +489,9 @@ public class OrgaEinheit {
 			for (Strichart strichart : stricharten) {
 				int stricheUnterEinheiten = 0;
 				for (ComStatistik stat : rueckgabe) {
-					if (hierarchieStufe==stat.getHierarchiestufe()-1 && stat.getIdStrichBez() == strichart.getIdStrichart()) {
+					if (hierarchieStufe == stat.getHierarchiestufe() - 1
+							&& stat.getIdStrichBez() == strichart
+									.getIdStrichart()) {
 						stricheUnterEinheiten = stricheUnterEinheiten
 								+ stat.getStrichzahl();
 					}
@@ -491,29 +511,37 @@ public class OrgaEinheit {
 		return rueckgabe;
 	}
 
-	//liest alle Statistiken aus der Tabelle Statistiken, die in der übergebenen kalendarwoche und
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach Strichart sortiert.
-	public List<ComStatistik> getStrichartStatistikAusDatenbank(int kalendarwoche,
-			int jahr, int idStrichart, String strichBezeichnung,
-			int hierarchieStufe, List<ComStatistik> rueckgabe) {
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getStrichartStatistikAusDatenbank(kalendarwoche, jahr, idStrichart, strichBezeichnung, 1, rueckgabe);
-			}
-			else {
+	// liest alle Statistiken aus der Tabelle Statistiken, die in der
+	// übergebenen kalendarwoche und
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach Strichart sortiert.
+	public List<ComStatistik> getStrichartStatistikAusDatenbank(
+			int kalendarwoche, int jahr, int idStrichart,
+			String strichBezeichnung, int hierarchieStufe,
+			List<ComStatistik> rueckgabe) {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				if (zentralbereich != null)
+					return zentralbereich.getStrichartStatistikAusDatenbank(
+							kalendarwoche, jahr, idStrichart,
+							strichBezeichnung, 1, rueckgabe);
+				else
+					return rueckgabe;
+			} else {
 				return rueckgabe;
 			}
-		}
-		else {
+		} else {
 			List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 			int stricheUnterEinheiten = 0;
 			for (int i = 0; i < unterOrga.size(); i++) {
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i).getStrichartStatistikAusDatenbank(
-						kalendarwoche, jahr, idStrichart, strichBezeichnung,
-						hierarchieStufe + 1, hilfsListe));
+				rueckgabe.addAll(unterOrga.get(i)
+						.getStrichartStatistikAusDatenbank(kalendarwoche, jahr,
+								idStrichart, strichBezeichnung,
+								hierarchieStufe + 1, hilfsListe));
 				for (int x = 0; x < hilfsListe.size(); x++) {
 					ComStatistik statistik = hilfsListe.get(x);
 					if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
@@ -524,10 +552,18 @@ public class OrgaEinheit {
 			try {
 				ResultSet result = db
 						.executeQueryStatement("SELECT * FROM Statistiken WHERE "
-								+ "idOrgaEinheit = '" + idOrgaEinheit + "' AND "
-								+ "Kalenderwoche = '" + kalendarwoche + "' AND "
-								+ "Jahr = '" + jahr + "' AND " + "idStrichart = '"
-								+ idStrichart + "'");
+								+ "idOrgaEinheit = '"
+								+ idOrgaEinheit
+								+ "' AND "
+								+ "Kalenderwoche = '"
+								+ kalendarwoche
+								+ "' AND "
+								+ "Jahr = '"
+								+ jahr
+								+ "' AND "
+								+ "idStrichart = '"
+								+ idStrichart
+								+ "'");
 				int strichzahl;
 				if (result.next()) {
 					strichzahl = result.getInt("Strichzahl");
@@ -537,43 +573,52 @@ public class OrgaEinheit {
 				strichzahl = strichzahl + stricheUnterEinheiten;
 				List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
 				for (int i = 0; i < unterOrga.size(); i++) {
-					idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+					idUnterOrgaEinheiten.add(unterOrga.get(i)
+							.getIdOrgaEinheit());
 				}
-				rueckgabe.add(0, new ComStatistik(idOrgaEinheit, OrgaEinheitBez,
-						kalendarwoche, jahr, strichBezeichnung, idStrichart,
-						strichzahl, hierarchieStufe, OrgaEinheitTyp,
-						idUnterOrgaEinheiten));
+				rueckgabe.add(0, new ComStatistik(idOrgaEinheit,
+						OrgaEinheitBez, kalendarwoche, jahr, strichBezeichnung,
+						idStrichart, strichzahl, hierarchieStufe,
+						OrgaEinheitTyp, idUnterOrgaEinheiten));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			return rueckgabe;
 		}
-		
+
 	}
 
-	//liest alle Statistiken aus der Tabelle Statistiken, die in dem übergebenen
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach Strichart sortiert.
+	// liest alle Statistiken aus der Tabelle Statistiken, die in dem
+	// übergebenen
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach Strichart sortiert.
 	public List<ComStatistik> getJahresStrichartStatistikAusDatenbank(int jahr,
 			int idStrichart, String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getJahresStrichartStatistikAusDatenbank(jahr, idStrichart, strichBezeichnung, 1, rueckgabe);
-			}
-			else {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				if (zentralbereich != null)
+					return zentralbereich
+							.getJahresStrichartStatistikAusDatenbank(jahr,
+									idStrichart, strichBezeichnung, 1,
+									rueckgabe);
+				else
+					return rueckgabe;
+			} else {
 				return rueckgabe;
 			}
-		}
-		else {
+		} else {
 			List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 			int stricheUnterEinheiten = 0;
 			for (int i = 0; i < unterOrga.size(); i++) {
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i).getJahresStrichartStatistikAusDatenbank(
-						jahr, idStrichart, strichBezeichnung, hierarchieStufe + 1,
-						hilfsListe));
+				rueckgabe.addAll(unterOrga.get(i)
+						.getJahresStrichartStatistikAusDatenbank(jahr,
+								idStrichart, strichBezeichnung,
+								hierarchieStufe + 1, hilfsListe));
 				for (int x = 0; x < hilfsListe.size(); x++) {
 					ComStatistik statistik = hilfsListe.get(x);
 					if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
@@ -591,8 +636,7 @@ public class OrgaEinheit {
 								+ "Jahr = '"
 								+ jahr
 								+ "' AND "
-								+ "idStrichart = '"
-								+ idStrichart + "'");
+								+ "idStrichart = '" + idStrichart + "'");
 				int strichzahl;
 				if (result.next()) {
 					strichzahl = result.getInt("Strichzahl");
@@ -602,42 +646,52 @@ public class OrgaEinheit {
 				strichzahl = strichzahl + stricheUnterEinheiten;
 				List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
 				for (int i = 0; i < unterOrga.size(); i++) {
-					idUnterOrgaEinheiten.add(unterOrga.get(i).getIdOrgaEinheit());
+					idUnterOrgaEinheiten.add(unterOrga.get(i)
+							.getIdOrgaEinheit());
 				}
-				rueckgabe.add(0, new ComStatistik(idOrgaEinheit, OrgaEinheitBez, 0,
-						jahr, strichBezeichnung, idStrichart, strichzahl,
-						hierarchieStufe, OrgaEinheitTyp, idUnterOrgaEinheiten));
+				rueckgabe.add(0, new ComStatistik(idOrgaEinheit,
+						OrgaEinheitBez, 0, jahr, strichBezeichnung,
+						idStrichart, strichzahl, hierarchieStufe,
+						OrgaEinheitTyp, idUnterOrgaEinheiten));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			return rueckgabe;
 		}
-		
+
 	}
 
-	//liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der übergebenen Kalendarwoche und
-	//Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten werden mit übergeben.
-	//Ist nach Strichart sortiert.
-	public List<ComStatistik> getTemporaereStrichartStatistik(int kalendarwoche,
-			int jahr, int idStrichart, String strichBezeichnung,
-			int hierarchieStufe, List<ComStatistik> rueckgabe) {
-		if(OrgaEinheitTyp.equals("Fachbereichsorganisation")){
-			if(hierarchieStufe==1){
-				OrgaEinheit zentralbereich = dbZugriff.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getTemporaereStrichartStatistik(kalendarwoche, jahr, idStrichart, strichBezeichnung, 1, rueckgabe);
-			}
-			else {
+	// liest alle Statistiken aus der Tabelle Arbeitsschritte, die in der
+	// übergebenen Kalendarwoche und
+	// Jahr gespeichert sind. Auch die Statistiken von den unterOrgaEinheiten
+	// werden mit übergeben.
+	// Ist nach Strichart sortiert.
+	public List<ComStatistik> getTemporaereStrichartStatistik(
+			int kalendarwoche, int jahr, int idStrichart,
+			String strichBezeichnung, int hierarchieStufe,
+			List<ComStatistik> rueckgabe) {
+		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+			if (hierarchieStufe == 1) {
+				OrgaEinheit zentralbereich = dbZugriff
+						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
+				if (zentralbereich != null)
+					return zentralbereich.getTemporaereStrichartStatistik(
+							kalendarwoche, jahr, idStrichart,
+							strichBezeichnung, 1, rueckgabe);
+				else
+					return rueckgabe;
+			} else {
 				return rueckgabe;
 			}
-		}
-		else {
+		} else {
 			List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 			int stricheUnterEinheiten = 0;
 			for (int i = 0; i < unterOrga.size(); i++) {
 				List<ComStatistik> hilfsListe = new ArrayList<ComStatistik>();
-				rueckgabe.addAll(unterOrga.get(i).getTemporaereStrichartStatistik(
-						kalendarwoche, jahr, idStrichart, strichBezeichnung,
-						hierarchieStufe + 1, hilfsListe));
+				rueckgabe.addAll(unterOrga.get(i)
+						.getTemporaereStrichartStatistik(kalendarwoche, jahr,
+								idStrichart, strichBezeichnung,
+								hierarchieStufe + 1, hilfsListe));
 				for (int x = 0; x < hilfsListe.size(); x++) {
 					ComStatistik statistik = hilfsListe.get(x);
 					if (statistik.getHierarchiestufe() == hierarchieStufe + 1)
@@ -645,7 +699,8 @@ public class OrgaEinheit {
 								+ statistik.getStrichzahl();
 				}
 			}
-			int strichzahl = getAlleStricheInWoche(kalendarwoche, jahr, idStrichart);
+			int strichzahl = getAlleStricheInWoche(kalendarwoche, jahr,
+					idStrichart);
 			strichzahl = strichzahl + stricheUnterEinheiten;
 			List<Integer> idUnterOrgaEinheiten = new ArrayList<Integer>();
 			for (int i = 0; i < unterOrga.size(); i++) {
@@ -657,7 +712,7 @@ public class OrgaEinheit {
 					idUnterOrgaEinheiten));
 			return rueckgabe;
 		}
-		
+
 	}
 
 }

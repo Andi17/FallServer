@@ -1,10 +1,11 @@
-package Stricheln;
+package stricheln;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import Zugriffsschicht.Arbeitsschritt;
-import Zugriffsschicht.Zugriffschicht;
+import zugriffsschicht.Arbeitsschritt;
+import zugriffsschicht.Zugriffschicht;
+
 
 public class Stricheln {
 

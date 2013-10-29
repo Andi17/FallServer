@@ -1,4 +1,4 @@
-package Optionen;
+package optionen;
 
 //Hier werden sind alle Optionen enthalten.
 

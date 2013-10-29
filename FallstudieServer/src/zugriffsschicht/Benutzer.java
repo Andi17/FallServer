@@ -1,9 +1,10 @@
-package Zugriffsschicht;
+package zugriffsschicht;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import Administration.Verschluesselung;
+import administration.Verschluesselung;
+
 import jdbc.JdbcAccess;
 
 public class Benutzer {

@@ -1,4 +1,4 @@
-package Zugriffsschicht;
+package zugriffsschicht;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

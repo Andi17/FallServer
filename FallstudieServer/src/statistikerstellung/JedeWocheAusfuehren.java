@@ -1,14 +1,16 @@
-package Statistikerstellung;
+package statistikerstellung;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
-import Optionen.Optionen;
-import Zugriffsschicht.OrgaEinheit;
-import Zugriffsschicht.Strichart;
-import Zugriffsschicht.Zugriffschicht;
+import optionen.Optionen;
+
+import zugriffsschicht.OrgaEinheit;
+import zugriffsschicht.Strichart;
+import zugriffsschicht.Zugriffschicht;
+
 
 //Diese Klasse ist ein TimerTask, die run() Methode wird in einem bestimmten Intervall 
 //immer wieder ausgeführt. Aktuelle Einstellung: Bei Start des Servers und dann immer Montags um 1:00.

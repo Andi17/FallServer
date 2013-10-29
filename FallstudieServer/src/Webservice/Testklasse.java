@@ -5,11 +5,13 @@ import java.util.Timer;
 
 import javax.xml.ws.Endpoint;
 
-import Com.ComBenutzer;
-import Com.ComOrgaEinheit;
-import Com.ComStatistik;
-import Com.ComStrichart;
-import Optionen.Optionen;
+import kommunikationsklassen.ComBenutzer;
+import kommunikationsklassen.ComOrgaEinheit;
+import kommunikationsklassen.ComStatistik;
+import kommunikationsklassen.ComStrichart;
+
+import optionen.Optionen;
+
 
 public class Testklasse {
 

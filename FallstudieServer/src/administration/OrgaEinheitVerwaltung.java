@@ -1,12 +1,14 @@
-package Administration;
+package administration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComOrgaEinheit;
-import Zugriffsschicht.Benutzer;
-import Zugriffsschicht.OrgaEinheit;
-import Zugriffsschicht.Zugriffschicht;
+import kommunikationsklassen.ComOrgaEinheit;
+
+import zugriffsschicht.Benutzer;
+import zugriffsschicht.OrgaEinheit;
+import zugriffsschicht.Zugriffschicht;
+
 
 public class OrgaEinheitVerwaltung {
 

@@ -13,21 +13,24 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.xml.ws.Endpoint;
 
-import jdbc.JdbcAccess;
+import administration.Benutzerverwaltung;
+import administration.OrgaEinheitVerwaltung;
+import administration.StrichArtVerwaltung;
 
-import RightsManagement.Rechte;
-import Administration.Benutzerverwaltung;
-import Administration.OrgaEinheitVerwaltung;
-import Administration.StrichArtVerwaltung;
-import Com.ComBenutzer;
-import Com.ComOrgaEinheit;
-import Com.ComStatistik;
-import Com.ComStrichart;
-import Optionen.Optionen;
-import Statistikausgabe.Statistikausgabe;
-import Statistikerstellung.JedeWocheAusfuehren;
-import Stricheln.Stricheln;
-import Zugriffsschicht.Zugriffschicht;
+import optionen.Optionen;
+
+import rechtemanagement.Rechte;
+import statistikausgabe.Statistikausgabe;
+import statistikerstellung.JedeWocheAusfuehren;
+import stricheln.Stricheln;
+import zugriffsschicht.Zugriffschicht;
+
+import jdbc.JdbcAccess;
+import kommunikationsklassen.ComBenutzer;
+import kommunikationsklassen.ComOrgaEinheit;
+import kommunikationsklassen.ComStatistik;
+import kommunikationsklassen.ComStrichart;
+
 
 /* 
  * Aus dieser *.java-Datei wurden die *.class-Dateien mit folgender Anweisung generiert:
@@ -292,10 +295,10 @@ public class Webservice {
 	// Ändert den Leiter einer Organisationseinheit.
 	@WebMethod
 	public boolean orgaEinheitLeiterAendern(String benutzer, String passwort,
-			String OrgaEinheit, String leitername) {
+			String orgaEinheit, String leitername) {
 		if (rechteManagement.vorgangMoeglich(benutzer, passwort,
 				Rechte.nurAdmin))
-			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(OrgaEinheit,
+			return orgaEinheitVerwaltung.OrgaEinheitLeiterAendern(orgaEinheit,
 					leitername);
 		else
 			return false;

@@ -1,4 +1,4 @@
-package Com;
+package kommunikationsklassen;
 
 public class ComStrichart {
 

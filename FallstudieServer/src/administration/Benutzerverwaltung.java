@@ -1,13 +1,16 @@
-package Administration;
+package administration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComBenutzer;
-import Optionen.Optionen;
-import Zugriffsschicht.Benutzer;
-import Zugriffsschicht.OrgaEinheit;
-import Zugriffsschicht.Zugriffschicht;
+import kommunikationsklassen.ComBenutzer;
+
+import optionen.Optionen;
+
+import zugriffsschicht.Benutzer;
+import zugriffsschicht.OrgaEinheit;
+import zugriffsschicht.Zugriffschicht;
+
 
 public class Benutzerverwaltung {
 

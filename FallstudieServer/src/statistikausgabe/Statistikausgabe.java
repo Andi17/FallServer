@@ -1,14 +1,16 @@
-package Statistikausgabe;
+package statistikausgabe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import Com.ComStatistik;
-import Zugriffsschicht.Benutzer;
-import Zugriffsschicht.OrgaEinheit;
-import Zugriffsschicht.Strichart;
-import Zugriffsschicht.Zugriffschicht;
+import kommunikationsklassen.ComStatistik;
+
+import zugriffsschicht.Benutzer;
+import zugriffsschicht.OrgaEinheit;
+import zugriffsschicht.Strichart;
+import zugriffsschicht.Zugriffschicht;
+
 
 //Anforderung 4.2.9 Anonymität des Erfassers muss berücksichtigt werden.
 

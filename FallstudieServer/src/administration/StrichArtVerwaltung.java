@@ -1,11 +1,13 @@
-package Administration;
+package administration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Com.ComStrichart;
-import Zugriffsschicht.Strichart;
-import Zugriffsschicht.Zugriffschicht;
+import kommunikationsklassen.ComStrichart;
+
+import zugriffsschicht.Strichart;
+import zugriffsschicht.Zugriffschicht;
+
 
 public class StrichArtVerwaltung {
 	

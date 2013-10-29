@@ -1,4 +1,4 @@
-package Zugriffsschicht;
+package zugriffsschicht;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import Optionen.Optionen;
+import optionen.Optionen;
+
 
 import jdbc.JdbcAccess;
 
