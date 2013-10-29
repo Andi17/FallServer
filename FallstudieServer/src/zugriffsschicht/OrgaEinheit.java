@@ -386,7 +386,8 @@ public class OrgaEinheit {
 			try {
 				for (Strichart strichart : stricharten) {
 					ResultSet result = db
-							.executeQueryStatement("SELECT * FROM Statistiken WHERE "
+							.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY "
+									+ "idOrgaEinheit, Jahr, idStrichart HAVING "
 									+ "idOrgaEinheit = "
 									+ idOrgaEinheit
 									+ " AND Jahr = "
@@ -394,11 +395,10 @@ public class OrgaEinheit {
 									+ " AND idStrichart = "
 									+ strichart.getIdStrichart());
 					if (result.next()) {
-						Statistik stat = new Statistik(result, db);
 						rueckgabe.add(new ComStatistik(idOrgaEinheit,
 								OrgaEinheitBez, 0, jahr,
-								stat.getStrichartBez(), stat.getStrichart(),
-								stat.getStrichanzahl(), hierarchieStufe,
+								strichart.getStrichbez(), strichart.getIdStrichart(),
+								result.getInt("Strichzahl"), hierarchieStufe,
 								OrgaEinheitTyp, null));
 					} else {
 						rueckgabe.add(new ComStatistik(idOrgaEinheit,
@@ -632,13 +632,12 @@ public class OrgaEinheit {
 				ResultSet result = db
 						.executeQueryStatement("SELECT SUM(Strichzahl) AS Strichzahl FROM Statistiken GROUP BY "
 								+ "idOrgaEinheit, Jahr, idStrichart HAVING "
-								+ "idOrgaEinheit = '"
+								+ "idOrgaEinheit = "
 								+ idOrgaEinheit
-								+ "' AND "
-								+ "Jahr = '"
+								+ " AND Jahr = "
 								+ jahr
-								+ "' AND "
-								+ "idStrichart = '" + idStrichart + "'");
+								+ " AND idStrichart = "
+								+ idStrichart);
 				int strichzahl;
 				if (result.next()) {
 					strichzahl = result.getInt("Strichzahl");
