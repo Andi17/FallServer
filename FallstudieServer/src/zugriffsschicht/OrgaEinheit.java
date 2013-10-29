@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import jdbc.JdbcAccess;
 import kommunikationsklassen.ComStatistik;
 
@@ -285,12 +284,13 @@ public class OrgaEinheit {
 			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getOrgaEinheitStatistikAusDatenbank(
-						kalendarwoche, jahr, 1, rueckgabe);
+				if (zentralbereich != null)
+					return zentralbereich.getOrgaEinheitStatistikAusDatenbank(
+							kalendarwoche, jahr, 1, rueckgabe);
 			} else {
 				return rueckgabe;
 			}
@@ -371,13 +371,14 @@ public class OrgaEinheit {
 			int jahr, int hierarchieStufe, List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich
-						.getJahresOrgaEinheitStatistikAusDatenbank(jahr, 1,
-								rueckgabe);
+				if (zentralbereich != null)
+					return zentralbereich
+							.getJahresOrgaEinheitStatistikAusDatenbank(jahr, 1,
+									rueckgabe);
 			} else {
 				return rueckgabe;
 			}
@@ -456,12 +457,13 @@ public class OrgaEinheit {
 			List<ComStatistik> rueckgabe) {
 		List<OrgaEinheit> unterOrga = getUnterOrgaEinheiten();
 		List<Strichart> stricharten = dbZugriff.getAlleStricharten(false);
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
-				return zentralbereich.getTemporaereOrgaEinheitStatistik(
-						kalendarwoche, jahr, 1, rueckgabe);
+				if (zentralbereich != null)
+					return zentralbereich.getTemporaereOrgaEinheitStatistik(
+							kalendarwoche, jahr, 1, rueckgabe);
 			} else {
 				return rueckgabe;
 			}
@@ -520,7 +522,7 @@ public class OrgaEinheit {
 			int kalendarwoche, int jahr, int idStrichart,
 			String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
@@ -596,7 +598,7 @@ public class OrgaEinheit {
 	public List<ComStatistik> getJahresStrichartStatistikAusDatenbank(int jahr,
 			int idStrichart, String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
@@ -670,7 +672,7 @@ public class OrgaEinheit {
 			int kalendarwoche, int jahr, int idStrichart,
 			String strichBezeichnung, int hierarchieStufe,
 			List<ComStatistik> rueckgabe) {
-		if (OrgaEinheitTyp.equals("Fachbereichsorganisation")) {
+		if (OrgaEinheitTyp.equals("Stabstelle")) {
 			if (hierarchieStufe == 1) {
 				OrgaEinheit zentralbereich = dbZugriff
 						.getOrgaEinheitZuidOrgaEinheit(idUeberOrgaEinheit);
