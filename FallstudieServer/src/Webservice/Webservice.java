@@ -447,7 +447,6 @@ public class Webservice {
 
 	//Gibt eine Liste in Form von getBereichsStatistik zurück, lediglich enthalten hier die 
 	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
-	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	@WebMethod
 	public List<ComStatistik> getBereichsStatistikJahr(String benutzer,
 			String passwort, int jahr) {
@@ -474,7 +473,6 @@ public class Webservice {
 
 	//Gibt eine Liste in Form von getStrichartStatistik zurück, lediglich enthalten hier die 
 	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
-	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	@WebMethod
 	public List<ComStatistik> getStrichartStatistikJahr(String benutzer,
 			String passwort, int jahr) {

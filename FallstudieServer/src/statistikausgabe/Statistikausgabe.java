@@ -41,7 +41,6 @@ public class Statistikausgabe {
 	
 	//Gibt eine Liste in Form von getBereichsStatistik zurück, lediglich enthalten hier die 
 	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
-	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	public List<ComStatistik> getOrgaEinheitStatistikJahr(String benutzername, int jahr){
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
 		OrgaEinheit orgaEinheit = dbZugriff.getOrgaEinheitZuidOrgaEinheit(benutzer.getAktuelleOE());
@@ -79,7 +78,6 @@ public class Statistikausgabe {
 	
 	//Gibt eine Liste in Form von getStrichartStatistik zurück, lediglich enthalten hier die 
 	//Kommunikationsobjekte Informationen über ein ganzes Jahr.
-	//Die letzten zwei Wochen tauchen allerdings nicht in der Jahresstatistik auf.
 	public List<ComStatistik> getStrichartStatistikJahr (String benutzername, int jahr){
 		List<ComStatistik> rueckgabe = new ArrayList<ComStatistik>();
 		Benutzer benutzer = dbZugriff.getBenutzervonBenutzername(benutzername);
