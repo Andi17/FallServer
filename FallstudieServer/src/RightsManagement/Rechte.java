@@ -54,19 +54,19 @@ public class Rechte {
 		return false;
 	}
 
-	//Gibt eine liste von chars zurück, a für Adminrechte, d für Strichelrechte und s für Statistikrechte
-	public List<Character> erlaubteAnzeigen(String benutzername) {
-		List<Character> rueckgabe = new ArrayList<Character>();
+	//Gibt eine liste von chars zurück, 3 für Adminrechte, 1 für Strichelrechte und 2 für Statistikrechte
+	public List<Integer> erlaubteAnzeigen(String benutzername) {
+		List<Integer> rueckgabe = new ArrayList<Integer>();
 		int LeiterRechte = dbZugriff.getBerechtigungzuLeitername(benutzername);
 		int MitarbeiterRechte = dbZugriff.getBerechtigungzuMitarbeiter(benutzername);
 		if(LeiterRechte == 1 || MitarbeiterRechte == 1){
-			rueckgabe.add('a');
+			rueckgabe.add(3);
 		}
 		if(LeiterRechte == 2 || MitarbeiterRechte == 2){
-			rueckgabe.add('d');
+			rueckgabe.add(1);
 		}
 		if(LeiterRechte == 3 || LeiterRechte == 4 || MitarbeiterRechte == 3|| MitarbeiterRechte == 4){
-			rueckgabe.add('s');
+			rueckgabe.add(2);
 		}
 		return rueckgabe;
 	}

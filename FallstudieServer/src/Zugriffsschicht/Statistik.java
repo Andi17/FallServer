@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import jdbc.JdbcAccess;
 
 public class Statistik {
-	private int idStatistik;
 	private int idOrgaEinheit;
 	private int kalenderWoche;
 	private int jahr;
@@ -39,16 +38,11 @@ public class Statistik {
 	
 	//Methode nur um Kurs zu sparen
 	private void werteSetzen(ResultSet resultSet) throws SQLException{
-		this.idStatistik = resultSet.getInt("idStatistik");
 		this.idOrgaEinheit = resultSet.getInt("idOrgaEinheit");
 		this.kalenderWoche = resultSet.getInt("KalenderWoche");
 		this.jahr = resultSet.getInt("Jahr");
 		this.idStrichart = resultSet.getInt("idStrichart");
 		this.strichzahl = resultSet.getInt("Strichzahl");
-	}
-
-	public int getIDStatistik() {
-		return idStatistik;
 	}
 
 	public int getOrgaEinheit() {

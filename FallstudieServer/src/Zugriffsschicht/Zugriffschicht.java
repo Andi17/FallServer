@@ -2,9 +2,12 @@ package Zugriffsschicht;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import Optionen.Optionen;
 
 import jdbc.JdbcAccess;
 
@@ -313,6 +316,21 @@ public class Zugriffschicht {
 			System.out.println(e);
 		}
 		return rueckgabe;
+	}
+	
+	public boolean arbeitsschritteLoeschen(Date datum){
+		long aktuelleZeit = datum.getTime();
+		long zuLoeschenZeit = aktuelleZeit + Optionen.getSpeicherdauer() * 24 * 60 * 60 * 1000;
+		Date zuLoeschenDatum = new Date(zuLoeschenZeit);
+		Timestamp timestamp = new Timestamp(zuLoeschenDatum.getTime());
+		try {
+			db.executeUpdateStatement("DELETE FROM Arbeitsschritte WHERE Timestamp < '" + timestamp + "'");
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 

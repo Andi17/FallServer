@@ -373,9 +373,9 @@ public class Webservice {
 	// werden sollen.
 	//Getestet, funzt.
 	@WebMethod
-	public List<Character> anzeige(String benutzer, String passwort) {
+	public List<Integer> anzeige(String benutzer, String passwort) {
 		/*
-		 * 'd'->Dash/Strichelfenster 'a'->Adminrechte 's'->Statistikfenster
+		 * 1->Dash/Strichelfenster 2->Statistikfenster 3->Adminrechte
 		 */
 		if (rightsManagement.vorgangMoeglich(benutzer, passwort, Rechte.alleBenutzer)) {
 			return rightsManagement.erlaubteAnzeigen(benutzer);

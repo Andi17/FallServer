@@ -9,7 +9,7 @@ public class Optionen {
 	private final static String jdbcpw = "1234";
 	private final static String webserverURL = "http://localhost:8888/WSExample/simple";
 	// Anforderung 4.3.1: Speicherdauer soll konfigurierbar sein.
-	private final static int speicherdauer = 90;
+	private final static int speicherdauerTage = 90;
 
 	public static boolean isInitialbelegungbenutzergesperrt() {
 		return initialbelegungBenutzerGesperrt;
@@ -36,5 +36,9 @@ public class Optionen {
 
 	public static String getWebserverURL() {
 		return webserverURL;
+	}
+
+	public static int getSpeicherdauer() {
+		return speicherdauerTage;
 	}
 }

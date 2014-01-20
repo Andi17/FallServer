@@ -1,9 +1,11 @@
 package Statistikerstellung;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
+import Optionen.Optionen;
 import Zugriffsschicht.OrgaEinheit;
 import Zugriffsschicht.Strichart;
 import Zugriffsschicht.Zugriffschicht;
@@ -40,6 +42,11 @@ public class Statistikerstellung extends TimerTask{
 			}
 		}
 		System.out.println("Neue Statistiken wurden erstellt.");
+		
+		Date aktuellesDatum = localCalendar.getTime();
+		if(dbZugriff.arbeitsschritteLoeschen(aktuellesDatum)){
+			System.out.println("Arbeitschritte, die älter sind als " + Optionen.getSpeicherdauer() + " Tage wurden gelöscht.");
+		}
 	}
 
 }
